@@ -1,12 +1,11 @@
 import { MongoClient } from 'mongodb';
+import { env } from '@/server/env';
 
 const globalForMongo = globalThis as unknown as { _mongo?: MongoClient };
 
 export function getClient() {
   if (!globalForMongo._mongo) {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) throw new Error('MONGODB_URI is not set');
-    globalForMongo._mongo = new MongoClient(uri);
+    globalForMongo._mongo = new MongoClient(env().MONGODB_URI);
   }
   return globalForMongo._mongo;
 }

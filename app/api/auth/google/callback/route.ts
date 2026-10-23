@@ -1,5 +1,6 @@
 import { AppError } from '@/lib/errors';
 import { finishGoogle } from '@/server/auth/google';
+import { limitAuth } from '@/server/auth/rate-limit';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -8,6 +9,7 @@ export async function GET(req: Request) {
   const back = (error: string) => Response.redirect(new URL(`/sign-in?error=${error}`, url.origin), 302);
   if (!code || !state) return back('invalid');
   try {
+    await limitAuth(req);
     await finishGoogle(code, state, req.headers.get('user-agent') ?? undefined);
     return Response.redirect(new URL('/', url.origin), 302);
   } catch (e) {

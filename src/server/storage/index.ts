@@ -1,1 +1,37 @@
-// TODO: see docs/System-Design.md §2 (storage)
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import type { StorageProvider } from '@/server/providers';
+import { env } from '@/server/env';
+
+export { storageKey } from './keys';
+
+type R2Config = { accountId: string; accessKeyId: string; secretAccessKey: string; bucket: string };
+
+function r2Config(): R2Config {
+  const e = env();
+  const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = e;
+  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET) {
+    throw new Error('R2 is not configured: set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET.');
+  }
+  return { accountId: R2_ACCOUNT_ID, accessKeyId: R2_ACCESS_KEY_ID, secretAccessKey: R2_SECRET_ACCESS_KEY, bucket: R2_BUCKET };
+}
+
+/** Cloudflare R2 through its S3-compatible API. The bucket stays private: callers get signed URLs only. */
+export function createR2Storage(cfg: R2Config = r2Config(), endpoint = `https://${cfg.accountId}.r2.cloudflarestorage.com`): StorageProvider {
+  const client = new S3Client({
+    region: 'auto', endpoint, forcePathStyle: true,
+    credentials: { accessKeyId: cfg.accessKeyId, secretAccessKey: cfg.secretAccessKey },
+  });
+  return {
+    async put(key, body, type) {
+      await client.send(new PutObjectCommand({ Bucket: cfg.bucket, Key: key, Body: body, ContentType: type }));
+    },
+    signedGet: (key, ttlSec) => getSignedUrl(client, new GetObjectCommand({ Bucket: cfg.bucket, Key: key }), { expiresIn: ttlSec }),
+    async delete(key) {
+      await client.send(new DeleteObjectCommand({ Bucket: cfg.bucket, Key: key }));
+    },
+  };
+}
+
+let shared: StorageProvider | undefined;
+export const storage = (): StorageProvider => (shared ??= createR2Storage());

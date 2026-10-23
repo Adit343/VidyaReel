@@ -26,5 +26,6 @@ export async function ensureIndexes() {
     { key: { videoId: 1 } },
   ]);
   await d.collection('usage_log').createIndex({ userId: 1, type: 1, createdAt: -1 });
+  await d.collection('rate_limits').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
   await d.collection('oauth_states').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 }
