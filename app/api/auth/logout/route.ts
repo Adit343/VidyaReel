@@ -1,5 +1,4 @@
 import { errorResponse } from '@/lib/errors';
-import { parseJson } from '@/server/auth/http';
 import { destroySession } from '@/server/auth/sessions';
 
 export async function POST() {
