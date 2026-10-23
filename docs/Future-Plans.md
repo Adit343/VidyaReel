@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-23 (prompt 5)
+Last updated: 2026-10-23 (prompt 6)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 code is done; its gate is waiting on the account steps below (marked 👤 there), then Phase 1 (pipeline spike).
 
@@ -14,8 +14,9 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] 0.27 Google Cloud OAuth client (redirect `APP_URL/api/auth/google/callback`), set `GOOGLE_CLIENT_ID/SECRET`; test Google sign-in and unapproved refusal
 - [ ] 0.26 Resend account + sender (`RESEND_API_KEY`, `EMAIL_FROM`); test a real reset email
 - [ ] 0.42 Cloudflare R2 bucket + API token (`R2_*`); upload a test file and open its signed link
-- [ ] Side-by-side visual check of the auth, Home, Library and Admin screens against Stitch
-- [ ] Optional: email verification for password signups
+- [ ] Side-by-side visual check of Home, Library and Admin against Stitch (auth screens done)
+- [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages, mobile Home
+- [ ] Optional: email verification for password signups (Stitch has "Check your email", "Email not verified" and verification states ready to build)
 
 ## Then Phase 1 (pipeline spike)
 

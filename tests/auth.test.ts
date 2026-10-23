@@ -49,6 +49,12 @@ describe('signup / login / logout', () => {
     await signup({ email: 'asha@example.com', name: 'A', password: PASSWORD });
     expect(await code(signup({ email: 'asha@example.com', name: 'A', password: PASSWORD }))).toBe('EMAIL_EXISTS');
   });
+  it('rejects common passwords and passwords containing the email', async () => {
+    await approve('asha@example.com');
+    expect(await code(signup({ email: 'asha@example.com', name: 'A', password: 'password1234' }))).toBe('WEAK_PASSWORD');
+    expect(await code(signup({ email: 'asha@example.com', name: 'A', password: 'asha.2025.winter' }))).toBe('WEAK_PASSWORD');
+    expect(await users().countDocuments()).toBe(0);
+  });
   it('gives the same error for a wrong password and an unknown email', async () => {
     await approve('asha@example.com');
     await signup({ email: 'asha@example.com', name: 'A', password: PASSWORD });
@@ -112,12 +118,12 @@ describe('forgot / reset password', () => {
     log.mockRestore();
     expect((await passwordResets().findOne({}))?.tokenHash).toBe(hashToken(token));
 
-    await resetPassword({ token, password: 'a brand new password' });
+    await resetPassword({ token, password: 'a brand new phrase' });
     expect(await sessions().countDocuments()).toBe(0);
     jar.clear();
-    await login({ email: 'asha@example.com', password: 'a brand new password' });
+    await login({ email: 'asha@example.com', password: 'a brand new phrase' });
     expect(await code(login({ email: 'asha@example.com', password: PASSWORD }))).toBe('INVALID_CREDENTIALS');
-    expect(await code(resetPassword({ token, password: 'another new password' }))).toBe('INVALID_RESET_TOKEN');
+    expect(await code(resetPassword({ token, password: 'another new phrase' }))).toBe('INVALID_RESET_TOKEN');
   });
   it('rejects an expired token', async () => {
     await seed();
@@ -126,7 +132,7 @@ describe('forgot / reset password', () => {
     const token = tokenFromLog(log);
     log.mockRestore();
     await passwordResets().updateMany({}, { $set: { expiresAt: new Date(Date.now() - 1000) } });
-    expect(await code(resetPassword({ token, password: 'a brand new password' }))).toBe('INVALID_RESET_TOKEN');
+    expect(await code(resetPassword({ token, password: 'a brand new phrase' }))).toBe('INVALID_RESET_TOKEN');
   });
 });
 

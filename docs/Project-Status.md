@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-23 (prompt 5)
+Last updated: 2026-10-23 (prompt 6)
 
 Current phase: **0 Setup and foundation** (see [Phases.md](Phases.md)). All code for Phase 0 is written and tested locally; what remains needs your accounts and keys (MongoDB Atlas, Google, Resend, R2).
 
@@ -8,7 +8,7 @@ Current progress, done so far. Updated on every prompt. Remaining work is in [Fu
 
 ## Summary
 
-Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invite-only gate, rate limits, admin access management, protected app shell, Stitch-styled auth/Home/Library/Admin screens, R2 storage provider. Verified against an in-memory MongoDB with 33 Vitest tests and a scripted run of the real dev server; `tsc`, `lint` and `next build` pass. Nothing has run against real Atlas, Google, Resend or R2 yet.
+Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invite-only gate, rate limits, admin access management, protected app shell, Stitch-styled auth/Home/Library/Admin screens, R2 storage provider. Verified against an in-memory MongoDB with 35 Vitest tests and a scripted run of the real dev server; `tsc`, `lint` and `next build` pass. Nothing has run against real Atlas, Google, Resend or R2 yet.
 
 ## Done
 
@@ -20,8 +20,9 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 | Tooling | ESLint (`npm run lint`), Vitest + `mongodb-memory-server` (`npm test`), `npm run db:indexes`, `npm run typecheck`. |
 | Config | `src/server/env.ts` Zod loader: missing `MONGODB_URI` / `APP_URL` / `ADMIN_EMAIL` fails with named variables. |
 | DB | Mongo client, typed collection helpers (`src/server/db/collections.ts`), indexes incl. `rate_limits` TTL. |
-| Auth (verified locally) | scrypt hashing, hashed session cookie, signup/login/logout, forgot/reset (one-time, 30 min, ends sessions), invite-only gate with `ADMIN_EMAIL` bootstrap, `requireUser`/`requireAdmin` (removed member gets 403/401), Google OAuth (state + PKCE, links to existing account by email; tested with mocked Google), per-IP rate limit (11th attempt in a minute gets 429 + `Retry-After`), `GET /api/me`. |
+| Auth (verified locally) | scrypt hashing, hashed session cookie, signup/login/logout, forgot/reset (one-time, 60 min, ends sessions), invite-only gate with `ADMIN_EMAIL` bootstrap, `requireUser`/`requireAdmin` (removed member gets 403/401), Google OAuth (state + PKCE, links to existing account by email; tested with mocked Google), per-IP rate limit (11th attempt in a minute gets 429 + `Retry-After`), `GET /api/me`. |
 | Admin | `GET/POST /api/admin/approved-emails`, `PATCH/DELETE .../:id`: roles, daily limit, soft remove that deletes sessions, re-invite reactivates, cannot remove/demote self or the `ADMIN_EMAIL` owner. Admin page UI. |
+| Auth screens (match Stitch) | Rebuilt from the Stitch HTML of Log In, Sign-Up, Forgot Password and Reset Password with Tailwind (tokens in `tailwind.config.ts`) and the exact art panels; every interactive state is implemented and was screenshot-checked in headless Chrome: Log In (default, focus, loading, wrong credentials, suspended, rate limited with countdown, returning from reset, Google cancelled); Sign-Up (focus "editing" tag, weak, common, contains-email, strong meter, loading, rate-limit banner with Dismiss, closed/invite-only banner); Forgot (default, focus, loading, invalid email, "Check your email" with resend countdown, rate limited); Reset (default, focus, weak, common, contains email, mismatch, loading, success, expired/used, rate limited). Password rules (min 10, common, contains email) shared by UI and server (`src/lib/password-rules.ts`). Reset links now last one hour (as in the design); "Keep me signed in" sets a persistent cookie. Not implemented: "Email not verified" / "Check your email" verification screens (no email verification yet) and compliance badges from the mock (FERPA/SOC 2) which we cannot claim. |
 | UI | Route groups: `(auth)` pages (sign-in, sign-up, forgot, reset; signed-in users redirect to `/`; friendly error text; Google `?error=` shown) and `(app)` pages (signed-out go to `/sign-in`): top bar with user menu and Sign out, Home dashboard, empty Library, Admin (admins only). |
 | Storage | `createR2Storage()` (S3-compatible put / signedGet / delete) and `storageKey` helpers following System-Design §7.6. Key helper unit-tested; R2 calls not run against a real bucket. |
 | Workflows / Remotion | Inngest function stubs, Remotion composition skeleton, provider interfaces (unchanged). |

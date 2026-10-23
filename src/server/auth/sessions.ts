@@ -6,14 +6,15 @@ import { hashToken, newToken } from './tokens';
 export const SESSION_COOKIE = 'vr_session';
 const SESSION_MS = 7 * 24 * 60 * 60 * 1000;
 
-export async function createSession(userId: ObjectId, userAgent?: string) {
+/** `remember: false` gives a browser-session cookie; the server-side row still expires in 7 days. */
+export async function createSession(userId: ObjectId, userAgent?: string, remember = true) {
   const token = newToken();
   const expiresAt = new Date(Date.now() + SESSION_MS);
   await db().collection('sessions').insertOne({
     userId, tokenHash: hashToken(token), expiresAt, userAgent, createdAt: new Date(),
   });
   (await cookies()).set(SESSION_COOKIE, token, {
-    httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', expires: expiresAt,
+    httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', ...(remember && { expires: expiresAt }),
   });
 }
 

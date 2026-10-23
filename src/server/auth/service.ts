@@ -3,30 +3,32 @@ import { AppError } from '@/lib/errors';
 import { db } from '@/server/db/client';
 import { emailProvider } from '@/server/email';
 import { assertApproved, normalizeEmail } from './approved';
-import { hashPassword, MIN_PASSWORD_LENGTH, verifyPassword } from './password';
+import { checkPassword } from '@/lib/password-rules';
+import { hashPassword, verifyPassword } from './password';
 import { createSession, destroyAllSessions } from './sessions';
 import { hashToken, newToken } from './tokens';
 
-const RESET_MS = 30 * 60 * 1000;
+const RESET_MS = 60 * 60 * 1000;
 const users = () => db().collection('users');
 
 export const signupSchema = z.object({
   email: z.string().email(), name: z.string().min(1).max(100), password: z.string(),
 }).strict();
-export const loginSchema = z.object({ email: z.string().email(), password: z.string() }).strict();
+export const loginSchema = z.object({ email: z.string().email(), password: z.string(), remember: z.boolean().optional() }).strict();
 export const forgotSchema = z.object({ email: z.string().email() }).strict();
 export const resetSchema = z.object({ token: z.string().min(1), password: z.string() }).strict();
 
-function assertStrong(password: string) {
-  if (password.length < MIN_PASSWORD_LENGTH) {
-    throw new AppError('WEAK_PASSWORD', `Use at least ${MIN_PASSWORD_LENGTH} characters.`, 400);
+function assertStrong(password: string, email = '') {
+  const check = checkPassword(password, email);
+  if (check.status === 'empty' || check.status === 'short' || check.status === 'common' || check.status === 'email') {
+    throw new AppError('WEAK_PASSWORD', check.status === 'empty' ? 'Enter a password.' : check.message, 400);
   }
 }
 
 export async function signup(input: z.infer<typeof signupSchema>, userAgent?: string) {
   const email = normalizeEmail(input.email);
   await assertApproved(email);
-  assertStrong(input.password);
+  assertStrong(input.password, email);
   if (await users().findOne({ email })) throw new AppError('EMAIL_EXISTS', 'An account already exists.', 409);
   const now = new Date();
   const { insertedId } = await users().insertOne({
@@ -42,7 +44,7 @@ export async function login(input: z.infer<typeof loginSchema>, userAgent?: stri
   const ok = user?.passwordHash ? await verifyPassword(input.password, user.passwordHash) : false;
   if (!user || !ok) throw new AppError('INVALID_CREDENTIALS', 'Incorrect email or password.', 401);
   await assertApproved(email);
-  await createSession(user._id, userAgent);
+  await createSession(user._id, userAgent, input.remember ?? true);
 }
 
 /** Always resolves; callers answer 200 regardless so emails cannot be enumerated. */
@@ -58,15 +60,15 @@ export async function forgotPassword(rawEmail: string) {
   const link = `${process.env.APP_URL}/reset-password?token=${token}`;
   await emailProvider.send({
     to: email, subject: 'Reset your Vidyareel password',
-    text: `Use this link within 30 minutes to set a new password:\n${link}`,
+    text: `Use this link within one hour to set a new password:\n${link}`,
   });
 }
 
 export async function resetPassword(input: z.infer<typeof resetSchema>) {
-  assertStrong(input.password);
   const resets = db().collection('password_resets');
   const reset = await resets.findOne({ tokenHash: hashToken(input.token), usedAt: { $exists: false }, expiresAt: { $gt: new Date() } });
   if (!reset) throw new AppError('INVALID_RESET_TOKEN', 'This reset link is invalid or has expired.', 400);
+  assertStrong(input.password, (await users().findOne({ _id: reset.userId }))?.email);
   await users().updateOne({ _id: reset.userId }, { $set: { passwordHash: await hashPassword(input.password), updatedAt: new Date() } });
   await resets.updateOne({ _id: reset._id }, { $set: { usedAt: new Date() } });
   await destroyAllSessions(reset.userId);

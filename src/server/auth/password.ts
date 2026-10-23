@@ -4,7 +4,7 @@ import { promisify } from 'node:util';
 const scrypt = promisify(scryptCb) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 const KEY_LEN = 64;
 
-export const MIN_PASSWORD_LENGTH = 10;
+export { MIN_PASSWORD_LENGTH } from '@/lib/password-rules';
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16);

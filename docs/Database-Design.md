@@ -63,7 +63,7 @@ Owned by the app (`src/server/auth`).
 
 **`sessions`:** `userId`, `tokenHash` (SHA-256 of the random cookie token; the raw token is never stored), `expiresAt` (7 days, extended on use), `userAgent`, `createdAt`. Index on `tokenHash` (unique) and `userId`; TTL on `expiresAt`.
 
-**`password_resets`:** `userId`, `tokenHash`, `expiresAt` (30 minutes), `usedAt?`. TTL on `expiresAt`. A new request invalidates earlier unused tokens; using one deletes all of the user's `sessions`.
+**`password_resets`:** `userId`, `tokenHash`, `expiresAt` (60 minutes), `usedAt?`. TTL on `expiresAt`. A new request invalidates earlier unused tokens; using one deletes all of the user's `sessions`.
 
 `oauth_states` is shared with Instagram connect and gains `purpose: "google" | "instagram"` plus the PKCE `codeVerifier` for Google.
 
@@ -368,7 +368,7 @@ Only the first row (7-day grace for deleted videos) is fixed by the PRD (L6) and
 | `idempotency_keys` | 24 hours | TTL index. |
 | `rate_limits` | 1 to 2 minutes | TTL index. |
 | `sessions` | 7 days, extended on use | TTL index on `expiresAt`. |
-| `password_resets` | 30 minutes | TTL index on `expiresAt`. |
+| `password_resets` | 60 minutes | TTL index on `expiresAt`. |
 | Removed member (`approved_emails.removedAt`) | Row 30 days; videos kept until an admin chooses delete | "Delete their data" soft-deletes all their videos (7-day grace), hard-deletes `instagram_connections` and `notifications`, and deletes their `usage_log` rows (V1 logs are quota data only, so they are removed with the member). |
 | Instagram token | While connected | Deleted on Disconnect, on member removal, or after 30 days in `needs_reconnect` with no action. |
 | Stock clip cache (`media/…`) | Until no `assets` row references it for 30 days | Weekly sweep (optional, P2). |

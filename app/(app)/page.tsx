@@ -28,7 +28,7 @@ export default async function Page() {
       <div className="grid-2">
         <section className="card">
           <span className="eyebrow">Daily production quota</span>
-          <p style={{ fontFamily: 'Bricolage Grotesque', fontSize: 32, fontWeight: 700, margin: '8px 0' }}>
+          <p className="font-display" style={{ fontSize: 32, fontWeight: 700, margin: '8px 0' }}>
             {used} <span className="muted" style={{ fontSize: 18 }}>/ {limit} today</span>
           </p>
           <div className="progress"><i style={{ width: `${(used / limit) * 100}%` }} /></div>

@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-23 (prompt 5)
+Last updated: 2026-10-23 (prompt 6)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -66,7 +66,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | Step | Task | Check |
 | --- | --- | --- |
 | 0.31 ✅ | Sign-in, Sign-up, Forgot, Reset pages with forms | Forms submit to the API |
-| 0.32 ✅ | Match Stitch visuals (tokens, card, buttons, Google button) | Side-by-side with Stitch Sign-In |
+| 0.32 ✅ | Match Stitch visuals (tokens, card, buttons, Google button) | Rebuilt from Stitch HTML incl. all interactive states; screenshot-checked |
 | 0.33 ✅ | Map error codes to friendly messages (`INVITE_ONLY`, `WEAK_PASSWORD`, ...) | Each error shows the right text |
 | 0.34 ✅ | Show `?error=` from Google callback on `/sign-in` | Message appears |
 | 0.35 ✅ | Route protection (middleware/layout): signed-out users go to `/sign-in`; signed-in users skip auth pages | Redirects work |

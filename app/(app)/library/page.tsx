@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <main className="page" style={{ display: 'grid', gap: 24 }}>
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <div>
+        <div style={{ display: 'grid', gap: 8 }}>
           <span className="eyebrow">Your reels</span>
           <h1 style={{ fontSize: 36 }}>Library</h1>
         </div>

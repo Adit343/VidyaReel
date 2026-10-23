@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=Hanken+Grotesk:wght@400;500;600&family=Space+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Martian+Mono:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --canvas: #EEF1EC; --surface: #FFFFFF; --muted: #E1E7DF;
@@ -82,3 +86,9 @@ a { color: var(--primary); }
 .table td { padding: 14px 16px; border-top: 1px solid var(--border); vertical-align: middle; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-lg); background: #fff; }
 .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; vertical-align: middle; line-height: 1; font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr; -webkit-font-smoothing: antialiased; }
+.tilted-preview { transform: perspective(1000px) rotate(-3.5deg) translateY(-4px); transition: transform .4s ease; }
+.tilted-preview:hover { transform: perspective(1000px) rotate(-1.5deg) translateY(-8px); }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+.animate-spin-slow { animation: spin-slow 1s linear infinite; }
