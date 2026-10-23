@@ -1,27 +1,29 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-23 (prompt 4)
+Last updated: 2026-10-23 (prompt 5)
 
-Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md); the next step to do is **0.2** (run the app), then the MongoDB connection steps 0.5–0.10.
+Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 code is done; its gate is waiting on the account steps below (marked 👤 there), then Phase 1 (pipeline spike).
 
 Work is organised in phases: see [Phases.md](Phases.md). Current phase: **0 Setup and foundation**.
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
-## Next up (M2 Foundation, finish)
+## Next up: finish Phase 0 (needs you)
 
-- [ ] Provision MongoDB Atlas, set `.env.local`, run the app, and test signup/login/logout/reset/Google end to end
-- [ ] Call `ensureIndexes()` (startup script or health route)
-- [ ] Per-IP rate limits on auth routes (`rate_limits` collection with TTL)
-- [ ] Google Cloud OAuth client (redirect `APP_URL/api/auth/google/callback`)
-- [ ] Resend account / sender for reset emails
-- [ ] `GET /api/me`, route protection (redirect signed-out users to `/sign-in`), sign-out button
-- [ ] Admin: approved-emails CRUD (`/api/admin/approved-emails`), removal revokes sessions
-- [ ] R2 `StorageProvider`, Library page shell
-- [ ] Auth tests: unapproved signup rejected, reset token single-use, removed member blocked
+- [ ] 0.5 Create a MongoDB Atlas M0 cluster, copy `.env.example` to `.env.local`, set `MONGODB_URI`, `ADMIN_EMAIL`, `APP_URL`; then run `npm run db:indexes` and open `/api/health`
+- [ ] 0.27 Google Cloud OAuth client (redirect `APP_URL/api/auth/google/callback`), set `GOOGLE_CLIENT_ID/SECRET`; test Google sign-in and unapproved refusal
+- [ ] 0.26 Resend account + sender (`RESEND_API_KEY`, `EMAIL_FROM`); test a real reset email
+- [ ] 0.42 Cloudflare R2 bucket + API token (`R2_*`); upload a test file and open its signed link
+- [ ] Side-by-side visual check of the auth, Home, Library and Admin screens against Stitch
 - [ ] Optional: email verification for password signups
 
+## Then Phase 1 (pipeline spike)
+
+See Implementation-Steps §Phase 1.
+
 ## Later milestones
+
+
 
 - [ ] M1 spike: Remotion in Vercel Sandbox, R2 upload, Inngest `renderVideo`, ElevenLabs sync, Instagram test post
 - [ ] M3 Script and review: idea suggestions, Gemini storyboard with schema validation, Review screen

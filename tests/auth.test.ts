@@ -11,6 +11,7 @@ import { approvedEmails, passwordResets, sessions, users } from '@/server/db/col
 import { jar } from './setup';
 import { approve, PASSWORD, req } from './helpers';
 
+const caught = async (p: Promise<unknown>) => p.then(() => { throw new Error('expected rejection'); }, (e: AppError) => e);
 const code = async (p: Promise<unknown>) => p.then(() => 'ok', (e: AppError) => e.code);
 
 describe('approved-email gate', () => {
@@ -51,8 +52,8 @@ describe('signup / login / logout', () => {
   it('gives the same error for a wrong password and an unknown email', async () => {
     await approve('asha@example.com');
     await signup({ email: 'asha@example.com', name: 'A', password: PASSWORD });
-    const wrong = await login({ email: 'asha@example.com', password: 'not the password' }).catch((e: AppError) => e);
-    const unknown = await login({ email: 'ghost@example.com', password: PASSWORD }).catch((e: AppError) => e);
+    const wrong = await caught(login({ email: 'asha@example.com', password: 'not the password' }));
+    const unknown = await caught(login({ email: 'ghost@example.com', password: PASSWORD }));
     expect([wrong.code, wrong.status, wrong.message]).toEqual([unknown.code, unknown.status, unknown.message]);
     expect(wrong.status).toBe(401);
   });
@@ -190,7 +191,7 @@ describe('rate limit', () => {
   it('allows 10 attempts a minute per IP and rejects the 11th with a Retry-After', async () => {
     const r = req('http://localhost:3000/api/auth/login', { headers: { 'x-forwarded-for': '1.2.3.4' } });
     for (let i = 0; i < 10; i++) await limitAuth(r);
-    const err = await limitAuth(r).catch((e: AppError) => e);
+    const err = await caught(limitAuth(r));
     expect(err.code).toBe('RATE_LIMITED');
     expect(err.status).toBe(429);
     expect(err.retryAfter).toBeGreaterThan(0);

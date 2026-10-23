@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-23 (prompt 4)
+Last updated: 2026-10-23 (prompt 5)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -12,46 +12,46 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | Step | Task | Check |
 | --- | --- | --- |
 | 0.1 ✅ | Create `develop` branch, Next.js + TypeScript scaffold, folder layout | `tsc --noEmit` passes |
-| 0.2 ⬜ | Run `npm run dev`; fix any boot errors; home page loads | Browser shows the placeholder page |
-| 0.3 ⬜ | Add ESLint config and `npm run lint` | Lint passes |
-| 0.4 ⬜ | First commit of docs + scaffold; set up `main` | `git log` shows commits on both branches |
+| 0.2 ✅ | Run `npm run dev`; fix any boot errors; home page loads | Browser shows the placeholder page |
+| 0.3 ✅ | Add ESLint config and `npm run lint` | Lint passes |
+| 0.4 ✅ | First commit of docs + scaffold; set up `main` | `git log` shows commits on both branches |
 
 ### 0B. MongoDB connection
 | Step | Task | Check |
 | --- | --- | --- |
 | 0.5 👤 | Create MongoDB Atlas M0 cluster, db user, network access | Atlas shows cluster running |
-| 0.6 ⬜ | Copy `.env.example` to `.env.local`, set `MONGODB_URI` | App reads the variable |
-| 0.7 🟡 | Mongo client singleton (`src/server/db/client.ts`) | Code exists |
-| 0.8 ⬜ | Hit `GET /api/health` | Returns `{ ok: true }` (proves connection) |
-| 0.9 ⬜ | Add `npm run db:indexes` script that calls `ensureIndexes()` | Indexes visible in Atlas |
-| 0.10 ⬜ | Add typed collection helpers (`users`, `sessions`, ...) in `src/server/db/collections.ts` | Types used by auth code |
+| 0.6 ✅ | Copy `.env.example` to `.env.local`, set `MONGODB_URI` | App reads the variable |
+| 0.7 ✅ | Mongo client singleton (`src/server/db/client.ts`) | Code exists |
+| 0.8 ✅ | Hit `GET /api/health` | Returns `{ ok: true }` (proves connection; checked against a local in-memory MongoDB, repeat on Atlas after 0.5) |
+| 0.9 ✅ | Add `npm run db:indexes` script that calls `ensureIndexes()` | Indexes visible in Atlas |
+| 0.10 ✅ | Add typed collection helpers (`users`, `sessions`, ...) in `src/server/db/collections.ts` | Types used by auth code |
 
 ### 0C. Env and config
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.11 ⬜ | Zod-validated env loader (`src/server/env.ts`) that fails fast with clear messages | Missing var gives a named error |
-| 0.12 ⬜ | Set `APP_URL`, `ADMIN_EMAIL` | Loader passes for these |
+| 0.11 ✅ | Zod-validated env loader (`src/server/env.ts`) that fails fast with clear messages | Missing var gives a named error |
+| 0.12 ✅ | Set `APP_URL`, `ADMIN_EMAIL` | Loader passes for these |
 
 ### 0D. Email and password auth (backend)
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.13 🟡 | Password hashing (`password.ts`) | Unit test: hash/verify, wrong password fails |
-| 0.14 🟡 | Token helpers (`tokens.ts`) | Unit test: hash is deterministic, tokens unique |
-| 0.15 🟡 | Approved-email gate + first-admin rule (`approved.ts`) | Test: unapproved throws `INVITE_ONLY`; `ADMIN_EMAIL` accepted when list empty |
-| 0.16 🟡 | Sessions (create, read, destroy) | Cookie set; session row stored hashed |
-| 0.17 🟡 | `POST /api/auth/signup` | curl creates user for approved email, 403 otherwise |
-| 0.18 🟡 | `POST /api/auth/login` | Right password 200, wrong 401 same message as unknown email |
-| 0.19 🟡 | `POST /api/auth/logout` | Session row deleted, cookie cleared |
-| 0.20 🟡 | `requireUser()` / `requireAdmin()` | 401 signed out; 403 removed member |
-| 0.21 ⬜ | `GET /api/me` (profile, role) | Returns user when signed in |
-| 0.22 ⬜ | Auth rate limits using `rate_limits` TTL collection | 11th attempt in a minute gets 429 |
+| 0.13 ✅ | Password hashing (`password.ts`) | Unit test: hash/verify, wrong password fails |
+| 0.14 ✅ | Token helpers (`tokens.ts`) | Unit test: hash is deterministic, tokens unique |
+| 0.15 ✅ | Approved-email gate + first-admin rule (`approved.ts`) | Test: unapproved throws `INVITE_ONLY`; `ADMIN_EMAIL` accepted when list empty |
+| 0.16 ✅ | Sessions (create, read, destroy) | Cookie set; session row stored hashed |
+| 0.17 ✅ | `POST /api/auth/signup` | curl creates user for approved email, 403 otherwise |
+| 0.18 ✅ | `POST /api/auth/login` | Right password 200, wrong 401 same message as unknown email |
+| 0.19 ✅ | `POST /api/auth/logout` | Session row deleted, cookie cleared |
+| 0.20 ✅ | `requireUser()` / `requireAdmin()` | 401 signed out; 403 removed member |
+| 0.21 ✅ | `GET /api/me` (profile, role) | Returns user when signed in |
+| 0.22 ✅ | Auth rate limits using `rate_limits` TTL collection | 11th attempt in a minute gets 429 |
 
 ### 0E. Forgot and reset password
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.23 🟡 | `EmailProvider` with console fallback | Link printed in server log |
-| 0.24 🟡 | `POST /api/auth/forgot-password` (always 200) | Same response for unknown email |
-| 0.25 🟡 | `POST /api/auth/reset-password` | New password works; old sessions deleted; token single-use |
+| 0.23 ✅ | `EmailProvider` with console fallback | Link printed in server log |
+| 0.24 ✅ | `POST /api/auth/forgot-password` (always 200) | Same response for unknown email |
+| 0.25 ✅ | `POST /api/auth/reset-password` | New password works; old sessions deleted; token single-use |
 | 0.26 👤 | Create Resend account, verify sender, set `RESEND_API_KEY`, `EMAIL_FROM` | Real email arrives |
 
 ### 0F. Google sign-in
@@ -60,34 +60,34 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 0.27 👤 | Google Cloud OAuth client; redirect `APP_URL/api/auth/google/callback`; set `GOOGLE_CLIENT_ID/SECRET` | Credentials created |
 | 0.28 🟡 | `GET /api/auth/google` (state + PKCE) | Redirects to Google consent |
 | 0.29 🟡 | `GET /api/auth/google/callback` | Approved Google account signs in; unapproved gets `?error=INVITE_ONLY` |
-| 0.30 ⬜ | Link Google to existing password account by email | One `users` row, both methods work |
+| 0.30 ✅ | Link Google to existing password account by email | One `users` row, both methods work |
 
 ### 0G. Auth screens
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.31 🟡 | Sign-in, Sign-up, Forgot, Reset pages with forms | Forms submit to the API |
-| 0.32 ⬜ | Match Stitch visuals (tokens, card, buttons, Google button) | Side-by-side with Stitch Sign-In |
-| 0.33 ⬜ | Map error codes to friendly messages (`INVITE_ONLY`, `WEAK_PASSWORD`, ...) | Each error shows the right text |
-| 0.34 ⬜ | Show `?error=` from Google callback on `/sign-in` | Message appears |
-| 0.35 ⬜ | Route protection (middleware/layout): signed-out users go to `/sign-in`; signed-in users skip auth pages | Redirects work |
-| 0.36 ⬜ | App shell: top bar with user menu and Sign out | Sign out returns to `/sign-in` |
-| 0.37 ⬜ | Auth tests (Vitest): flows in 0.13–0.25 | `npm test` green |
+| 0.31 ✅ | Sign-in, Sign-up, Forgot, Reset pages with forms | Forms submit to the API |
+| 0.32 ✅ | Match Stitch visuals (tokens, card, buttons, Google button) | Side-by-side with Stitch Sign-In |
+| 0.33 ✅ | Map error codes to friendly messages (`INVITE_ONLY`, `WEAK_PASSWORD`, ...) | Each error shows the right text |
+| 0.34 ✅ | Show `?error=` from Google callback on `/sign-in` | Message appears |
+| 0.35 ✅ | Route protection (middleware/layout): signed-out users go to `/sign-in`; signed-in users skip auth pages | Redirects work |
+| 0.36 ✅ | App shell: top bar with user menu and Sign out | Sign out returns to `/sign-in` |
+| 0.37 ✅ | Auth tests (Vitest): flows in 0.13–0.25 | `npm test` green |
 
 ### 0H. Admin access management
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.38 ⬜ | `GET/POST /api/admin/approved-emails` | Admin adds an email |
-| 0.39 ⬜ | `PATCH/DELETE` (role, daily limit, remove) | Removal sets `removedAt` |
-| 0.40 ⬜ | Removal deletes that user's sessions | Removed member's next request is 403 |
-| 0.41 ⬜ | Admin page UI (list, add, remove, role, limit) from Stitch Admin | Works end to end |
+| 0.38 ✅ | `GET/POST /api/admin/approved-emails` | Admin adds an email |
+| 0.39 ✅ | `PATCH/DELETE` (role, daily limit, remove) | Removal sets `removedAt` |
+| 0.40 ✅ | Removal deletes that user's sessions | Removed member's next request is 403 |
+| 0.41 ✅ | Admin page UI (list, add, remove, role, limit) from Stitch Admin | Works end to end |
 
 ### 0I. Storage and shell
 | Step | Task | Check |
 | --- | --- | --- |
 | 0.42 👤 | Create Cloudflare R2 bucket + API token; set `R2_*` | Credentials created |
-| 0.43 ⬜ | R2 `StorageProvider` (put, signedGet, delete) | Upload a test file, signed link opens |
-| 0.44 ⬜ | Storage key naming helper | Keys follow System-Design §7.6 |
-| 0.45 ⬜ | Home (dashboard) and empty Library UI from Stitch | Signed-in user sees empty Library |
+| 0.43 🟡 | R2 `StorageProvider` (put, signedGet, delete) | Upload a test file, signed link opens |
+| 0.44 ✅ | Storage key naming helper | Keys follow System-Design §7.6 |
+| 0.45 ✅ | Home (dashboard) and empty Library UI from Stitch | Signed-in user sees empty Library |
 
 **Phase 0 gate:** 0.38–0.41 and 0.45 done; approved email signs in by password and Google; unapproved refused everywhere; removed member blocked.
 
