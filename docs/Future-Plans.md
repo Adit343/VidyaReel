@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 11)
+Last updated: 2026-10-24 (prompt 12)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
@@ -10,9 +10,9 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 
 ## Next up: Phase 1 (pipeline spike)
 
-- [ ] Confirm Spend Management cap in Vercel (not confirmed yet); check Sandbox usage in the dashboard; try a snapshot to cut the 45 s cold start
-- [ ] 1.5 Wrap the spike script as a `Renderer` implementation (`src/server/render`)
-- [ ] 1.8 and 1.9 `renderVideo` as an Inngest function (start detached, poll, upload to R2, update Mongo), then forced-failure test
+- [ ] Check Sandbox usage in the Vercel dashboard (Spend Management is paid-only; Hobby cannot be billed); try a snapshot to cut the 45 s cold start
+- [ ] Work out how long renders fit in a Hobby function (maxDuration) or split renders by frame range (deploy time)
+- [ ] Clean up sandboxes left by failed attempts
 - [ ] 1.11 to 1.13 ElevenLabs adapter, word times, cue sync, credits per 60 s video
 - [ ] 1.14 👤 Meta developer app + Business test Instagram account, then 1.15 to 1.17
 

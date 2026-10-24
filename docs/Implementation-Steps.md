@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 11)
+Last updated: 2026-10-24 (prompt 12)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -98,12 +98,12 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 1.1 ✅ | Hard-coded 3-scene props JSON (worked on `develop`, no separate branch) | `src/remotion/fixtures/spike-3-scenes.json` |
 | 1.2 🟡 | Remotion Studio runs the composition locally | `npm run remotion:studio`; composition renders via CLI, Studio not opened yet |
 | 1.3 ✅ | 3 templates (written fresh; prototype code is not on this machine) | `npm run remotion:render` gives a 16 s MP4 in about 32 s |
-| 1.4 🟡 | Vercel project linked, Sandbox works on Hobby | Sandbox ran; Spend Management cap still to confirm |
+| 1.4 ✅ | Vercel project linked, Sandbox works on Hobby | Sandbox ran; Spend Management is paid-only, Hobby cannot be billed |
 | 1.5 ✅ | Render in Vercel Sandbox (script `spike:sandbox`; `Renderer` wrapper still to write) | MP4 produced; 20 s render, 77 s cold total |
 | 1.6 ✅ | Upload MP4 from Sandbox to R2 | Signed link returns valid `video/mp4` |
-| 1.7 🟡 | Inngest keys set | Dev UI check pending |
-| 1.8 ⬜ | `renderVideo` as Inngest function: start detached, poll, upload, update Mongo | `generating` → `ready` unattended |
-| 1.9 ⬜ | Forced-failure test | Retries then `failed` |
+| 1.7 ✅ | Inngest keys set; dev server syncs the app | Functions listed (`function_count` 5 at `/api/inngest`) |
+| 1.8 ✅ | `renderVideo` as Inngest function (sandbox steps, render, upload to R2, update Mongo; not detached, see results note) | `rendering` → `ready` in 69 s unattended |
+| 1.9 ✅ | Forced-failure test | Retries twice, then `failed` |
 | 1.10 🟡 | ElevenLabs key + 2 voice ids set (comma-separated in `ELEVENLABS_VOICE_IDS`) | API call pending |
 | 1.11 ⬜ | `VoiceProvider` ElevenLabs adapter + char→word grouping | Word times for one scene |
 | 1.12 ⬜ | Cue-phrase sync (`sync/`) | Elements within 0.3 s of cue word |

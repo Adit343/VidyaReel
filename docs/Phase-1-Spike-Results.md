@@ -25,9 +25,23 @@ Run: `npm run spike:sandbox` (`scripts/spike-sandbox-render.mts`), Vercel Hobby 
 
 Not yet measured: usage shown in the Vercel dashboard (Sandbox CPU/memory), a warm start with a snapshot (the 44.8 s cold start is the main cost to reduce), and a 60 s video. Spend Management cap was not confirmed by the owner before this run; Hobby has hard free-tier limits.
 
-## Experiment 3: Inngest `renderVideo`
+## Experiment 3: Inngest `renderVideo` (PASS)
 
-Not run yet.
+Run: `npm run spike:inngest` (needs `npm run dev`, `npm run inngest:dev` and `npm run remotion:bundle`). The script inserts a `videos` row, sends the `video/render.requested` event and polls MongoDB.
+
+| Case | Result |
+| --- | --- |
+| Normal | `storyboard_ready` -> `rendering` (2 s) -> `ready` (69 s), no manual step. MP4 (351 kB) at `videos/<id>/final.mp4` in R2, size recorded on the video row. |
+| Forced failure (`--fail`) | The render step failed, Inngest retried it twice, then the video ended as `failed` with the plain-language reason (130 s including retry back-off). |
+
+Steps (each one is a separate Inngest step, so none outlives a platform time limit): load video, start sandbox (about 45 s), upload bundle, render, read file and upload to R2 (also sets `ready`), stop sandbox. Step results are saved by Inngest, so a retry of the render does not create a second sandbox.
+
+Findings and limits:
+- Vercel's detached render mode uploads only to Vercel Blob, so the render step runs normally (about 20 s for 16 s of video) and the file is copied to R2 in the next step. A 90 s video would make the render step about 2 minutes, which is more than a single Hobby function invocation allows by default. Before deploying, either set the route's `maxDuration` as high as Hobby permits, or split the render into frame ranges. To be checked at deploy time (Phase 6).
+- The `start-sandbox` step (about 45 s) is close to a 60 s limit; a snapshot would cut it.
+- A failed attempt leaves its sandbox running until the 15 minute timeout set at creation; nothing else cleans it up. Acceptable on the free plan only because runs are rare; revisit with the cleanup job.
+- The Remotion bundle is built ahead of time (`npm run remotion:bundle`, output in git-ignored `build/`), not at request time.
+- Spend Management is a paid Vercel feature; the Hobby plan cannot be billed, and it pauses at its free limits instead.
 
 ## Experiment 4: ElevenLabs voice and sync
 
