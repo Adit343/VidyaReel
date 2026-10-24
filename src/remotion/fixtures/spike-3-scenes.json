@@ -1,0 +1,35 @@
+{
+  "scenes": [
+    {
+      "id": "s1", "order": 0, "template": "title-hook", "needsCheck": false,
+      "title": "Why is the sky blue?",
+      "narration": "Why is the sky blue? It all comes down to sunlight.",
+      "elements": [
+        { "id": "e1", "type": "headline", "text": "Why is the sky blue?", "cue": "sky blue", "startMs": 300 },
+        { "id": "e2", "type": "subhead", "text": "It all comes down to sunlight", "cue": "sunlight", "startMs": 1800 }
+      ],
+      "durationMs": 4000
+    },
+    {
+      "id": "s2", "order": 1, "template": "bullet-reveal", "needsCheck": false,
+      "title": "What happens to sunlight",
+      "narration": "Sunlight holds every colour. Air molecules scatter short blue waves the most. Our eyes see that scattered blue from every direction.",
+      "elements": [
+        { "id": "e1", "type": "bullet", "text": "Sunlight holds every colour", "cue": "every colour", "startMs": 400 },
+        { "id": "e2", "type": "bullet", "text": "Air scatters blue the most", "cue": "scatter", "startMs": 2400 },
+        { "id": "e3", "type": "bullet", "text": "We see blue from every direction", "cue": "every direction", "startMs": 4800 }
+      ],
+      "durationMs": 7000
+    },
+    {
+      "id": "s3", "order": 2, "template": "definition-callout", "needsCheck": false,
+      "title": "Rayleigh scattering",
+      "narration": "This is called Rayleigh scattering: light bouncing off particles much smaller than its wavelength.",
+      "elements": [
+        { "id": "e1", "type": "term", "text": "Rayleigh scattering", "cue": "Rayleigh scattering", "startMs": 400 },
+        { "id": "e2", "type": "definition", "text": "Light bouncing off particles much smaller than its wavelength", "cue": "bouncing", "startMs": 2200 }
+      ],
+      "durationMs": 5000
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-24 (prompt 9)
+Last updated: 2026-10-24 (prompt 10)
 
-Current phase: **0 Setup and foundation** (see [Phases.md](Phases.md)). All code for Phase 0 is written and tested locally; what remains needs your accounts and keys (MongoDB Atlas, Google, Resend, R2).
+Current phase: **1 Pipeline spike** (see [Phases.md](Phases.md) and [Phase-1-Spike-Plan.md](Phase-1-Spike-Plan.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started with the local Remotion work (steps 1.1 to 1.3).
 
 Current progress, done so far. Updated on every prompt. Remaining work is in [Future-Plans.md](Future-Plans.md).
 
@@ -25,7 +25,8 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 | Auth screens (match Stitch) | Rebuilt from the Stitch HTML of Log In, Sign-Up, Forgot Password and Reset Password with Tailwind (tokens in `tailwind.config.ts`) and the exact art panels; every interactive state is implemented and was screenshot-checked in headless Chrome: Log In (default, focus, loading, wrong credentials, suspended, rate limited with countdown, returning from reset, Google cancelled); Sign-Up (focus "editing" tag, weak, common, contains-email, strong meter, loading, rate-limit banner with Dismiss, closed/invite-only banner); Forgot (default, focus, loading, invalid email, "Check your email" with resend countdown, rate limited); Reset (default, focus, weak, common, contains email, mismatch, loading, success, expired/used, rate limited). Password rules (min 10, common, contains email) shared by UI and server (`src/lib/password-rules.ts`). Reset links now last one hour (as in the design); "Keep me signed in" sets a persistent cookie. Not implemented: "Email not verified" / "Check your email" verification screens (no email verification yet) and compliance badges from the mock (FERPA/SOC 2) which we cannot claim. |
 | UI | Route groups: `(auth)` pages (sign-in, sign-up, forgot, reset; signed-in users redirect to `/`; friendly error text; Google `?error=` shown) and `(app)` pages (signed-out go to `/sign-in`): top bar with user menu and Sign out, Home dashboard, empty Library, Admin (admins only). |
 | Storage | `createR2Storage()` (S3-compatible put / signedGet / delete) and `storageKey` helpers following System-Design §7.6. Key helper unit-tested; R2 calls not run against a real bucket. |
-| Workflows / Remotion | Inngest function stubs, Remotion composition skeleton, provider interfaces (unchanged). |
+| Workflows | Inngest function stubs, provider interfaces (unchanged). |
+| Remotion (Phase 1, steps 1.1 to 1.3) | Hard-coded 3-scene fixture `src/remotion/fixtures/spike-3-scenes.json` (validated by the storyboard zod schema). Templates `title-hook`, `bullet-reveal`, `definition-callout` in `src/remotion/templates/`; elements spring in at their `startMs` cue time (falling back to an even spread), and the bullet scene shows its title from frame 0 so it is never empty. Design fonts (Bricolage Grotesque, Hanken Grotesk) load via `@remotion/google-fonts`. `remotion.config.ts` maps `@/` for the bundler. Local render works: `npm run remotion:render` makes a 16 s, 1080x1920, 30 fps MP4 (553 kB) in about 32 s on this laptop (output in git-ignored `out/`); Studio via `npm run remotion:studio`. Stills of each scene checked by eye. Remotion CLI pinned to 4.0.538, matching `remotion`. Narration audio and captions are not in these templates yet (Phase 1 experiment 4, Phase 3). |
 | API | Auth, `/api/me`, admin approved-emails, health done; the rest return 501. |
 
 ## Verified against real services (2026-10-24)
@@ -37,6 +38,10 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 - Database isolation: the first `MONGODB_URI` had no database name, so the driver used `test`, which holds another project's data on the same cluster. Vidyareel now uses its own `vidyareel` database (name in the URI, and `db()` falls back to `vidyareel`, never `test`). Re-verified there: signup, login, `/api/me`, admin add, member signup, removal (member's session ends, relogin 403).
 - Leftovers from the first run in `test` (not Vidyareel's database): empty collections `approved_emails`, `videos`, `render_jobs`, `posts`, `usage_log`, `rate_limits`, `oauth_states`, `password_resets` (a few rows) and indexes `email_1`, `googleId_1` on `users`. No existing documents were changed. Cleanup awaits the owner's go-ahead.
 - Google sign-in shows `redirect_uri_mismatch`: `http://localhost:3000/api/auth/google/callback` must be added to Authorized redirect URIs of the OAuth client in Google Cloud.
+
+## Phase 0 sign-off (2026-10-24)
+
+You confirmed the real reset email arrives and the link works, and Google sign-in as `shahadit68@gmail.com` lands on Home as admin. Together with the checks above this meets the Phase 0 gate.
 
 ## Not yet verified
 

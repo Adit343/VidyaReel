@@ -1,26 +1,31 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 9)
+Last updated: 2026-10-24 (prompt 10)
 
-Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 code is done; its gate is waiting on the account steps below (marked 👤 there), then Phase 1 (pipeline spike).
+Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **0 Setup and foundation**.
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **1 Pipeline spike**.
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
-## Next up: finish Phase 0 (needs you)
+## Next up: Phase 1 (pipeline spike)
 
-- [ ] 0.28/0.29 Complete Google sign-in in a browser (consent screen needs a human); test unapproved Google account refusal
-- [ ] Add `http://localhost:3000/api/auth/google/callback` to the Google OAuth client's redirect URIs (error `redirect_uri_mismatch`), then retest Google
+- [ ] 1.4 👤 Vercel account, Sandbox access, Spend Management limits (needed before 1.5)
+- [ ] 1.5 `Renderer` implementation in Vercel Sandbox; record render time
+- [ ] 1.6 Upload the MP4 from the Sandbox to R2; signed link plays
+- [ ] 1.7 👤 Inngest account/dev server, then 1.8 and 1.9 (`renderVideo`, forced failure)
+- [ ] 1.10 👤 ElevenLabs key + 2 voice ids, then 1.11 to 1.13
+- [ ] 1.14 👤 Meta developer app + Business test Instagram account, then 1.15 to 1.17
+
+## Phase 0 leftovers (not blocking)
+
+- [ ] Test that an unapproved Google account is refused (needs a second Google account)
 - [ ] Clean up leftovers Vidyareel created in the other project's `test` database (needs owner approval)
-- [ ] 0.26 Confirm the real reset email arrives and the link resets the password; make forgot-password log send failures; verify a domain before inviting other members
+- [ ] 0.26 Make forgot-password log send failures; verify a sending domain before inviting other members
 - [ ] Side-by-side visual check of Home, Library and Admin against Stitch (auth screens done)
 - [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages, mobile Home
 - [ ] Optional: email verification for password signups (Stitch has "Check your email", "Email not verified" and verification states ready to build)
 
-## Then Phase 1 (pipeline spike)
-
-See Implementation-Steps §Phase 1.
 
 ## Later milestones
 

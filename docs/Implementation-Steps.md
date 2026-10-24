@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 9)
+Last updated: 2026-10-24 (prompt 10)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -52,14 +52,14 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 0.23 ✅ | `EmailProvider` with console fallback | Link printed in server log |
 | 0.24 ✅ | `POST /api/auth/forgot-password` (always 200) | Same response for unknown email |
 | 0.25 ✅ | `POST /api/auth/reset-password` | New password works; old sessions deleted; token single-use |
-| 0.26 👤 | Resend key set; `EMAIL_FROM` must be a verified sender (gmail rejected) | Real email arrives |
+| 0.26 ✅ | Resend key set; `EMAIL_FROM=onboarding@resend.dev` (gmail is rejected; needs a verified domain for other recipients) | Real email arrives (confirmed) |
 
 ### 0F. Google sign-in
 | Step | Task | Check |
 | --- | --- | --- |
 | 0.27 ✅ | Google Cloud OAuth client; redirect `APP_URL/api/auth/google/callback`; set `GOOGLE_CLIENT_ID/SECRET` | Credentials created |
-| 0.28 🟡 | `GET /api/auth/google` (state + PKCE) | Redirects to Google consent |
-| 0.29 🟡 | `GET /api/auth/google/callback` | Approved Google account signs in; unapproved gets `?error=INVITE_ONLY` |
+| 0.28 ✅ | `GET /api/auth/google` (state + PKCE) | Redirects to Google consent |
+| 0.29 ✅ | `GET /api/auth/google/callback` | Approved Google account signs in; unapproved gets `?error=INVITE_ONLY` |
 | 0.30 ✅ | Link Google to existing password account by email | One `users` row, both methods work |
 
 ### 0G. Auth screens
@@ -95,9 +95,9 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 
 | Step | Task | Check |
 | --- | --- | --- |
-| 1.1 ⬜ | Spike branch; hard-coded 3-scene props JSON | File committed |
-| 1.2 ⬜ | Remotion Studio runs the composition locally | Preview plays |
-| 1.3 ⬜ | Port 3 templates from the prototype (title-hook, bullet-reveal, definition-callout) | Local render to MP4 |
+| 1.1 ✅ | Hard-coded 3-scene props JSON (worked on `develop`, no separate branch) | `src/remotion/fixtures/spike-3-scenes.json` |
+| 1.2 🟡 | Remotion Studio runs the composition locally | `npm run remotion:studio`; composition renders via CLI, Studio not opened yet |
+| 1.3 ✅ | 3 templates (written fresh; prototype code is not on this machine) | `npm run remotion:render` gives a 16 s MP4 in about 32 s |
 | 1.4 👤 | Vercel account, Sandbox access, Spend Management set | Dashboard shows limits |
 | 1.5 ⬜ | `Renderer` implementation: render in Vercel Sandbox | MP4 produced; render time recorded |
 | 1.6 ⬜ | Upload MP4 from Sandbox to R2 | Signed link plays |
