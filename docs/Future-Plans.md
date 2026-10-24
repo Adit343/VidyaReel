@@ -1,14 +1,16 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 15)
+Last updated: 2026-10-24 (prompt 16)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **1 Pipeline spike**.
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **2 Storyboard AI and Review** (Phase 1 complete).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
-## Next up: Phase 1 (pipeline spike)
+## Next up: Phase 2 (storyboard AI and Review)
+
+Phase 1 leftovers to schedule later:
 
 - [ ] Check Sandbox usage in the Vercel dashboard (Spend Management is paid-only; Hobby cannot be billed); try a snapshot to cut the 45 s cold start
 - [ ] Work out how long renders fit in a Hobby function (maxDuration) or split renders by frame range (deploy time)
@@ -16,8 +18,7 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] Pick the two free stock voices to ship (tried Alice and Daniel; listen to `out/voice/*.mp3`) and set `ELEVENLABS_VOICE_IDS`
 - [ ] Wire voice and sync into the render steps and templates (audio in the video, captions): Phase 3/4
 - [ ] Monthly voice-credit guard (about 10 videos of 60 s per month on the free plan): step 6.2
-- [ ] 1.16 Switch the test Instagram account to Creator, rerun `npm run spike:instagram -- --publish` (new token if needed) and record the result
-- [ ] 1.17 Write the Phase 1 decision note: architecture stands (sandbox render, Inngest, R2, ElevenLabs sync, Instagram all pass) with the free-tier limits found
+- [ ] Phase 1 is complete; start Phase 2 (see Implementation-Steps §Phase 2)
 
 ## Phase 0 leftovers (not blocking)
 

@@ -59,7 +59,7 @@ First run showed first elements 0.5 to 1 s early. Cause: design rule "first elem
 
 Credit use: 281 characters of narration (18.3 s of audio) cost 281 credits, about 15 credits per audio second. A 60 s video is therefore about 920 credits, so the 10,000 monthly free credits give **about 10 videos of 60 s** (about 20 at 30 s). This is the real monthly limit, not the daily cap. The monthly voice-credit guard (step 6.2) is needed.
 
-## Experiment 5: Instagram (Business account: PASS; Creator: not tested yet)
+## Experiment 5: Instagram (Business and Creator accounts: PASS)
 
 Run: `npm run spike:instagram` (`scripts/spike-instagram.mts`), with `-- --publish` to post. Instagram API with Instagram Login, Graph version v23.0, token from the app's "Generate token" button (app in Development mode, account added as Instagram Tester). Permissions used: `instagram_business_basic`, `instagram_business_content_publish`.
 
@@ -75,4 +75,25 @@ Findings:
 - Development mode needs no Meta app review for accounts with a role on the app. Letting other educators connect their own accounts needs the app live, which needs review, a privacy policy URL and business verification (Phase 5/6). All free.
 - The Meta developer registration was blocked on the laptop browser ("device you don't usually use") and passed from the phone browser after a day.
 - The Meta dashboard's "required" permissions list only messaging permissions; `instagram_business_content_publish` is added separately under Permissions and features.
-- Creator accounts: still to test (System-Design open item). Switch the test account to Creator in Instagram and rerun; a new token may be needed.
+- **Creator accounts work.** After switching the same account to Creator (reported as `MEDIA_CREATOR`) and generating a new token, the same script published a second Reel (`https://www.instagram.com/reel/De4qdNZDrcJ/`). The container took 83 s to finish this time (24 to 29 s before), so allow for several minutes of polling. V1 can accept both Business and Creator accounts; this closes the System-Design open item.
+- Switching the account type needed a freshly generated token.
+
+## Decision (step 1.17): the architecture stands
+
+All five experiments passed on free tiers (Vercel Hobby, R2, Inngest, ElevenLabs free, Instagram in Development mode). No fallback server is needed.
+
+| Experiment | Result |
+| --- | --- |
+| 1 Render in Vercel Sandbox | Pass: 20 s render of a 16 s video, 77 s cold total |
+| 2 Upload to R2, signed link | Pass |
+| 3 Inngest `renderVideo` | Pass: `ready` unattended in 69 s; forced failure retries then `failed` |
+| 4 Voice and cue sync | Pass with free stock voices: worst offset 207 ms (target 300 ms) |
+| 5 Instagram | Pass on Business and Creator accounts |
+
+Changes to the design that came out of the spike:
+1. **Voices:** the Indian-accent library voices need a paid ElevenLabs plan through the API, so V1 ships with free stock voices (a voice probe stays in the design).
+2. **First-element sync rule:** within the first second, not 4 frames (System-Design 7.3 updated).
+3. **Voice credits are the binding limit:** about 15 credits per audio second, so about 10 videos of 60 s a month on the free 10,000 credits. The monthly guard (step 6.2) is essential, and 30 s videos should be the default suggestion.
+4. **Render step length:** a long video makes the render step longer than one Hobby function call may allow; plan a `maxDuration` setting or frame-range splitting when deploying, and use a Sandbox snapshot to cut the 45 s cold start.
+5. **Upload path:** the file is read out of the Sandbox and written to R2 by our code (the detached mode only supports Vercel Blob).
+6. **Instagram:** a signed R2 URL works as the video source. Instagram API with Instagram Login, Development mode for the team; going live for other accounts needs Meta app review (free).

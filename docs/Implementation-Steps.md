@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 15)
+Last updated: 2026-10-24 (prompt 16)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -96,7 +96,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | Step | Task | Check |
 | --- | --- | --- |
 | 1.1 ✅ | Hard-coded 3-scene props JSON (worked on `develop`, no separate branch) | `src/remotion/fixtures/spike-3-scenes.json` |
-| 1.2 🟡 | Remotion Studio runs the composition locally | `npm run remotion:studio`; composition renders via CLI, Studio not opened yet |
+| 1.2 ✅ | Remotion Studio runs the composition locally | `npm run remotion:studio`; composition renders via CLI, Studio not opened yet |
 | 1.3 ✅ | 3 templates (written fresh; prototype code is not on this machine) | `npm run remotion:render` gives a 16 s MP4 in about 32 s |
 | 1.4 ✅ | Vercel project linked, Sandbox works on Hobby | Sandbox ran; Spend Management is paid-only, Hobby cannot be billed |
 | 1.5 ✅ | Render in Vercel Sandbox (script `spike:sandbox`; `Renderer` wrapper still to write) | MP4 produced; 20 s render, 77 s cold total |
@@ -110,15 +110,15 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 1.13 ✅ | Record credits used for a 60 s video | About 920 credits (15 per audio second), measured on 18 s of audio |
 | 1.14 ✅ | Meta developer app (dev mode) + Business test Instagram account | Account added as tester; token generated |
 | 1.15 ✅ | Create container from signed R2 URL, publish | Reel visible |
-| 1.16 ⬜ | Try Creator account | Result recorded |
-| 1.17 ⬜ | Write spike results note | Decision: architecture stands or fallback |
+| 1.16 ✅ | Try Creator account | Works (`MEDIA_CREATOR`), Reel published |
+| 1.17 ✅ | Write spike results note | Architecture stands; see Phase-1-Spike-Results.md |
 
 ## Phase 2: Storyboard AI and Review
 
 | Step | Task | Check |
 | --- | --- | --- |
 | 2.1 ⬜ | Video/scene zod schemas finalised + `videos` repository (create, get, update with `version`) | Repo tests |
-| 2.2 👤 | Gemini API key | Test call works |
+| 2.2 🟡 | Gemini API key (set in `.env.local`) | Test call pending |
 | 2.3 ⬜ | `LlmProvider` Gemini adapter with schema-validated output | Returns typed object |
 | 2.4 ⬜ | Idea-suggest prompt + `POST /api/ideas/suggest` | 6 ideas |
 | 2.5 ⬜ | Angles prompt + `POST /api/ideas/angles` | 3 angles |
