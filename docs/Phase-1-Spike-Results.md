@@ -59,6 +59,20 @@ First run showed first elements 0.5 to 1 s early. Cause: design rule "first elem
 
 Credit use: 281 characters of narration (18.3 s of audio) cost 281 credits, about 15 credits per audio second. A 60 s video is therefore about 920 credits, so the 10,000 monthly free credits give **about 10 videos of 60 s** (about 20 at 30 s). This is the real monthly limit, not the daily cap. The monthly voice-credit guard (step 6.2) is needed.
 
-## Experiment 5: Instagram
+## Experiment 5: Instagram (Business account: PASS; Creator: not tested yet)
 
-Not run yet (Meta app and test account not created).
+Run: `npm run spike:instagram` (`scripts/spike-instagram.mts`), with `-- --publish` to post. Instagram API with Instagram Login, Graph version v23.0, token from the app's "Generate token" button (app in Development mode, account added as Instagram Tester). Permissions used: `instagram_business_basic`, `instagram_business_content_publish`.
+
+| Step | Result |
+| --- | --- |
+| Account type reported | BUSINESS |
+| Create REELS container from a signed R2 URL (private bucket, 1 h link) | Accepted; Instagram fetched the video itself |
+| Container status | `IN_PROGRESS` then `FINISHED` in 24 to 29 s |
+| Publish | PASSED, 31 s from container creation; permalink returned (`https://www.instagram.com/reel/De4psPxj0VT/`) |
+
+Findings:
+- A signed R2 URL is enough; no public bucket or custom domain is needed.
+- Development mode needs no Meta app review for accounts with a role on the app. Letting other educators connect their own accounts needs the app live, which needs review, a privacy policy URL and business verification (Phase 5/6). All free.
+- The Meta developer registration was blocked on the laptop browser ("device you don't usually use") and passed from the phone browser after a day.
+- The Meta dashboard's "required" permissions list only messaging permissions; `instagram_business_content_publish` is added separately under Permissions and features.
+- Creator accounts: still to test (System-Design open item). Switch the test account to Creator in Instagram and rerun; a new token may be needed.

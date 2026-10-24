@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 14)
+Last updated: 2026-10-24 (prompt 15)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
@@ -16,7 +16,8 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] Pick the two free stock voices to ship (tried Alice and Daniel; listen to `out/voice/*.mp3`) and set `ELEVENLABS_VOICE_IDS`
 - [ ] Wire voice and sync into the render steps and templates (audio in the video, captions): Phase 3/4
 - [ ] Monthly voice-credit guard (about 10 videos of 60 s per month on the free plan): step 6.2
-- [ ] 1.14 👤 Meta developer registration is blocked by Meta's device check (retry from the phone or a known browser); then create the app, add the Instagram tester, generate a token; then run `npm run spike:instagram` (1.15), try a Creator account (1.16) and write the decision note (1.17)
+- [ ] 1.16 Switch the test Instagram account to Creator, rerun `npm run spike:instagram -- --publish` (new token if needed) and record the result
+- [ ] 1.17 Write the Phase 1 decision note: architecture stands (sandbox render, Inngest, R2, ElevenLabs sync, Instagram all pass) with the free-tier limits found
 
 ## Phase 0 leftovers (not blocking)
 
