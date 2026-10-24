@@ -147,12 +147,15 @@ describe('google sign-in', () => {
     const q = await begin();
     expect(q.get('code_challenge_method')).toBe('S256');
     expect(q.get('state')).toBeTruthy();
+    expect(q.get('prompt')).toBe('select_account'); // always show the account chooser
     expect(q.get('redirect_uri')).toBe('http://localhost:3000/api/auth/google/callback');
   });
   it('refuses an unapproved Google account', async () => {
     mockGoogle({ sub: 'g1', email: 'nobody@example.com', email_verified: true });
     const state = (await begin()).get('state')!;
-    expect(await code(finishGoogle('c', state))).toBe('INVITE_ONLY');
+    const err = (await finishGoogle('c', state).catch((e) => e)) as AppError;
+    expect(err.code).toBe('INVITE_ONLY');
+    expect(err.details).toEqual({ email: 'nobody@example.com' }); // the sign-in screen names the refused account
     expect(await users().countDocuments()).toBe(0);
     vi.unstubAllGlobals();
   });

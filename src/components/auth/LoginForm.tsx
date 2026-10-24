@@ -4,14 +4,19 @@ import { useState } from 'react';
 import { friendlyError } from '@/lib/error-messages';
 import { Banner, GoogleButton, inputClass, OrDivider, PasswordInput, postJson, SubmitButton, useCountdown } from './primitives';
 
-type Notice = { code: string; retryAfter?: number } | null;
+type Notice = { code: string; retryAfter?: number; email?: string } | null;
 
 function Notices({ notice, resetDone }: { notice: Notice; resetDone: boolean }) {
   const countdown = useCountdown(notice?.code === 'RATE_LIMITED' ? notice.retryAfter ?? 60 : null);
   if (notice) {
     switch (notice.code) {
       case 'INVALID_CREDENTIALS': return <Banner tone="error" icon="error">That email and password don&apos;t match.</Banner>;
-      case 'NOT_APPROVED': case 'INVITE_ONLY': return <Banner tone="neutral" icon="block">This account is suspended or not invited. Contact the admin.</Banner>;
+      case 'NOT_APPROVED': case 'INVITE_ONLY':
+        return (
+          <Banner tone="neutral" icon="block">
+            {notice.email ? <><strong>{notice.email}</strong> is not on the invite list (or its access was removed). Ask the admin to invite it, or choose a different Google account.</> : 'This account is suspended or not invited. Contact the admin.'}
+          </Banner>
+        );
       case 'RATE_LIMITED':
         return (
           <div role="status" className="flex items-center justify-between gap-3 rounded-xl border border-solstice-border bg-white p-3.5 text-solstice-charcoal shadow-sm">
@@ -27,8 +32,8 @@ function Notices({ notice, resetDone }: { notice: Notice; resetDone: boolean }) 
   return null;
 }
 
-export function LoginForm({ initialError, resetDone }: { initialError?: string; resetDone?: boolean }) {
-  const [notice, setNotice] = useState<Notice>(initialError ? { code: initialError } : null);
+export function LoginForm({ initialError, initialEmail, resetDone }: { initialError?: string; initialEmail?: string; resetDone?: boolean }) {
+  const [notice, setNotice] = useState<Notice>(initialError ? { code: initialError, email: initialEmail } : null);
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
 

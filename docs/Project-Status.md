@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-25 (prompt 19)
+Last updated: 2026-10-25 (prompt 20)
 
 Current phase: **Phase 2 (storyboard AI and Review) is done and signed off (2026-10-25)**; music tracks and voice samples (step 2.18) wait for Phase 3, which has not started. **Phase 1 (pipeline spike) is complete**: all five experiments passed and the architecture stands (decision in [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started: local Remotion work (1.1 to 1.3) the Vercel Sandbox render to R2 (1.4 to 1.6), the Inngest `renderVideo` workflow (1.7 to 1.9) and the ElevenLabs voice and cue sync (1.10 to 1.13) are done; see [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md).
 
@@ -52,6 +52,10 @@ You confirmed the real reset email arrives and the link works, and Google sign-i
 ## Phase 2 sign-off (2026-10-25)
 
 You tried Create and Review in the browser with the real Gemini model and confirmed they work. The Phase 2 gate was met: 10 of 10 topics gave valid storyboards, bad output retries once then fails cleanly, and edits autosave and survive a refresh.
+
+## Google sign-in with a second account (2026-10-25)
+
+Choosing a Google account that is not on the invite list ended in the generic "suspended or not invited" banner, which looked like the app was reading another project's users. It is not: Vidyareel only reads its own `vidyareel` database (it holds just the admin, one member and one removed test member), and the invite-only gate refused the account. Fixes: Google now always shows the account chooser (`prompt=select_account`), and the sign-in banner names the refused account ("x@y is not on the invite list (or its access was removed). Ask the admin to invite it, or choose a different Google account."). To let an account in, add its email under Admin, Invite list. Tests: 82 (the Google tests now check both).
 
 ## Not yet verified
 

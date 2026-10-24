@@ -18,7 +18,7 @@ export async function startGoogle(): Promise<string> {
   });
   const params = new URLSearchParams({
     client_id: process.env.GOOGLE_CLIENT_ID!, redirect_uri: redirectUri(), response_type: 'code',
-    scope: 'openid email profile', state,
+    scope: 'openid email profile', state, prompt: 'select_account',
     code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'), code_challenge_method: 'S256',
   });
   return `${AUTH_URL}?${params}`;
@@ -44,7 +44,10 @@ export async function finishGoogle(code: string, state: string, userAgent?: stri
   if (!info.email || !info.email_verified) throw new AppError('INVALID', 'Google email is not verified.', 400);
 
   const email = normalizeEmail(info.email);
-  await assertApproved(email);
+  // Name the refused account so the sign-in screen can say which Google account was used.
+  await assertApproved(email).catch((e) => {
+    throw e instanceof AppError && e.code === 'INVITE_ONLY' ? new AppError(e.code, e.message, e.status, undefined, { email }) : e;
+  });
 
   const users = db().collection('users');
   const now = new Date();
