@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-24 (prompt 7)
+Last updated: 2026-10-24 (prompt 8)
 
 Current phase: **0 Setup and foundation** (see [Phases.md](Phases.md)). All code for Phase 0 is written and tested locally; what remains needs your accounts and keys (MongoDB Atlas, Google, Resend, R2).
 
@@ -33,6 +33,10 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 - Atlas: `npm run db:indexes` ok, `/api/health` returns ok, unapproved signup refused with 403 `INVITE_ONLY`, wrong login 401, forgot-password 200.
 - R2: `scripts/r2-smoke.ts` uploaded a file, signed link returned the content (200), unsigned URL refused (400), deleted object gives 404.
 - Google: `/api/auth/google` redirects to Google consent with the right redirect URI, state and PKCE. The consent screen itself still needs a human in a browser.
+
+- Database isolation: the first `MONGODB_URI` had no database name, so the driver used `test`, which holds another project's data on the same cluster. Vidyareel now uses its own `vidyareel` database (name in the URI, and `db()` falls back to `vidyareel`, never `test`). Re-verified there: signup, login, `/api/me`, admin add, member signup, removal (member's session ends, relogin 403).
+- Leftovers from the first run in `test` (not Vidyareel's database): empty collections `approved_emails`, `videos`, `render_jobs`, `posts`, `usage_log`, `rate_limits`, `oauth_states`, `password_resets` (a few rows) and indexes `email_1`, `googleId_1` on `users`. No existing documents were changed. Cleanup awaits the owner's go-ahead.
+- Google sign-in shows `redirect_uri_mismatch`: `http://localhost:3000/api/auth/google/callback` must be added to Authorized redirect URIs of the OAuth client in Google Cloud.
 
 ## Not yet verified
 

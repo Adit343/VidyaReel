@@ -10,4 +10,6 @@ export function getClient() {
   return globalForMongo._mongo;
 }
 
-export const db = () => getClient().db();
+// Never fall back to the driver's default `test` database (shared clusters hold other projects).
+const uriDbName = (uri: string) => decodeURIComponent(new URL(uri.replace('mongodb+srv:', 'https:').replace('mongodb:', 'http:')).pathname.slice(1));
+export const db = () => getClient().db(uriDbName(env().MONGODB_URI) || 'vidyareel');
