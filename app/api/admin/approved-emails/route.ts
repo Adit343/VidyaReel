@@ -6,7 +6,7 @@ import { parseJson } from '@/server/auth/http';
 export async function GET(req: Request) {
   try {
     await requireAdmin(req);
-    return Response.json({ items: await listApproved() });
+    return Response.json({ items: await listApproved({ includeRemoved: true }) });
   } catch (e) { return errorResponse(e); }
 }
 

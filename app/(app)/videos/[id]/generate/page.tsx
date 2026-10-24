@@ -1,8 +1,5 @@
+import { ComingSoon } from '@/components/shell/ComingSoon';
+
 export default function Page() {
-  return (
-    <main className="page">
-      <h1>Step 3: Generate</h1>
-      <p>Progress, player, fix a scene, download (Stitch: Create Step 3).</p>
-    </main>
-  );
+  return <ComingSoon icon="movie_edit" title="This step is not available yet" text="Reviewing, generating and posting a video arrive in the next releases." />;
 }

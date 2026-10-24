@@ -5,7 +5,7 @@ import { db } from './client';
 
 export type UserDoc = {
   _id: ObjectId; email: string; name: string; passwordHash?: string; googleId?: string;
-  emailVerifiedAt?: Date; timeZone: string; createdAt: Date; updatedAt: Date;
+  emailVerifiedAt?: Date; notificationsReadAt?: Date; timeZone: string; createdAt: Date; updatedAt: Date;
 };
 export type SessionDoc = { _id: ObjectId; userId: ObjectId; tokenHash: string; expiresAt: Date; userAgent?: string; createdAt: Date };
 export type PasswordResetDoc = { _id: ObjectId; userId: ObjectId; tokenHash: string; expiresAt: Date; usedAt?: Date };

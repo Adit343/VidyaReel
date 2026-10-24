@@ -87,7 +87,25 @@ a { color: var(--primary); }
 .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-lg); background: #fff; }
 .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
-.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; vertical-align: middle; line-height: 1; font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr; -webkit-font-smoothing: antialiased; }
+/* In a layer so Tailwind size utilities (text-[18px]) can override the default size. */
+@layer components {
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; vertical-align: middle; line-height: 1; font-size: 20px; font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; letter-spacing: normal; text-transform: none; white-space: nowrap; direction: ltr; -webkit-font-smoothing: antialiased; }
+  .material-symbols-outlined.fill-icon { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+}
+/* Stitch library screen: card lift, button lift, sage shimmer */
+.card-lift { transition: transform .18s cubic-bezier(.16, 1, .3, 1), box-shadow .18s cubic-bezier(.16, 1, .3, 1); }
+.card-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -6px rgba(20, 90, 65, .08); border-color: #B9C5B5; }
+.btn-lift { transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; }
+.btn-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -4px rgba(20, 90, 65, .18); }
+.btn-lift:active { transform: scale(.99); }
+@keyframes sageShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.shimmer-sage { background: linear-gradient(90deg, #E6EBE4 25%, #F4F7F2 50%, #E6EBE4 75%); background-size: 200% 100%; animation: sageShimmer 1.8s infinite linear; }
+@keyframes atelierPulse { 0%, 100% { opacity: .85; } 50% { opacity: .45; } }
+.skeleton-shimmer { animation: atelierPulse 1.8s cubic-bezier(.4, 0, .6, 1) infinite; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.overlay-ambient-shadow { box-shadow: 0 8px 24px -4px rgba(15, 42, 32, .08); }
+.hero-atelier-shadow { box-shadow: 0 12px 32px -8px rgba(20, 90, 65, .08); }
 .tilted-preview { transform: perspective(1000px) rotate(-3.5deg) translateY(-4px); transition: transform .4s ease; }
 .tilted-preview:hover { transform: perspective(1000px) rotate(-1.5deg) translateY(-8px); }
 @keyframes spin-slow { to { transform: rotate(360deg); } }

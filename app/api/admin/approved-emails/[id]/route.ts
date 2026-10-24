@@ -1,5 +1,5 @@
 import { errorResponse } from '@/lib/errors';
-import { patchSchema, removeApproved, updateApproved } from '@/server/admin/approved-emails';
+import { patchSchema, removeApproved, removeSchema, updateApproved } from '@/server/admin/approved-emails';
 import { requireAdmin } from '@/server/auth';
 import { assertSameOrigin, parseJson } from '@/server/auth/http';
 
@@ -16,7 +16,9 @@ export async function DELETE(req: Request, { params }: Ctx) {
   try {
     assertSameOrigin(req);
     const admin = await requireAdmin(req);
-    await removeApproved((await params).id, admin.id);
+    const body = req.headers.get('content-length') === '0' ? {} : await req.json().catch(() => ({}));
+    const parsed = removeSchema.safeParse(body);
+    await removeApproved((await params).id, admin.id, parsed.success ? parsed.data : {});
     return new Response(null, { status: 204 });
   } catch (e) { return errorResponse(e); }
 }

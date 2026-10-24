@@ -1,8 +1,5 @@
+import { ComingSoon } from '@/components/shell/ComingSoon';
+
 export default function Page() {
-  return (
-    <main className="page">
-      <h1>Settings</h1>
-      <p>Instagram connection (Stitch: Settings).</p>
-    </main>
-  );
+  return <ComingSoon icon="tune" title="Settings" text="Sign-in methods and your Instagram connection will live here. This screen arrives with the posting release." />;
 }

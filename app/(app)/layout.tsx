@@ -1,15 +1,20 @@
-import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
 import { AppShell } from '@/components/AppShell';
-import { getCurrentUser } from '@/server/auth/current-user';
-import { users } from '@/server/db/collections';
+import { getAppContext } from '@/server/app-data';
 
 export const dynamic = 'force-dynamic';
 
 // Signed-out (or removed) users go to /sign-in.
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
-  if (!user) redirect('/sign-in');
-  const account = await users().findOne({ _id: new ObjectId(user.id) });
-  return <AppShell user={{ name: account?.name ?? user.email, email: user.email, role: user.role }}>{children}</AppShell>;
+  const ctx = await getAppContext();
+  if (!ctx) redirect('/sign-in');
+  return (
+    <AppShell
+      user={{ name: ctx.name, email: ctx.user.email, role: ctx.user.role }}
+      quota={{ used: ctx.quota.used, limit: ctx.quota.limit }}
+      notices={ctx.notices}
+    >
+      {children}
+    </AppShell>
+  );
 }

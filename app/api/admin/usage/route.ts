@@ -1,7 +1,10 @@
 import { errorResponse } from '@/lib/errors';
-import { AppError } from '@/lib/errors';
+import { getUsage } from '@/server/admin/usage';
+import { requireAdmin } from '@/server/auth';
 
-// TODO: see docs/API-Design.md
-export async function GET(_req: Request) {
-  return errorResponse(new AppError('INVALID', 'Not implemented', 501));
+export async function GET(req: Request) {
+  try {
+    await requireAdmin(req);
+    return Response.json(await getUsage());
+  } catch (e) { return errorResponse(e); }
 }

@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 16)
+Last updated: 2026-10-25 (prompt 17)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -88,6 +88,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 0.43 ✅ | R2 `StorageProvider` (put, signedGet, delete) | Verified on real R2 (`scripts/r2-smoke.ts`) |
 | 0.44 ✅ | Storage key naming helper | Keys follow System-Design §7.6 |
 | 0.45 ✅ | Home (dashboard) and empty Library UI from Stitch | Signed-in user sees empty Library |
+| 0.46 ✅ | UI audit: rebuild app shell, Home, Library and Admin from the Stitch HTML and check every state in headless Chrome against the Stitch render (desktop and 390 px) | All listed states match; deviations are documented in Project-Status |
 
 **Phase 0 gate:** 0.38–0.41 and 0.45 done; approved email signs in by password and Google; unapproved refused everywhere; removed member blocked.
 

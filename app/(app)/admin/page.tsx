@@ -1,14 +1,18 @@
-import { AdminMembers } from '@/components/AdminMembers';
+import { AdminPanel, type Member } from '@/components/admin/AdminPanel';
+import { getUsage } from '@/server/admin/usage';
+import { listApproved } from '@/server/admin/approved-emails';
+import { getAppContext } from '@/server/app-data';
 
-export default function Page() {
+export const dynamic = 'force-dynamic';
+
+export default async function Page() {
+  const [ctx, members, usage] = await Promise.all([getAppContext(), listApproved({ includeRemoved: true }), getUsage()]);
+  // Dates cross the server/client boundary as strings, the same shape the API returns.
   return (
-    <main className="page" style={{ display: 'grid', gap: 24 }}>
-      <div style={{ display: 'grid', gap: 8 }}>
-        <span className="eyebrow">Members &amp; access</span>
-        <h1 style={{ fontSize: 36 }}>Admin</h1>
-        <p className="muted">Only approved emails can sign up or sign in. Removing a member signs them out immediately.</p>
-      </div>
-      <AdminMembers />
-    </main>
+    <AdminPanel
+      initialMembers={JSON.parse(JSON.stringify(members)) as Member[]}
+      initialUsage={usage}
+      selfEmail={ctx?.user.email ?? ''}
+    />
   );
 }

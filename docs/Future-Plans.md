@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 16)
+Last updated: 2026-10-25 (prompt 17)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
@@ -25,8 +25,10 @@ Phase 1 leftovers to schedule later:
 - [ ] Test that an unapproved Google account is refused (needs a second Google account)
 - [ ] Clean up leftovers Vidyareel created in the other project's `test` database (needs owner approval)
 - [ ] 0.26 Make forgot-password log send failures; verify a sending domain before inviting other members
-- [ ] Side-by-side visual check of Home, Library and Admin against Stitch (auth screens done)
-- [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages, mobile Home
+- [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages (Home on mobile is now done)
+- [ ] Home "Generate script" hands the idea to `/create?topic=…`; the Create screen itself is Phase 2
+- [ ] Turn derived notifications into a stored collection with real events (step 6.1) and show render percentage from `render_jobs` on Library cards
+- [ ] Wire `/api/me` videos-used to `quota.ts`
 - [ ] Optional: email verification for password signups (Stitch has "Check your email", "Email not verified" and verification states ready to build)
 
 
