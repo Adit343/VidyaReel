@@ -116,7 +116,7 @@ export function SceneCard(p: Props) {
               </div>
             )}
             <div className="mb-3">
-              <span className="block font-code-xs text-[#54675D] uppercase tracking-wider mb-1">Narration voiceover</span>
+              <span className="block font-code-xs text-code-xs text-[#54675D] uppercase tracking-wider mb-1">Narration voiceover</span>
               <button
                 type="button" onClick={p.actions.edit} disabled={p.busy}
                 className="block w-full text-left text-body-md text-[#0F2A20] leading-relaxed hover:bg-[#EEF1EC]/60 p-2 -ml-2 rounded-lg cursor-text transition-colors border border-transparent hover:border-[#D3DBD0] disabled:cursor-default"
@@ -127,13 +127,13 @@ export function SceneCard(p: Props) {
           </div>
           <div className="pt-2 border-t border-[#EEF1EC] flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 flex-wrap min-w-0">
-              <span className="font-code-xs text-[#54675D]">On-screen:</span>
+              <span className="font-code-xs text-code-xs text-[#54675D]">On-screen:</span>
               {scene.onScreenText.length ? scene.onScreenText.slice(0, 2).map((t, i) => (
                 <span key={i} className="px-2.5 py-1 rounded-full bg-[#D6F5E5] text-[#145A41] font-ui-medium text-code-xs border border-[#D0E5D8] flex items-center gap-1.5 max-w-full">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#145A41] shrink-0" /><span className="truncate">&ldquo;{t}&rdquo;</span>
                 </span>
-              )) : <span className="font-code-xs text-[#54675D]">none</span>}
-              {scene.onScreenText.length > 2 && <span className="font-code-xs text-[#54675D]">+{scene.onScreenText.length - 2} more</span>}
+              )) : <span className="font-code-xs text-code-xs text-[#54675D]">none</span>}
+              {scene.onScreenText.length > 2 && <span className="font-code-xs text-code-xs text-[#54675D]">+{scene.onScreenText.length - 2} more</span>}
             </div>
             <span className="font-code-sm text-[11px] text-[#54675D]">{scene.words} words</span>
           </div>
@@ -188,7 +188,7 @@ function EditingCard(p: Props & { label: string }) {
               </div>
             </div>
             <div className="mb-3">
-              <label htmlFor={`narr-${scene.id}`} className="block font-code-xs text-[#145A41] font-semibold uppercase tracking-wider mb-1">Narration Voiceover (Editing)</label>
+              <label htmlFor={`narr-${scene.id}`} className="block font-code-xs text-code-xs text-[#145A41] font-semibold uppercase tracking-wider mb-1">Narration Voiceover (Editing)</label>
               <textarea
                 id={`narr-${scene.id}`} ref={area} rows={3} value={narration} maxLength={600} onChange={(e) => setNarration(e.target.value)}
                 className="w-full rounded-xl bg-[#EEF1EC]/30 border border-[#145A41] text-[#0F2A20] text-body-md p-3 focus:outline-none focus:ring-2 focus:ring-[#145A41]/20 resize-none leading-relaxed"
@@ -196,7 +196,7 @@ function EditingCard(p: Props & { label: string }) {
               {!narration.trim() && <p className="text-[11px] text-[#C93A2E] mt-1">Narration cannot be empty.</p>}
             </div>
             <div className="mb-3">
-              <label htmlFor={`text-${scene.id}`} className="block font-code-xs text-[#54675D] uppercase tracking-wider mb-1">On-Screen Key Takeaway</label>
+              <label htmlFor={`text-${scene.id}`} className="block font-code-xs text-code-xs text-[#54675D] uppercase tracking-wider mb-1">On-Screen Key Takeaway</label>
               <div className="flex items-center gap-2">
                 <span className="font-code-sm text-[11px] text-[#54675D]">T:</span>
                 <input

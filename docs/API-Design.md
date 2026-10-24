@@ -617,3 +617,16 @@ Everything not listed follows System Design section 5 (endpoints, auth, ownershi
 | Disconnect | deletes token | also cancels that connection's scheduled posts | Cannot publish without a token |
 | LLM rate limit | not specified | 20 per member per hour | Protects Gemini free tier |
 | `GET /api/health` | build version | same | n/a |
+
+## Phase 2 as built (2026-10-25)
+
+Where the built endpoints differ from the sections above:
+
+- **Added `POST /api/videos/:id/scenes`** (`{ version, afterSceneId? }`, `201`, Video object): adds a blank scene for the "+ Add new scene beat" and "+ Blank scene" buttons in the Stitch Review screen.
+- `POST /api/videos` takes `angle` as `everyday | step | mistake`, `audience` as free text up to 40 characters (the Stitch values `Class 5`, `Class 7`, `Class 9`, `General`), `voiceId` (one of `src/config/voices.ts`) and defaults `language` to `en`.
+- The storyboard is checked once more on its own: at most one retry (two model calls) with the problems listed. Cues that are headings instead of spoken words are repaired and elements are put in spoken order before the check. Narration under 60% or over 125% of the target length is rejected; 10% to 25% over only adds the soft `warnings` line.
+- `STORYBOARD_FAILED` and `PROVIDER_UNAVAILABLE` carry `details: { videoId, version }`. A brand new draft is marked `failed` (so the quota rule refunds it); regenerating a failed video checks the cap again. A video that already has a storyboard keeps it when a regenerate fails.
+- `speed` is a number from 0.8 to 1.2 (the Review slider uses 0.9 to 1.1); `theme` is `forest | saffron | sage`; Stitch has no `sunrise/ocean/slate` themes.
+- `onScreenText` edits replace the element texts in order; `checkNote` (why a scene is marked "Check this") is stored on the scene and returned.
+- `POST .../scenes/:sceneId/regenerate` stops without saving if the browser disconnected (the Review "Cancel" button).
+- Not built yet: `VOICE_CREDITS_LOW` (step 6.2), `GET /api/voices` and `GET /api/music` (Phase 3), `POST /api/videos/:id/duplicate` (Phase 4). `GET /api/me` now reports the real videos used.

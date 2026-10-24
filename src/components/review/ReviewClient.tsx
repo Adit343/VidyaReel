@@ -70,10 +70,18 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
       const url = method === 'DELETE' ? `${path}?version=${version.current}` : path;
       const res = await api<VideoView>(url, { method, body: method === 'DELETE' ? undefined : body(version.current) });
       if (res.ok) { adopt(res.data); setSave((s) => (timer.current || Object.keys(pending.current).length ? s : 'saved')); }
-      else fail(res.error);
+      else {
+        fail(res.error);
+        // A rejected edit must not stay on screen as if it were saved: show the server's copy again.
+        if (optimistic && res.error.code !== 'VERSION_CONFLICT' && res.error.code !== 'VIDEO_LOCKED') {
+          const fresh = await api<VideoView>(`/api/videos/${video.id}`);
+          if (fresh.ok) adopt(fresh.data);
+          toast('error', res.error.message);
+        }
+      }
       return res;
     });
-  }, [adopt, enqueue, fail]);
+  }, [adopt, enqueue, fail, toast, video.id]);
 
   const flushSettings = useCallback(async () => {
     clearTimeout(timer.current);
@@ -235,7 +243,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
                 />
               ) : (
                 <>
-                  <h1 className="font-headline-md text-[24px] md:text-[28px] lg:text-[32px] text-[#0F2A20] font-bold tracking-tight truncate" id="lesson-title">{title}</h1>
+                  <h1 className="font-headline-md text-[24px] md:text-[28px] lg:text-[32px] text-[#0F2A20] font-bold tracking-tight truncate leading-[1.3] py-0.5" id="lesson-title">{title}</h1>
                   <button aria-label="Edit title" disabled={locked} onClick={() => setEditingTitle(true)} className="p-1 rounded text-[#54675D] hover:text-[#145A41] hover:bg-white/80 transition-colors">
                     <span className="material-symbols-outlined text-[18px]">edit</span>
                   </button>

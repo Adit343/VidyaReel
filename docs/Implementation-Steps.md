@@ -1,4 +1,4 @@
-# Vidyareel: Implementation Steps
+| 2.18 🟡 | Voice, theme, music, captions settings (voice samples stubbed) | Saved on video (music and samples wait for Phase 3) || 2.17 ✅ | Scene editing + debounced autosave + Saved/Conflict state | Refresh keeps edits || 2.16 ✅ | Review Step 2 UI: scene cards | Shows scenes || 2.15 ✅ | Create Step 1 UI (topic, ideas, length, audience) | Creates a video || 2.14 ✅ | Regenerate one scene / whole storyboard | Works, no extra cap row || 2.13 ✅ | `PATCH /api/videos/:id/scenes/:sceneId` (edit, reorder, delete) | Length recomputed || 2.12 ✅ | `PATCH /api/videos/:id` with `version` conflict | Stale version 409 || 2.11 ✅ | `GET /api/videos/:id` with ownership check | Others' ids 404 || 2.10 ✅ | Daily-cap guard (`usage/`) + `GET /api/me` videos left | Cap enforced || 2.9 ✅ | `POST /api/videos` (creates video, counts toward daily cap) | Storyboard saved, `storyboard_ready` || 2.8 ✅ | Safety check for unsafe topics (`UNSAFE_TOPIC`) | Blocked topic rejected || 2.7 ✅ | Validator checks: cue appears in narration, order, limits; retry once | Bad output retried then clean failure || 2.6 ✅ | Storyboard prompt (templates, cues, length and scene limits) | Valid JSON on 10 topics (10/10, `npm run check:storyboards`) || 2.5 ✅ | Angles prompt + `POST /api/ideas/angles` | 3 angles || 2.4 ✅ | Idea-suggest prompt + `POST /api/ideas/suggest` | 6 ideas || 2.3 ✅ | `LlmProvider` Gemini adapter with schema-validated output | Returns typed object || 2.2 ✅ | Gemini API key (set in `.env.local`) | Real call works (`gemini-3.5-flash-lite`; the 2.x models are closed to new keys) || 2.1 ✅ | Video/scene zod schemas finalised + `videos` repository (create, get, update with `version`) | Repo tests |# Vidyareel: Implementation Steps
 
 Last updated: 2026-10-25 (prompt 17)
 
@@ -118,24 +118,24 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 
 | Step | Task | Check |
 | --- | --- | --- |
-| 2.1 ⬜ | Video/scene zod schemas finalised + `videos` repository (create, get, update with `version`) | Repo tests |
-| 2.2 🟡 | Gemini API key (set in `.env.local`) | Test call pending |
-| 2.3 ⬜ | `LlmProvider` Gemini adapter with schema-validated output | Returns typed object |
-| 2.4 ⬜ | Idea-suggest prompt + `POST /api/ideas/suggest` | 6 ideas |
-| 2.5 ⬜ | Angles prompt + `POST /api/ideas/angles` | 3 angles |
-| 2.6 ⬜ | Storyboard prompt (templates, cues, length and scene limits) | Valid JSON on 10 topics |
-| 2.7 ⬜ | Validator checks: cue appears in narration, order, limits; retry once | Bad output retried then clean failure |
-| 2.8 ⬜ | Safety check for unsafe topics (`UNSAFE_TOPIC`) | Blocked topic rejected |
-| 2.9 ⬜ | `POST /api/videos` (creates video, counts toward daily cap) | Storyboard saved, `storyboard_ready` |
-| 2.10 ⬜ | Daily-cap guard (`usage/`) + `GET /api/me` videos left | Cap enforced |
-| 2.11 ⬜ | `GET /api/videos/:id` with ownership check | Others' ids 404 |
-| 2.12 ⬜ | `PATCH /api/videos/:id` with `version` conflict | Stale version 409 |
-| 2.13 ⬜ | `PATCH /api/videos/:id/scenes/:sceneId` (edit, reorder, delete) | Length recomputed |
-| 2.14 ⬜ | Regenerate one scene / whole storyboard | Works, no extra cap row |
-| 2.15 ⬜ | Create Step 1 UI (topic, ideas, length, audience) | Creates a video |
-| 2.16 ⬜ | Review Step 2 UI: scene cards | Shows scenes |
-| 2.17 ⬜ | Scene editing + debounced autosave + Saved/Conflict state | Refresh keeps edits |
-| 2.18 ⬜ | Voice, theme, music, captions settings (voice samples stubbed) | Saved on video |
+| 2.1 ✅ | Video/scene zod schemas finalised + `videos` repository (create, get, update with `version`) | Repo tests |
+| 2.2 ✅ | Gemini API key (set in `.env.local`) | Real call works with `gemini-3.5-flash-lite` (the 2.x models are closed to new keys) |
+| 2.3 ✅ | `LlmProvider` Gemini adapter with schema-validated output | Returns typed object |
+| 2.4 ✅ | Idea-suggest prompt + `POST /api/ideas/suggest` | 6 ideas |
+| 2.5 ✅ | Angles prompt + `POST /api/ideas/angles` | 3 angles |
+| 2.6 ✅ | Storyboard prompt (templates, cues, length and scene limits) | Valid JSON on 10 topics (10/10 with the real model; `npm run check:storyboards`) |
+| 2.7 ✅ | Validator checks: cue appears in narration, order, limits; retry once | Bad output retried then clean failure |
+| 2.8 ✅ | Safety check for unsafe topics (`UNSAFE_TOPIC`) | Blocked topic rejected |
+| 2.9 ✅ | `POST /api/videos` (creates video, counts toward daily cap) | Storyboard saved, `storyboard_ready` |
+| 2.10 ✅ | Daily-cap guard (`usage/`) + `GET /api/me` videos left | Cap enforced |
+| 2.11 ✅ | `GET /api/videos/:id` with ownership check | Others' ids 404 |
+| 2.12 ✅ | `PATCH /api/videos/:id` with `version` conflict | Stale version 409 |
+| 2.13 ✅ | `PATCH /api/videos/:id/scenes/:sceneId` (edit, reorder, delete) | Length recomputed |
+| 2.14 ✅ | Regenerate one scene / whole storyboard | Works, no extra cap row |
+| 2.15 ✅ | Create Step 1 UI (topic, ideas, length, audience) | Creates a video |
+| 2.16 ✅ | Review Step 2 UI: scene cards | Shows scenes |
+| 2.17 ✅ | Scene editing + debounced autosave + Saved/Conflict state | Refresh keeps edits |
+| 2.18 🟡 | Voice, theme, music, captions settings (voice samples stubbed) | Saved on video (music tracks and voice samples wait for Phase 3) |
 
 ## Phase 3: Template library and media
 

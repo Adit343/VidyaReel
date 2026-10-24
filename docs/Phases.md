@@ -6,9 +6,9 @@ Work moves one phase at a time; the step-by-step breakdown is in [Implementation
 
 | Phase | Name | Milestone | State |
 | --- | --- | --- | --- |
-| 0 | Setup and foundation | M2 | In progress |
-| 1 | Pipeline spike | M0 + M1 | Not started (M0 local prototype exists in docs) |
-| 2 | Storyboard AI and Review | M3 | Not started |
+| 0 | Setup and foundation | M2 | Done (signed off 2026-10-24) |
+| 1 | Pipeline spike | M0 + M1 | Done (architecture stands) |
+| 2 | Storyboard AI and Review | M3 | Built; waiting for owner sign-off |
 | 3 | Template library and media | M4 (part) | Not started |
 | 4 | Render workflow and Library | M4 | Not started |
 | 5 | Instagram | M5 | Not started |
