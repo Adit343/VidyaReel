@@ -13,6 +13,7 @@
     "remotion:bundle": "remotion bundle src/remotion/index.ts --out-dir=build/remotion-bundle",
     "spike:inngest": "tsx scripts/spike-inngest-render.mts",
     "spike:voice": "tsx scripts/spike-voice-sync.mts",
+    "spike:instagram": "tsx scripts/spike-instagram.mts",
     "spike:sandbox": "tsx scripts/spike-sandbox-render.mts",
     "remotion:render": "remotion render src/remotion/index.ts Video out/spike.mp4 --port=3100",
     "db:indexes": "tsx scripts/db-indexes.ts",

@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 13)
+Last updated: 2026-10-24 (prompt 14)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -109,7 +109,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 1.12 ✅ | Cue-phrase sync (`sync/`) | Worst offset 207 ms |
 | 1.13 ✅ | Record credits used for a 60 s video | About 920 credits (15 per audio second), measured on 18 s of audio |
 | 1.14 👤 | Meta developer app (dev mode) + Business test Instagram account | Account added as tester |
-| 1.15 ⬜ | Create container from signed R2 URL, publish | Reel visible |
+| 1.15 🟡 | Create container from signed R2 URL, publish | Reel visible |
 | 1.16 ⬜ | Try Creator account | Result recorded |
 | 1.17 ⬜ | Write spike results note | Decision: architecture stands or fallback |
 
