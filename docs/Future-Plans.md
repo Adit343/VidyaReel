@@ -1,16 +1,15 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 18)
+Last updated: 2026-10-25 (prompt 19)
 
-Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 and 1 are done; Phase 2 (storyboard AI and Review) is built and waits for your sign-off.
+Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **2 Storyboard AI and Review** (built); next is **3 Template library and media**.
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: none in progress; **3 Template library and media** is next (to be started by the owner).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] Phase 2 sign-off: try Create and Review in a browser with your account (real Gemini), then Phase 3 starts
 - [ ] Phase 3 (templates and media), in order: theme system, word-by-word captions, step-flow, stat, comparison, timeline, formula, diagram, recap, stock clips (Pexels / Pixabay keys), music with ducking, voice samples, then widen `ENABLED_TEMPLATES` in `src/lib/schemas/storyboard.ts`
 - [ ] Review polish waiting on Phase 3: voice sample playback (3.14), music select and volume (3.13), a real frame preview per scene
 - [ ] Monthly voice-credit check at `POST /api/videos` (`VOICE_CREDITS_LOW`, step 6.2)
