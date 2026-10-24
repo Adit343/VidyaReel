@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 10)
+Last updated: 2026-10-24 (prompt 11)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
@@ -10,11 +10,10 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 
 ## Next up: Phase 1 (pipeline spike)
 
-- [ ] 1.4 👤 Vercel account, Sandbox access, Spend Management limits (needed before 1.5)
-- [ ] 1.5 `Renderer` implementation in Vercel Sandbox; record render time
-- [ ] 1.6 Upload the MP4 from the Sandbox to R2; signed link plays
-- [ ] 1.7 👤 Inngest account/dev server, then 1.8 and 1.9 (`renderVideo`, forced failure)
-- [ ] 1.10 👤 ElevenLabs key + 2 voice ids, then 1.11 to 1.13
+- [ ] Confirm Spend Management cap in Vercel (not confirmed yet); check Sandbox usage in the dashboard; try a snapshot to cut the 45 s cold start
+- [ ] 1.5 Wrap the spike script as a `Renderer` implementation (`src/server/render`)
+- [ ] 1.8 and 1.9 `renderVideo` as an Inngest function (start detached, poll, upload to R2, update Mongo), then forced-failure test
+- [ ] 1.11 to 1.13 ElevenLabs adapter, word times, cue sync, credits per 60 s video
 - [ ] 1.14 👤 Meta developer app + Business test Instagram account, then 1.15 to 1.17
 
 ## Phase 0 leftovers (not blocking)
