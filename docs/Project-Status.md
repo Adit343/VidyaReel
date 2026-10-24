@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-24 (prompt 8)
+Last updated: 2026-10-24 (prompt 9)
 
 Current phase: **0 Setup and foundation** (see [Phases.md](Phases.md)). All code for Phase 0 is written and tested locally; what remains needs your accounts and keys (MongoDB Atlas, Google, Resend, R2).
 
@@ -40,7 +40,7 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 
 ## Not yet verified
 
-- Resend: `EMAIL_FROM` is a gmail.com address, which Resend rejects (403 "domain not verified"). Use `onboarding@resend.dev` (delivers only to the Resend account owner) or a verified domain.
+- Resend: `EMAIL_FROM` is now `onboarding@resend.dev`; Resend accepted a direct send and a forgot-password request (200). Waiting for you to confirm the reset email arrived and the link works end to end. It delivers only to the Resend account owner's address, so other members' resets need a verified domain.
 - Browser walk-through with the existing admin account: password sign-in, Google sign-in, admin add/remove from the UI. The admin account already existed in Atlas, so scripted signup/login with a fresh password could not be repeated.
 - `forgot-password` returns 200 even when the email send fails, with nothing in the log (to be checked).
 - Screens were built from the Stitch screenshots but not compared side by side in a browser.

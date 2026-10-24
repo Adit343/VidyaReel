@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 8)
+Last updated: 2026-10-24 (prompt 9)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 code is done; its gate is waiting on the account steps below (marked 👤 there), then Phase 1 (pipeline spike).
 
@@ -13,7 +13,7 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] 0.28/0.29 Complete Google sign-in in a browser (consent screen needs a human); test unapproved Google account refusal
 - [ ] Add `http://localhost:3000/api/auth/google/callback` to the Google OAuth client's redirect URIs (error `redirect_uri_mismatch`), then retest Google
 - [ ] Clean up leftovers Vidyareel created in the other project's `test` database (needs owner approval)
-- [ ] 0.26 Set `EMAIL_FROM` to `onboarding@resend.dev` or a verified-domain address (gmail is rejected); test a real reset email; make forgot-password log send failures
+- [ ] 0.26 Confirm the real reset email arrives and the link resets the password; make forgot-password log send failures; verify a domain before inviting other members
 - [ ] Side-by-side visual check of Home, Library and Admin against Stitch (auth screens done)
 - [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages, mobile Home
 - [ ] Optional: email verification for password signups (Stitch has "Check your email", "Email not verified" and verification states ready to build)
