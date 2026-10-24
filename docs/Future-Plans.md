@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-23 (prompt 6)
+Last updated: 2026-10-24 (prompt 7)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 code is done; its gate is waiting on the account steps below (marked 👤 there), then Phase 1 (pipeline spike).
 
@@ -10,10 +10,8 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 
 ## Next up: finish Phase 0 (needs you)
 
-- [ ] 0.5 Create a MongoDB Atlas M0 cluster, copy `.env.example` to `.env.local`, set `MONGODB_URI`, `ADMIN_EMAIL`, `APP_URL`; then run `npm run db:indexes` and open `/api/health`
-- [ ] 0.27 Google Cloud OAuth client (redirect `APP_URL/api/auth/google/callback`), set `GOOGLE_CLIENT_ID/SECRET`; test Google sign-in and unapproved refusal
-- [ ] 0.26 Resend account + sender (`RESEND_API_KEY`, `EMAIL_FROM`); test a real reset email
-- [ ] 0.42 Cloudflare R2 bucket + API token (`R2_*`); upload a test file and open its signed link
+- [ ] 0.28/0.29 Complete Google sign-in in a browser (consent screen needs a human); test unapproved Google account refusal
+- [ ] 0.26 Set `EMAIL_FROM` to `onboarding@resend.dev` or a verified-domain address (gmail is rejected); test a real reset email; make forgot-password log send failures
 - [ ] Side-by-side visual check of Home, Library and Admin against Stitch (auth screens done)
 - [ ] Stitch screens not yet built: Settings (Sign-In Methods), Terms/Privacy pages, mobile Home
 - [ ] Optional: email verification for password signups (Stitch has "Check your email", "Email not verified" and verification states ready to build)

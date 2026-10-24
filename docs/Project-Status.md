@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-23 (prompt 6)
+Last updated: 2026-10-24 (prompt 7)
 
 Current phase: **0 Setup and foundation** (see [Phases.md](Phases.md)). All code for Phase 0 is written and tested locally; what remains needs your accounts and keys (MongoDB Atlas, Google, Resend, R2).
 
@@ -8,7 +8,7 @@ Current progress, done so far. Updated on every prompt. Remaining work is in [Fu
 
 ## Summary
 
-Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invite-only gate, rate limits, admin access management, protected app shell, Stitch-styled auth/Home/Library/Admin screens, R2 storage provider. Verified against an in-memory MongoDB with 35 Vitest tests and a scripted run of the real dev server; `tsc`, `lint` and `next build` pass. Nothing has run against real Atlas, Google, Resend or R2 yet.
+Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invite-only gate, rate limits, admin access management, protected app shell, Stitch-styled auth/Home/Library/Admin screens, R2 storage provider. Verified against an in-memory MongoDB with 35 Vitest tests and a scripted run of the real dev server; `tsc`, `lint` and `next build` pass. Now also verified against real Atlas and R2; Google redirect confirmed; Resend blocked by the sender address (see below).
 
 ## Done
 
@@ -28,11 +28,16 @@ Phase 0 is built end to end: custom auth (password + Google), forgot/reset, invi
 | Workflows / Remotion | Inngest function stubs, Remotion composition skeleton, provider interfaces (unchanged). |
 | API | Auth, `/api/me`, admin approved-emails, health done; the rest return 501. |
 
-## Not yet verified (needs your accounts)
+## Verified against real services (2026-10-24)
 
-- Real MongoDB Atlas (step 0.5, then rerun `/api/health` and `npm run db:indexes`).
-- Real Google sign-in (0.27, then 0.28/0.29 end to end).
-- Real reset emails through Resend (0.26); links print to the server log until then.
-- Real R2 upload and signed link (0.42, then 0.43).
+- Atlas: `npm run db:indexes` ok, `/api/health` returns ok, unapproved signup refused with 403 `INVITE_ONLY`, wrong login 401, forgot-password 200.
+- R2: `scripts/r2-smoke.ts` uploaded a file, signed link returned the content (200), unsigned URL refused (400), deleted object gives 404.
+- Google: `/api/auth/google` redirects to Google consent with the right redirect URI, state and PKCE. The consent screen itself still needs a human in a browser.
+
+## Not yet verified
+
+- Resend: `EMAIL_FROM` is a gmail.com address, which Resend rejects (403 "domain not verified"). Use `onboarding@resend.dev` (delivers only to the Resend account owner) or a verified domain.
+- Browser walk-through with the existing admin account: password sign-in, Google sign-in, admin add/remove from the UI. The admin account already existed in Atlas, so scripted signup/login with a fresh password could not be repeated.
+- `forgot-password` returns 200 even when the email send fails, with nothing in the log (to be checked).
 - Screens were built from the Stitch screenshots but not compared side by side in a browser.
 - Videos-used-today on Home and `/api/me` is a placeholder 0 until the usage log (step 2.10).

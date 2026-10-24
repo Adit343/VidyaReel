@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-23 (prompt 6)
+Last updated: 2026-10-24 (prompt 7)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -19,7 +19,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 ### 0B. MongoDB connection
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.5 👤 | Create MongoDB Atlas M0 cluster, db user, network access | Atlas shows cluster running |
+| 0.5 ✅ | Create MongoDB Atlas M0 cluster, db user, network access | Atlas shows cluster running |
 | 0.6 ✅ | Copy `.env.example` to `.env.local`, set `MONGODB_URI` | App reads the variable |
 | 0.7 ✅ | Mongo client singleton (`src/server/db/client.ts`) | Code exists |
 | 0.8 ✅ | Hit `GET /api/health` | Returns `{ ok: true }` (proves connection; checked against a local in-memory MongoDB, repeat on Atlas after 0.5) |
@@ -52,12 +52,12 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 0.23 ✅ | `EmailProvider` with console fallback | Link printed in server log |
 | 0.24 ✅ | `POST /api/auth/forgot-password` (always 200) | Same response for unknown email |
 | 0.25 ✅ | `POST /api/auth/reset-password` | New password works; old sessions deleted; token single-use |
-| 0.26 👤 | Create Resend account, verify sender, set `RESEND_API_KEY`, `EMAIL_FROM` | Real email arrives |
+| 0.26 👤 | Resend key set; `EMAIL_FROM` must be a verified sender (gmail rejected) | Real email arrives |
 
 ### 0F. Google sign-in
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.27 👤 | Google Cloud OAuth client; redirect `APP_URL/api/auth/google/callback`; set `GOOGLE_CLIENT_ID/SECRET` | Credentials created |
+| 0.27 ✅ | Google Cloud OAuth client; redirect `APP_URL/api/auth/google/callback`; set `GOOGLE_CLIENT_ID/SECRET` | Credentials created |
 | 0.28 🟡 | `GET /api/auth/google` (state + PKCE) | Redirects to Google consent |
 | 0.29 🟡 | `GET /api/auth/google/callback` | Approved Google account signs in; unapproved gets `?error=INVITE_ONLY` |
 | 0.30 ✅ | Link Google to existing password account by email | One `users` row, both methods work |
@@ -84,8 +84,8 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 ### 0I. Storage and shell
 | Step | Task | Check |
 | --- | --- | --- |
-| 0.42 👤 | Create Cloudflare R2 bucket + API token; set `R2_*` | Credentials created |
-| 0.43 🟡 | R2 `StorageProvider` (put, signedGet, delete) | Upload a test file, signed link opens |
+| 0.42 ✅ | Create Cloudflare R2 bucket + API token; set `R2_*` | Credentials created |
+| 0.43 ✅ | R2 `StorageProvider` (put, signedGet, delete) | Verified on real R2 (`scripts/r2-smoke.ts`) |
 | 0.44 ✅ | Storage key naming helper | Keys follow System-Design §7.6 |
 | 0.45 ✅ | Home (dashboard) and empty Library UI from Stitch | Signed-in user sees empty Library |
 
