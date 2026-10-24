@@ -1,4 +1,4 @@
-import type { ZodType } from 'zod';
+import type { ZodType, ZodTypeDef } from 'zod';
 
 export type Word = { word: string; startMs: number; endMs: number };
 export type Prompt = { system: string; user: string };
@@ -6,7 +6,7 @@ export type MediaCandidate = { id: string; url: string; source: 'pexels' | 'pixa
 export type Connection = { igUserId: string; accessToken: string };
 
 export interface LlmProvider {
-  generate<T>(prompt: Prompt, schema: ZodType<T>): Promise<T>;
+  generate<T>(prompt: Prompt, schema: ZodType<T, ZodTypeDef, unknown>): Promise<T>;
 }
 export interface VoiceProvider {
   synthesize(text: string, opts: { voiceId: string; speed: number }): Promise<{

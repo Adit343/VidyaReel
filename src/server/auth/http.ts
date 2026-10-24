@@ -1,4 +1,4 @@
-import type { ZodType } from 'zod';
+import type { ZodType, ZodTypeDef } from 'zod';
 import { AppError } from '@/lib/errors';
 import { limitAuth } from './rate-limit';
 
@@ -8,7 +8,7 @@ export function assertSameOrigin(req: Request) {
 }
 
 /** Same-origin check + zod parse for JSON bodies. */
-export async function parseJson<T>(req: Request, schema: ZodType<T>): Promise<T> {
+export async function parseJson<T>(req: Request, schema: ZodType<T, ZodTypeDef, unknown>): Promise<T> {
   assertSameOrigin(req);
   const parsed = schema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) throw new AppError('INVALID', 'Invalid request', 400);
@@ -16,7 +16,7 @@ export async function parseJson<T>(req: Request, schema: ZodType<T>): Promise<T>
 }
 
 /** Public auth endpoints: per-IP rate limit first, then parse. */
-export async function parseAuthJson<T>(req: Request, schema: ZodType<T>): Promise<T> {
+export async function parseAuthJson<T>(req: Request, schema: ZodType<T, ZodTypeDef, unknown>): Promise<T> {
   await limitAuth(req);
   return parseJson(req, schema);
 }

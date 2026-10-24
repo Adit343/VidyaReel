@@ -21,7 +21,7 @@ async function member(email: string, extra: Partial<{ googleId: string; password
 async function video(userId: ObjectId, status: VideoDoc['status'], extra: Partial<VideoDoc> = {}) {
   const now = new Date();
   const doc: VideoDoc = {
-    _id: new ObjectId(), userId, title: `v-${status}`, status, scenes: [{ durationMs: 10_000 }, { durationMs: 20_000 }],
+    _id: new ObjectId(), userId, title: `v-${status}`, status, scenes: [{ durationMs: 10_000 }, { durationMs: 20_000 }] as never,
     version: 1, createdAt: now, updatedAt: now, ...extra,
   };
   await videos().insertOne(doc);

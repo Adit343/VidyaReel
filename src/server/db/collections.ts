@@ -1,4 +1,5 @@
 import type { ObjectId } from 'mongodb';
+import type { Scene } from '@/lib/schemas/storyboard';
 import type { VideoStatus } from '@/lib/schemas/video';
 import type { Role } from '@/server/auth/approved';
 import { db } from './client';
@@ -15,10 +16,13 @@ export type ApprovedEmailDoc = {
 export type OauthStateDoc = { _id: ObjectId; state: string; purpose: 'google' | 'instagram'; codeVerifier?: string; userId?: ObjectId; expiresAt: Date };
 export type RateLimitDoc = { _id: string; count: number; expiresAt: Date };
 
-// Fields the render workflow reads and writes; the full shape is in docs/Database-Design.md section 4.3.
+// The central document (docs/Database-Design.md section 4.3). Render fields are written by the render workflow.
 export type VideoDoc = {
   _id: ObjectId; userId: ObjectId; title: string; status: VideoStatus; failureReason?: string;
-  scenes: unknown[]; outputKey?: string; output?: { sizeBytes: number; validatedAt: Date };
+  topic?: string; angle?: string; lengthSec?: number; language?: string; audience?: string;
+  voiceId?: string; speed?: number; theme?: string; accent?: string; musicId?: string | null; captionsOn?: boolean;
+  caption?: string; hashtags?: string[]; estimatedSec?: number; safety?: { checkedAt: Date; result: 'ok' };
+  scenes: Scene[]; outputKey?: string; output?: { sizeBytes: number; validatedAt: Date };
   version: number; createdAt: Date; updatedAt: Date; deletedAt?: Date;
 };
 

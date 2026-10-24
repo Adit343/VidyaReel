@@ -1,14 +1,17 @@
-import { ComingSoon } from '@/components/shell/ComingSoon';
+import { redirect } from 'next/navigation';
+import { CreateClient } from '@/components/create/CreateClient';
+import { getAppContext } from '@/server/app-data';
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ topic?: string }> }) {
-  const topic = (await searchParams).topic?.slice(0, 800);
+export default async function Page({ searchParams }: { searchParams: Promise<{ topic?: string; voice?: string }> }) {
+  // Layouts and pages render in parallel, so the page checks the session itself.
+  const ctx = await getAppContext();
+  if (!ctx) redirect('/sign-in');
+  const { topic, voice } = await searchParams;
   return (
-    <ComingSoon icon="movie_edit" title="Script and storyboard drafting is coming next" text="This step turns your idea into an editable script and storyboard. It is the next thing being built.">
-      {topic && (
-        <p className="font-code-xs text-code-xs text-[#0F2A20] bg-[#EEF1EC] border border-[#D3DBD0] rounded-xl p-3 mb-6 text-left break-words">
-          <span className="text-[#54675D]">Your idea:</span> {topic}
-        </p>
-      )}
-    </ComingSoon>
+    <CreateClient
+      initialTopic={(topic ?? '').slice(0, 500)} voiceId={voice}
+      quota={{ used: ctx.quota.used, limit: ctx.quota.limit }}
+      tzLabel={ctx.timeZone === 'Asia/Kolkata' ? 'IST' : ctx.timeZone}
+    />
   );
 }
