@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-24 (prompt 12)
+Last updated: 2026-10-24 (prompt 13)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phase 0 is done and signed off; Phase 1 (pipeline spike) is in progress.
 
@@ -13,7 +13,9 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] Check Sandbox usage in the Vercel dashboard (Spend Management is paid-only; Hobby cannot be billed); try a snapshot to cut the 45 s cold start
 - [ ] Work out how long renders fit in a Hobby function (maxDuration) or split renders by frame range (deploy time)
 - [ ] Clean up sandboxes left by failed attempts
-- [ ] 1.11 to 1.13 ElevenLabs adapter, word times, cue sync, credits per 60 s video
+- [ ] Pick the two free stock voices to ship (tried Alice and Daniel; listen to `out/voice/*.mp3`) and set `ELEVENLABS_VOICE_IDS`
+- [ ] Wire voice and sync into the render steps and templates (audio in the video, captions): Phase 3/4
+- [ ] Monthly voice-credit guard (about 10 videos of 60 s per month on the free plan): step 6.2
 - [ ] 1.14 👤 Meta developer app + Business test Instagram account, then 1.15 to 1.17
 
 ## Phase 0 leftovers (not blocking)

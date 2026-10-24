@@ -328,7 +328,7 @@ Inputs per scene: narration, elements with cues, word list. Output: frame number
 1. Normalise text: lowercase, keep letters, digits and apostrophes, split on whitespace.
 2. Find the cue as a consecutive token run. Exact match first; if none, allow one-token edit distance per word (Indian names and number words); if still none, space the unmatched elements evenly across the scene and log a warning.
 3. `startFrame = leadIn + round(t * fps) - 3`, so the visual lands three frames before the word. `leadIn` is 0.15 s and a tail of 0.15 s follows the audio (the 0.3 s from the PRD).
-4. The first element of each scene is clamped to appear within 4 frames of the scene start, so a scene is never an empty screen.
+4. The first element of each scene is clamped to appear within the first second of the scene (changed from 4 frames after the phase 1 spike: the voice does not start until about 0.7 to 1.1 s, so 4 frames put the first element up to 1 s early). Templates show their label from frame 0 so a scene is never empty.
 5. If element start times are out of order, the elements are sorted by start time and a warning is stored, instead of failing the render as the prototype did.
 6. Scene duration is `leadIn + ceil(audioSeconds * fps) + tail` frames; captions use the same word times shifted by `leadIn`, so voice, captions and visuals share one clock.
 

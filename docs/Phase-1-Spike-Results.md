@@ -43,9 +43,21 @@ Findings and limits:
 - The Remotion bundle is built ahead of time (`npm run remotion:bundle`, output in git-ignored `build/`), not at request time.
 - Spend Management is a paid Vercel feature; the Hobby plan cannot be billed, and it pauses at its free limits instead.
 
-## Experiment 4: ElevenLabs voice and sync
+## Experiment 4: ElevenLabs voice and sync (PASS, with free stock voices)
 
-Not run yet.
+Run: `npm run spike:voice` (`scripts/spike-voice-sync.mts`): one `with-timestamps` call per scene of the 3-scene fixture, characters grouped into words, cues matched and placed by `syncScene`. MP3s go to git-ignored `out/voice/`.
+
+| Check | Result |
+| --- | --- |
+| Library voices (Tara, Viraj: the two Indian-accent voices first chosen) | **Fail on the free plan**: HTTP 402 `paid_plan_required` ("Free users cannot use library voices via the API"). As System-Design 7.2 predicted. |
+| Free stock ("premade") voices | Work through the API. Tried Alice (`Xb7hH8MSUJpSbSDYk0k2`, British, educational) and Daniel (`onwK4e9ZLuTAKqWW03F9`, British, broadcaster). |
+| Word times | Grouped from character times; 11, 21 and 14 words for the three scenes. |
+| Cue sync | All 7 cues found. Every element lands 100 ms before its spoken cue word (the 3-frame lead), except one first element at 207 ms because of the first-second clamp. **Worst offset 207 ms, target 300 ms.** |
+| Speed setting | `voice_settings.speed` is accepted by the API (tested with 1.0 only). |
+
+First run showed first elements 0.5 to 1 s early. Cause: design rule "first element within 4 frames of the scene start" (System-Design 7.3 step 4) fights the 0.3 s goal, because the voice only starts speaking about 0.7 to 1.1 s in (150 ms lead-in plus the voice's own lead silence). Changed the rule to "within the first second" (`FIRST_ELEMENT_MAX_MS`) and keep templates showing their label from frame 0 (Phase 3 step 3.15).
+
+Credit use: 281 characters of narration (18.3 s of audio) cost 281 credits, about 15 credits per audio second. A 60 s video is therefore about 920 credits, so the 10,000 monthly free credits give **about 10 videos of 60 s** (about 20 at 30 s). This is the real monthly limit, not the daily cap. The monthly voice-credit guard (step 6.2) is needed.
 
 ## Experiment 5: Instagram
 

@@ -1,6 +1,6 @@
 # Vidyareel: Implementation Steps
 
-Last updated: 2026-10-24 (prompt 12)
+Last updated: 2026-10-24 (prompt 13)
 
 The phases in [Phases.md](Phases.md) broken into small steps. Do them in order; each step is one focused change with a check that proves it works. Step ids (`0.3`) are used in [Project-Status.md](Project-Status.md).
 
@@ -104,10 +104,10 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 1.7 ✅ | Inngest keys set; dev server syncs the app | Functions listed (`function_count` 5 at `/api/inngest`) |
 | 1.8 ✅ | `renderVideo` as Inngest function (sandbox steps, render, upload to R2, update Mongo; not detached, see results note) | `rendering` → `ready` in 69 s unattended |
 | 1.9 ✅ | Forced-failure test | Retries twice, then `failed` |
-| 1.10 🟡 | ElevenLabs key + 2 voice ids set (comma-separated in `ELEVENLABS_VOICE_IDS`) | API call pending |
-| 1.11 ⬜ | `VoiceProvider` ElevenLabs adapter + char→word grouping | Word times for one scene |
-| 1.12 ⬜ | Cue-phrase sync (`sync/`) | Elements within 0.3 s of cue word |
-| 1.13 ⬜ | Record credits used for a 60 s video | Number in results note |
+| 1.10 ✅ | ElevenLabs key set; the 2 chosen Indian-accent voices are paid-only through the API, so free stock voices are used | API returns audio (Alice, Daniel) |
+| 1.11 ✅ | `VoiceProvider` ElevenLabs adapter + char→word grouping | Word times for each scene; unit tested |
+| 1.12 ✅ | Cue-phrase sync (`sync/`) | Worst offset 207 ms |
+| 1.13 ✅ | Record credits used for a 60 s video | About 920 credits (15 per audio second), measured on 18 s of audio |
 | 1.14 👤 | Meta developer app (dev mode) + Business test Instagram account | Account added as tester |
 | 1.15 ⬜ | Create container from signed R2 URL, publish | Reel visible |
 | 1.16 ⬜ | Try Creator account | Result recorded |
