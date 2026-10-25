@@ -141,15 +141,15 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 
 | Step | Task | Check |
 | --- | --- | --- |
-| 3.1 ⬜ | Theme system (colors, fonts) for videos | Two themes render |
-| 3.2 ⬜ | Word-by-word captions component | Captions follow word times |
-| 3.3 ⬜ | Template: title-hook | Renders from sample props |
-| 3.4 ⬜ | Template: bullet-reveal | ✓ |
-| 3.5 ⬜ | Template: step-flow | ✓ |
-| 3.6 ⬜ | Template: definition-callout | ✓ |
-| 3.7 ⬜ | Templates: stat, comparison | ✓ |
-| 3.8 ⬜ | Templates: timeline, formula | ✓ |
-| 3.9 ⬜ | Templates: diagram (flow, raindrop, orbit), recap | ✓ |
+| 3.1 ✅ | Theme system (colors, fonts) for videos | Two themes render |
+| 3.2 ✅ | Word-by-word captions component | Captions follow word times |
+| 3.3 ✅ | Template: title-hook | Renders from sample props |
+| 3.4 ✅ | Template: bullet-reveal | ✓ |
+| 3.5 ✅ | Template: step-flow | ✓ |
+| 3.6 ✅ | Template: definition-callout | ✓ |
+| 3.7 ✅ | Templates: stat, comparison | ✓ |
+| 3.8 ✅ | Templates: timeline, formula | ✓ |
+| 3.9 ✅ | Templates: diagram (flow, raindrop, orbit), recap | ✓ |
 | 3.10 👤 | Pexels and Pixabay keys | Test search works |
 | 3.11 ⬜ | `MediaProvider` adapters + licence record in `assets` | Portrait clip found |
 | 3.12 ⬜ | Stock-clip template with 9:16 crop | Renders |

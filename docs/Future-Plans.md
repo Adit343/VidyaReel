@@ -1,16 +1,17 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 20)
+Last updated: 2026-10-25 (prompt 21)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: none in progress; **3 Template library and media** is next (to be started by the owner).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (3.1 to 3.9 done: themes, captions, all templates except stock-clip).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] Phase 3 (templates and media), in order: theme system, word-by-word captions, step-flow, stat, comparison, timeline, formula, diagram, recap, stock clips (Pexels / Pixabay keys), music with ducking, voice samples, then widen `ENABLED_TEMPLATES` in `src/lib/schemas/storyboard.ts`
+- [ ] Phase 3 (templates and media), what is left, in order: stock clips (3.10 to 3.12; needs free Pexels and Pixabay keys from the owner), music with ducking (3.13; needs royalty-free tracks), voice samples (3.14), then add `stock-clip` to `ENABLED_TEMPLATES`
+- [ ] Run `npm run check:storyboards` against the real model to confirm the wider template list still gives valid storyboards (10 of 10)
 - [ ] Review polish waiting on Phase 3: voice sample playback (3.14), music select and volume (3.13), a real frame preview per scene
 - [ ] Monthly voice-credit check at `POST /api/videos` (`VOICE_CREDITS_LOW`, step 6.2)
 - [ ] `POST /api/videos/:id/duplicate` (Phase 4, step 4.17)
@@ -44,6 +45,6 @@ Phase 1 leftovers to schedule later:
 - [ ] M5 Post: Instagram connect, post now, schedule, reschedule, cancel, token refresh
 - [ ] M6 Harden: daily cap, usage log, notifications, admin usage screens, delete + cleanup, error messages, PRD test checklist
 - [ ] Build real UI for the remaining Stitch designs: Create 3 (Generate) and 4 (Post), Settings
-- [ ] Remaining Remotion templates (stat, comparison, timeline, formula, stock-clip, recap, diagram)
+- [ ] Remaining Remotion template: stock-clip
 - [ ] Deployment: Vercel project, env vars, Spend Management, Inngest cloud
 - [ ] First commit and `main` branch setup

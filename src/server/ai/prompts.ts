@@ -47,6 +47,14 @@ const SCENE_RULES = `Scene rules:
   - title-hook: the opening scene, one big "title" element.
   - bullet-reveal: 2 to 4 "bullet" elements that appear one by one.
   - definition-callout: one "term" element and one "definition" element.
+  - step-flow: 2 to 5 "step" elements for a process, in order.
+  - stat: a "value" element that is just the number or short figure (for example "23.5°"), a "label" element saying what it measures, and optionally a "note".
+  - comparison: a "left" element naming the first thing, then "left" detail elements, a "right" element naming the second thing, then "right" detail elements (1 or 2 details each).
+  - timeline: 2 to 4 "event" elements written as "date: what happened" (the date is under 15 characters).
+  - formula: a "formula" element (for example "v = d / t") and one "note" element per variable or rule.
+  - diagram: a process or picture. Add "diagram": "flow" (3 to 5 "node" elements in order), "raindrop" (light splitting in a raindrop, 3 "label" elements) or "orbit" (Earth around the Sun, 2 "label" elements). Use raindrop and orbit only for those topics.
+  - recap: the closing scene, 2 to 4 "point" elements. Use it as the last scene.
+  Use a variety of templates that fit the content; do not use bullet-reveal for every scene.
 - "narration" is exactly what a narrator says aloud: plain sentences, no stage directions, no emoji, numbers written so they can be read aloud.
 - Every element has a "cue": a short phrase (1 to 4 words) copied EXACTLY from the narration of that scene. The element appears when the narrator says the cue. List the elements in the order their cues are spoken.
 - "text" is the short text shown on screen (under 60 characters; do not repeat the whole narration).
@@ -65,7 +73,7 @@ ${i.angle && ANGLE_TEXT[i.angle] ? `Approach: ${ANGLE_TEXT[i.angle]}\n` : ''}Sta
 ${SCENE_RULES}
 
 Also write: a short video "title" (under 60 characters), an "accent" colour hex that suits the topic, an Instagram "caption" (under 300 characters, ends with a question for viewers) and up to 5 "hashtags" (each starting with #).
-Return {"title":"","accent":"#145A41","caption":"","hashtags":[],"scenes":[{"template":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}]}.${rejected(previousErrors)}`,
+Return {"title":"","accent":"#145A41","caption":"","hashtags":[],"scenes":[{"template":"","diagram":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}]}.${rejected(previousErrors)}`,
   };
 }
 
@@ -82,6 +90,6 @@ Rewrite this scene${scene.title ? ` ("${scene.title}")` : ''}, currently: """${s
 ${instruction ? `Teacher instruction: ${instruction}` : 'Make it clearer and more engaging, about the same length.'}
 
 ${SCENE_RULES}
-Return one scene: {"template":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}.${rejected(previousErrors)}`,
+Return one scene: {"template":"","diagram":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}.${rejected(previousErrors)}`,
   };
 }

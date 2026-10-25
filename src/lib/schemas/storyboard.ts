@@ -6,7 +6,9 @@ export const TEMPLATES = [
 ] as const;
 
 /** Templates the renderer can draw today (src/remotion/templates). The storyboard prompt only offers these; Phase 3 widens it. */
-export const ENABLED_TEMPLATES = ['title-hook', 'bullet-reveal', 'definition-callout'] as const;
+export const ENABLED_TEMPLATES = [
+  'title-hook', 'bullet-reveal', 'definition-callout', 'step-flow', 'stat', 'comparison', 'timeline', 'formula', 'diagram', 'recap',
+] as const;
 
 export const wordSchema = z.object({ word: z.string(), startMs: z.number(), endMs: z.number() });
 
@@ -47,6 +49,8 @@ export type Storyboard = z.infer<typeof storyboardSchema>;
 /** What the model returns for one scene (ids and order are added by the server). */
 export const llmSceneSchema = z.object({
   template: z.enum(ENABLED_TEMPLATES),
+  // The prompt shows "diagram":"" for scenes that are not diagrams, so an empty string counts as absent.
+  diagram: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.enum(['flow', 'raindrop', 'orbit']).optional()),
   title: z.string().min(1).max(80).optional(),
   narration: z.string().min(1).max(600),
   needsCheck: z.boolean().default(false),
