@@ -20,7 +20,16 @@ export async function ensureIndexes() {
     { key: { userId: 1, createdAt: -1 } },
     { key: { userId: 1, status: 1 } },
   ]);
-  await d.collection('render_jobs').createIndex({ videoId: 1, startedAt: -1 });
+  await d.collection('render_jobs').createIndexes([
+    { key: { videoId: 1, queuedAt: -1 } },
+    // One active job per video; a second start finds the first instead of racing it.
+    { key: { videoId: 1, active: 1 }, unique: true, partialFilterExpression: { active: true } },
+    { key: { userId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } },
+  ]);
+  await d.collection('assets').createIndexes([
+    { key: { videoId: 1 } },
+    { key: { source: 1, sourceId: 1 } },
+  ]);
   await d.collection('posts').createIndexes([
     { key: { status: 1, scheduledAt: 1 } },
     { key: { videoId: 1 } },

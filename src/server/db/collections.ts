@@ -22,9 +22,25 @@ export type VideoDoc = {
   topic?: string; angle?: string; lengthSec?: number; language?: string; audience?: string;
   voiceId?: string; speed?: number; theme?: string; accent?: string; musicId?: string | null; musicVolume?: number; captionsOn?: boolean;
   caption?: string; hashtags?: string[]; estimatedSec?: number; safety?: { checkedAt: Date; result: 'ok' };
-  scenes: Scene[]; outputKey?: string; output?: { sizeBytes: number; validatedAt: Date };
+  scenes: Scene[]; outputKey?: string; thumbKey?: string; output?: { sizeBytes: number; validatedAt: Date; durationMs?: number };
+  currentJobId?: ObjectId;
   version: number; createdAt: Date; updatedAt: Date; deletedAt?: Date;
 };
+
+export type RenderStage = 'load' | 'voice' | 'sync' | 'media' | 'props' | 'render' | 'upload' | 'finalise';
+
+/** One render attempt (docs/Database-Design.md section 4.4). `active` is true only while queued or running. */
+export type RenderJobDoc = {
+  _id: ObjectId; videoId: ObjectId; userId: ObjectId; kind: 'full' | 'fix'; sceneIds?: string[];
+  status: 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled'; stage: RenderStage; progress: number; attempt: number;
+  active?: true; idempotencyKey?: string; sandboxId?: string;
+  error?: { code: string; message: string; step?: string; detail?: string }; warnings?: string[];
+  outputKey?: string; thumbKey?: string; voiceCredits?: number; renderSec?: number;
+  queuedAt: Date; startedAt?: Date; finishedAt?: Date;
+};
+
+/** Counts voice credits (and later other costs) per member; the monthly voice budget is the sum of these. */
+export type UsageDoc = { _id: ObjectId; userId: ObjectId; videoId?: ObjectId; type: 'voice_credits'; amount: number; createdAt: Date };
 
 /** Licence record for every stock clip, image or music track used (docs/Database-Design.md section 4.7). */
 export type AssetDoc = {
@@ -36,6 +52,8 @@ export type AssetDoc = {
 export const assets = () => db().collection<AssetDoc>('assets');
 export const users = () => db().collection<UserDoc>('users');
 export const videos = () => db().collection<VideoDoc>('videos');
+export const renderJobs = () => db().collection<RenderJobDoc>('render_jobs');
+export const usageLog = () => db().collection<UsageDoc>('usage_log');
 export const sessions = () => db().collection<SessionDoc>('sessions');
 export const passwordResets = () => db().collection<PasswordResetDoc>('password_resets');
 export const approvedEmails = () => db().collection<ApprovedEmailDoc>('approved_emails');

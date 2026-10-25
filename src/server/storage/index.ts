@@ -26,7 +26,10 @@ export function createR2Storage(cfg: R2Config = r2Config(), endpoint = `https://
     async put(key, body, type) {
       await client.send(new PutObjectCommand({ Bucket: cfg.bucket, Key: key, Body: body, ContentType: type }));
     },
-    signedGet: (key, ttlSec) => getSignedUrl(client, new GetObjectCommand({ Bucket: cfg.bucket, Key: key }), { expiresIn: ttlSec }),
+    signedGet: (key, ttlSec, opts) => getSignedUrl(client, new GetObjectCommand({
+      Bucket: cfg.bucket, Key: key,
+      ...(opts?.downloadName ? { ResponseContentDisposition: `attachment; filename="${opts.downloadName.replace(/[^\w .()-]/g, '')}"` } : {}),
+    }), { expiresIn: ttlSec }),
     async exists(key) {
       try {
         await client.send(new HeadObjectCommand({ Bucket: cfg.bucket, Key: key }));

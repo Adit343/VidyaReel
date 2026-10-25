@@ -32,8 +32,9 @@ export const sceneSchema = z.object({
   elements: z.array(elementSchema),
   // `url` and `durationSec` are filled in when the render props are built (a signed link to the cached clip).
   media: z.object({ assetId: z.string().optional(), query: z.string(), url: z.string().optional(), durationSec: z.number().optional() }).optional(),
+  // `url` (a signed link to the narration file) is only present in render props.
   audio: z.object({
-    key: z.string(), hash: z.string(), durationMs: z.number(), words: z.array(wordSchema),
+    key: z.string(), hash: z.string(), durationMs: z.number(), words: z.array(wordSchema), url: z.string().optional(),
   }).optional(),
   durationMs: z.number().optional(),
 });

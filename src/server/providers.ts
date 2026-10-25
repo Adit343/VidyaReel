@@ -21,7 +21,8 @@ export interface MediaProvider {
 }
 export interface StorageProvider {
   put(key: string, body: Buffer, type: string): Promise<void>;
-  signedGet(key: string, ttlSec: number): Promise<string>;
+  /** A time-limited link; `downloadName` makes the browser save the file under that name instead of playing it. */
+  signedGet(key: string, ttlSec: number, opts?: { downloadName?: string }): Promise<string>;
   exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
 }

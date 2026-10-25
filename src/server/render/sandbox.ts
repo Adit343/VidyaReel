@@ -1,7 +1,7 @@
 import path from 'node:path';
-import { addBundleToSandbox, createSandbox, renderMediaOnVercel } from '@remotion/vercel';
+import { addBundleToSandbox, createSandbox, renderMediaOnVercel, renderStillOnVercel } from '@remotion/vercel';
 import { Sandbox } from '@vercel/sandbox';
-import type { Scene } from '@/lib/schemas/storyboard';
+import type { RenderProps } from './pipeline';
 
 /**
  * Vercel Sandbox helpers for the render workflow. Each function is one Inngest step, so the
@@ -20,12 +20,25 @@ export async function uploadBundle(name: string): Promise<void> {
   await addBundleToSandbox({ sandbox, bundleDir: bundleDir() });
 }
 
-export async function renderScenes(name: string, scenes: Scene[]): Promise<{ filePath: string; contentType: string }> {
+/** Renders the `Video` composition from the given props; `onProgress` gets 0 to 1. */
+export async function renderScenes(
+  name: string, props: RenderProps, onProgress?: (fraction: number) => Promise<void> | void,
+): Promise<{ filePath: string; contentType: string }> {
   const sandbox = await Sandbox.get({ name, resume: true });
   const { sandboxFilePath, contentType } = await renderMediaOnVercel({
-    sandbox, compositionId: 'Video', inputProps: { scenes }, codec: 'h264',
+    sandbox, compositionId: 'Video', inputProps: props, codec: 'h264',
+    onProgress: onProgress ? (p) => onProgress(p.overallProgress) : undefined,
   });
   return { filePath: sandboxFilePath, contentType };
+}
+
+/** One frame of the video as a JPEG, used as the poster image. */
+export async function renderPoster(name: string, props: RenderProps, frame = 45): Promise<{ filePath: string }> {
+  const sandbox = await Sandbox.get({ name, resume: true });
+  const { sandboxFilePath } = await renderStillOnVercel({
+    sandbox, compositionId: 'Video', inputProps: props, frame, imageFormat: 'jpeg', jpegQuality: 80, scale: 0.5,
+  });
+  return { filePath: sandboxFilePath };
 }
 
 export async function readRendered(name: string, filePath: string): Promise<Buffer> {
