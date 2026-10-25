@@ -52,7 +52,7 @@ await db.collection('videos').insertOne({
 
 const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
   '--headless=new', '--remote-debugging-port=9334', `--user-data-dir=${mkdtempSync(join(tmpdir(), 'vr-chrome-'))}`,
-  '--no-first-run', '--hide-scrollbars', 'about:blank',
+  '--no-first-run', '--hide-scrollbars', '--autoplay-policy=no-user-gesture-required', 'about:blank',
 ]);
 let target = '';
 for (let i = 0; i < 30 && !target; i++) {
@@ -98,6 +98,53 @@ try {
     await sleep(1500);
     await shot(name, 1500);
   }
+
+  // ---- Dropdowns: the music select on Review (including switching tracks while one plays), then the others ----
+  const viewport = async (name: string) => {
+    const r = await cdp('Page.captureScreenshot', { format: 'png' });
+    writeFileSync(join(OUT, `${name}.png`), Buffer.from(r.data, 'base64'));
+    console.log('shot', name);
+  };
+  const clickEl = (sel: string) => js(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return 'missing'; e.click(); return 'ok'; })()`);
+  const chooseOption = (text: string) => js(`(() => { const o = [...document.querySelectorAll('[role=option]')].find((x) => x.textContent.includes(${JSON.stringify(text)})); if (!o) return 'missing'; o.click(); return 'ok'; })()`);
+  const previewLabel = () => js(`document.querySelector('button[aria-label*="Healing"], button[aria-label*="Ambient Focus"]')?.getAttribute('aria-label')`);
+  await js(`document.querySelector('#music').scrollIntoView({ block: 'center' })`);
+  await sleep(500);
+  await viewport('dropdown-music-closed');
+  await clickEl('#music');
+  await sleep(400);
+  await viewport('dropdown-music-open');
+  await chooseOption('Healing Piano');
+  await sleep(400);
+  await viewport('dropdown-music-chosen');
+  // A real mouse click (the browser only starts audio after a genuine user gesture)
+  const box = await js(`(() => { const r = document.querySelector('button[aria-label^="Preview Healing"]').getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`);
+  for (const type of ['mousePressed', 'mouseReleased']) await cdp('Input.dispatchMouseEvent', { type, x: box.x, y: box.y, button: 'left', clickCount: 1 });
+  await sleep(3000);
+  console.log('while playing ->', await previewLabel(), '(should start with Stop)');
+  await clickEl('#music');
+  await sleep(300);
+  await chooseOption('Ambient Focus');
+  await sleep(500);
+  console.log('after changing track ->', await previewLabel(), '(should start with Preview, not Stop)');
+  await viewport('dropdown-music-switched');
+
+  await cdp('Page.navigate', { url: `${BASE}/create` });
+  await sleep(3000);
+  await js(`document.querySelector('#audience-select').scrollIntoView({ block: 'center' })`);
+  await clickEl('#audience-select');
+  await sleep(400);
+  await viewport('dropdown-audience-open');
+  await cdp('Page.navigate', { url: `${BASE}/library` });
+  await sleep(3000);
+  await clickEl('button[aria-label="Sort videos"]');
+  await sleep(400);
+  await viewport('dropdown-library-sort-open');
+  await cdp('Page.navigate', { url: `${BASE}/admin` });
+  await sleep(3500);
+  await clickEl('button[aria-label^="Role for"]');
+  await sleep(400);
+  await viewport('dropdown-admin-role-open');
 } finally {
   ws.close();
   chrome.kill();

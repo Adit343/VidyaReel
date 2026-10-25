@@ -5,6 +5,7 @@ import { useRef, useState, useTransition } from 'react';
 import { VOICES } from '@/config/voices';
 import { clock, whenLabel } from '@/lib/time';
 import type { VideoCardData } from '@/server/videos/list';
+import { Select } from '../ui/Select';
 import { FILTER_GROUPS, HOME_STATUS, NEXT_STEP } from '../video/status';
 
 const SUBJECTS = ['Biology', 'Chemistry', 'World History', 'Literature'];
@@ -106,9 +107,10 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
                 <label className="flex items-center gap-1.5 bg-white border border-[#D3DBD0] rounded-xl px-3 py-1.5 text-xs text-[#0F2A20]">
                   <span className="material-symbols-outlined text-sm text-[#54675D]">graphic_eq</span>
                   <span className="font-code-xs text-code-xs text-[#54675D]">Voice:</span>
-                  <select value={voice} onChange={(e) => setVoice(e.target.value)} className="bg-transparent border-none p-0 text-xs font-ui-medium text-[#0F2A20] focus:ring-0 cursor-pointer pr-6">
-                    {VOICES.map((v) => <option key={v.id} value={v.id}>{v.name} · {v.blurb}</option>)}
-                  </select>
+                  <Select
+                    value={voice} onChange={setVoice} variant="bare" ariaLabel="Narration voice"
+                    options={VOICES.map((v) => ({ value: v.id, label: v.name, hint: v.blurb }))}
+                  />
                 </label>
                 <div className="flex items-center gap-1 bg-white border border-[#D3DBD0] rounded-xl px-3 py-1.5 text-xs">
                   <span className="material-symbols-outlined text-sm text-[#FF9F1C]">timer</span>

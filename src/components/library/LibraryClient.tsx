@@ -5,6 +5,7 @@ import type { VideoStatus } from '@/lib/schemas/video';
 import { clock, whenLabel } from '@/lib/time';
 import type { VideoCardData } from '@/server/videos/list';
 import { useToast } from '../shell/Toast';
+import { Select } from '../ui/Select';
 import { NEXT_STEP } from '../video/status';
 
 const PAGE = 8;
@@ -118,12 +119,11 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
               >{label}</button>
             ))}
           </div>
-          <div className="relative self-end lg:self-auto min-w-[130px]">
-            <select
-              value={sort} onChange={(e) => setSort(e.target.value as (typeof SORTS)[number])} aria-label="Sort videos"
-              className="w-full appearance-none bg-white border border-[#D3DBD0] rounded-[12px] pl-3.5 pr-8 py-2 text-ui-medium font-ui-medium text-[#0F2A20] focus:outline-none focus:border-[#145A41] focus:ring-2 focus:ring-[#145A41]/20 cursor-pointer shadow-sm"
-            >{SORTS.map((s) => <option key={s}>{s}</option>)}</select>
-            <span className="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#54675D] text-[18px]">expand_more</span>
+          <div className="self-end lg:self-auto min-w-[150px]">
+            <Select
+              value={sort} onChange={(v) => setSort(v as (typeof SORTS)[number])} ariaLabel="Sort videos" menuAlign="right"
+              options={SORTS.map((s) => ({ value: s, label: s }))} className="font-ui-medium shadow-sm"
+            />
           </div>
         </div>
 

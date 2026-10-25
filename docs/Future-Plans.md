@@ -1,16 +1,16 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 27)
+Last updated: 2026-10-25 (prompt 28)
 
-Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
+Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1, 2 and 3 are done and signed off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (all steps done, waiting for owner sign-off).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: none in progress; **4 Render workflow and Library** is next. Phases 0 to 3 are done and signed off.
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] Phase 3 sign-off by the owner (everything is built; try the Review screen voice samples and music in the browser). Re-run `npm run check:storyboards` now and then (it uses free Gemini quota; the daily quota resets at 12:30 PM IST until 1 Nov, then 1:30 PM IST)
+- [ ] Re-run `npm run check:storyboards` now and then (it uses free Gemini quota; the daily quota resets at 12:30 PM IST until 1 Nov, then 1:30 PM IST)
 - [ ] Phase 4: call `attachClip` for stock-clip scenes in `renderVideo` and put a signed `media.url` in the render props; fall back to another template when no clip is found; add an index for `assets`
 - [ ] Add Pexels as a second media source if its API keys open again
 - [ ] Phase 4: put the narration audio and the music `url` (signed link) in the render props; `Video` already plays the music and ducks it

@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { VOICES } from '@/config/voices';
+import { Select } from '@/components/ui/Select';
 import { clock } from '@/lib/time';
 
 export type Settings = {
@@ -40,7 +41,7 @@ function usePreview() {
     a.onerror = fail;
     a.play().catch(fail);
   };
-  return { state, failed, toggle };
+  return { state, failed, toggle, stop };
 }
 
 /** Right-hand "Reel settings" panel of Stitch Review: voice, pacing, theme, music, captions, duration meter. */
@@ -146,20 +147,19 @@ export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, l
         <label htmlFor="music" className="block font-ui-medium text-body-sm text-[#0F2A20] mb-2 font-semibold">Background music</label>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <select
-              id="music" value={track ? track.id : ''} disabled={disabled || !tracks?.length}
-              onChange={(e) => onChange({ musicId: e.target.value || null })}
-              className="flex-1 rounded-xl border border-[#D3DBD0] text-body-sm text-[#0F2A20] py-2 px-3 bg-white focus:border-[#145A41] focus:ring-1 focus:ring-[#145A41] disabled:opacity-70"
-            >
-              <option value="">No background music</option>
-              {tracks?.map((t) => <option key={t.id} value={t.id}>{t.name} ({t.blurb})</option>)}
-            </select>
+            <div className="min-w-0 flex-1">
+              <Select
+                id="music" ariaLabel="Background music" value={track ? track.id : ''} disabled={disabled || !tracks?.length}
+                options={[{ value: '', label: 'No background music' }, ...(tracks ?? []).map((t) => ({ value: t.id, label: t.name, hint: t.blurb }))]}
+                onChange={(v) => { samples.stop(); onChange({ musicId: v || null }); }}
+              />
+            </div>
             <button
               type="button" disabled={!track || samples.failed.includes(track.id)}
               onClick={() => track && samples.toggle(track.id, track.previewUrl)}
               title={track && samples.failed.includes(track.id) ? 'Preview unavailable right now' : 'Preview track'}
               aria-label={track ? `${samples.state?.id === track.id ? 'Stop' : 'Preview'} ${track.name}` : 'Preview track (pick a track first)'}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${track && samples.state?.id === track.id ? 'bg-[#145A41] text-white' : 'bg-[#E1E7DF] text-[#145A41] hover:bg-[#145A41] hover:text-white'}`}
+              className={`w-[38px] h-[38px] rounded-xl flex items-center justify-center shrink-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${track && samples.state?.id === track.id ? 'bg-[#145A41] text-white' : 'bg-[#E1E7DF] text-[#145A41] hover:bg-[#145A41] hover:text-white'}`}
             >
               <span className={`material-symbols-outlined text-[18px] ${track && samples.state?.id === track.id && samples.state.phase === 'loading' ? 'animate-spin' : ''}`}>
                 {track && samples.state?.id === track.id ? (samples.state.phase === 'loading' ? 'progress_activity' : 'pause') : 'music_note'}

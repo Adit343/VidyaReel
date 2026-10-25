@@ -4,6 +4,7 @@ import { friendlyError } from '@/lib/error-messages';
 import { initialsOf, timeAgo } from '@/lib/time';
 import type { UsageSummary } from '@/server/admin/usage';
 import { useToast } from '../shell/Toast';
+import { Select } from '../ui/Select';
 
 export type Member = {
   id: string; email: string; name: string | null; role: 'member' | 'admin'; dailyLimit: number; addedAt: string;
@@ -224,13 +225,11 @@ export function AdminPanel({ initialMembers, initialUsage, selfEmail }: Props) {
                           </div>
                         </td>
                         <td className="py-3.5 px-4">
-                          <select
-                            aria-label={`Role for ${m.email}`} value={m.role} disabled={locked || off}
-                            onChange={(e) => void patch(m, { role: e.target.value }, `${first(m)} is now ${e.target.value === 'admin' ? 'an admin' : 'a member'}.`)}
-                            className={`border border-[#D3DBD0] rounded-lg text-xs font-ui-medium py-1 px-2 focus:ring-1 focus:ring-[#145A41] focus:border-[#145A41] ${locked || off ? 'bg-[#E1E7DF]/30 text-[#54675D] cursor-not-allowed' : 'bg-[#E1E7DF]/40 text-[#0F2A20] cursor-pointer'}`}
-                          >
-                            <option value="admin">Admin</option><option value="member">Member</option>
-                          </select>
+                          <Select
+                            variant="compact" ariaLabel={`Role for ${m.email}`} value={m.role} disabled={locked || off}
+                            options={[{ value: 'admin', label: 'Admin', hint: 'Manages members and sees usage' }, { value: 'member', label: 'Member', hint: 'Creates and posts videos' }]}
+                            onChange={(role) => void patch(m, { role }, `${first(m)} is now ${role === 'admin' ? 'an admin' : 'a member'}.`)}
+                          />
                         </td>
                         <td className="py-3.5 px-4">
                           <Stepper value={off ? 0 : m.dailyLimit} disabled={off} label={`Daily limit for ${m.email}`} onChange={(v) => setLimit(m, v)} />
@@ -298,10 +297,11 @@ export function AdminPanel({ initialMembers, initialUsage, selfEmail }: Props) {
                     type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="colleague@school.edu" aria-label="Email to invite"
                     className="flex-1 bg-white border border-[#D3DBD0] rounded-xl px-4 py-2.5 text-sm font-code-xs text-[#0F2A20] placeholder:text-[#54675D]/60 focus:outline-none focus:border-[#145A41] focus:ring-2 focus:ring-[#145A41]/10"
                   />
-                  <select
-                    value={inviteRole} aria-label="Role" onChange={(e) => { const r = e.target.value as 'member' | 'admin'; setInviteRole(r); setInviteLimit(r === 'admin' ? 20 : 5); }}
-                    className="bg-white border border-[#D3DBD0] rounded-xl px-3 py-2.5 text-xs font-ui-medium text-[#0F2A20] cursor-pointer"
-                  ><option value="member">Role: Member</option><option value="admin">Role: Admin</option></select>
+                  <Select
+                    variant="compact" value={inviteRole} ariaLabel="Role" className="h-full rounded-xl px-3 py-2.5"
+                    options={[{ value: 'member', label: 'Role: Member' }, { value: 'admin', label: 'Role: Admin' }]}
+                    onChange={(v) => { const r = v as 'member' | 'admin'; setInviteRole(r); setInviteLimit(r === 'admin' ? 20 : 5); }}
+                  />
                   <div className="flex items-center justify-between bg-white border border-[#D3DBD0] rounded-xl px-2 py-1 shadow-sm">
                     <span className="text-xs text-[#54675D] mr-2 font-ui-medium pl-1">Limit:</span>
                     <Stepper value={inviteLimit} label="Daily limit for the invite" bare onChange={(v) => setInviteLimit(Math.min(50, Math.max(1, v)))} />

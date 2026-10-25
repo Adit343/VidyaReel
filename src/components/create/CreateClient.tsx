@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { api } from '@/lib/client-api';
 import type { VideoView } from '@/server/videos/view';
+import { Select } from '../ui/Select';
 import { Stepper } from './Stepper';
 
 const MAX = 500;
@@ -238,15 +239,10 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
               </div>
               <div className="sm:col-span-4">
                 <label htmlFor="audience-select" className="block font-headline-sm text-[13px] text-[#0F2A20] mb-2 tracking-tight">Audience</label>
-                <div className="relative">
-                  <select
-                    id="audience-select" value={audience} disabled={loading} onChange={(e) => setAudience(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border border-[#D3DBD0] bg-white px-3.5 py-2 text-[14px] text-[#0F2A20] focus:border-[#145A41] focus:ring-2 focus:ring-[#145A41]/10 outline-none cursor-pointer pr-9"
-                  >
-                    {AUDIENCES.map(([v, label]) => <option key={v} value={v}>{label}</option>)}
-                  </select>
-                  <span className="material-symbols-outlined text-[18px] text-[#54675D] pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">expand_more</span>
-                </div>
+                <Select
+                  id="audience-select" value={audience} disabled={loading} onChange={setAudience}
+                  options={AUDIENCES.map(([value, label]) => ({ value, label }))}
+                />
               </div>
               <div className="sm:col-span-3">
                 <span className="block font-headline-sm text-[13px] text-[#0F2A20] mb-2 tracking-tight">Language</span>

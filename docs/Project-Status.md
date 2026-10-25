@@ -1,8 +1,8 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-25 (prompt 27)
+Last updated: 2026-10-25 (prompt 28)
 
-Current phase: **Phase 3 (template library and media) is built and waiting for your sign-off**: themes, captions, all eleven templates, stock clips, voice samples and music with ducking are done. **Phase 2 (storyboard AI and Review) is done and signed off (2026-10-25)**; its music tracks and voice samples (step 2.18) arrived in Phase 3. **Phase 1 (pipeline spike) is complete**: all five experiments passed and the architecture stands (decision in [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started: local Remotion work (1.1 to 1.3) the Vercel Sandbox render to R2 (1.4 to 1.6), the Inngest `renderVideo` workflow (1.7 to 1.9) and the ElevenLabs voice and cue sync (1.10 to 1.13) are done; see [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md).
+Current phase: **Phase 3 (template library and media) is done and signed off (2026-10-25)**: themes, captions, all eleven templates, stock clips, voice samples and music with ducking; Phase 4 (render workflow and Library) has not started. **Phase 2 (storyboard AI and Review) is done and signed off (2026-10-25)**; its music tracks and voice samples (step 2.18) arrived in Phase 3. **Phase 1 (pipeline spike) is complete**: all five experiments passed and the architecture stands (decision in [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started: local Remotion work (1.1 to 1.3) the Vercel Sandbox render to R2 (1.4 to 1.6), the Inngest `renderVideo` workflow (1.7 to 1.9) and the ElevenLabs voice and cue sync (1.10 to 1.13) are done; see [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md).
 
 Current progress, done so far. Updated on every prompt. Remaining work is in [Future-Plans.md](Future-Plans.md).
 
@@ -58,6 +58,14 @@ You confirmed the real reset email arrives and the link works, and Google sign-i
 ## Phase 2 sign-off (2026-10-25)
 
 You tried Create and Review in the browser with the real Gemini model and confirmed they work. The Phase 2 gate was met: 10 of 10 topics gave valid storyboards, bad output retries once then fails cleanly, and edits autosave and survive a refresh.
+
+## Phase 3 sign-off (2026-10-25)
+
+You confirmed in the browser that Review works (voice samples, the music select and its volume) and asked for the dropdown fixes below. The Phase 3 gate was met: all templates render from sample props, stock clips crop to 9:16, the licence is recorded in `assets`, both music tracks are in R2, and 10 of 10 topics give valid storyboards with the wider template list.
+
+## Dropdowns (2026-10-25)
+
+The browser's native dropdowns looked out of place and the Review music row overflowed its box. All six native selects (Review music, Create audience, Library sort, Home voice, Admin member role and invite role) now use one component, `src/components/ui/Select.tsx`: a listbox in the Solstice style (white card, 1px sage border, saffron-free, rounded 12 px, check mark on the chosen row, optional second line such as a track's description). It is drawn on the page body so a table or card cannot clip it, opens upward when there is no room below, and works with the keyboard (arrows, Home, End, Enter, Escape, first letter). Fixed on Review: the music row (the select shrinks, the preview button stays inside the box and matches the select's height) and changing the music track now stops a preview that is playing. Checked in headless Chrome with a real mouse click: the button reads "Stop Healing Piano" while playing and "Preview Ambient Focus" after switching. `npx tsx scripts/review-preview-check.mts <out-dir>` now also screenshots every dropdown. 104 tests still pass.
 
 ## Google sign-in with a second account (2026-10-25)
 
