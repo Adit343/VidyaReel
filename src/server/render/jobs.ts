@@ -17,7 +17,7 @@ export const STAGE_LABEL: Record<RenderStage, string> = {
 export type JobView = {
   id: string; status: RenderJobDoc['status']; stage: RenderStage; stageLabel: string; progress: number; etaSec: number | null;
   kind: 'full' | 'fix'; attempt: number; sceneIds: string[]; error: { code: string; message: string } | null; startedAt: string | null;
-  warnings: string[];
+  renderSec: number | null; warnings: string[];
 };
 
 export function toJobView(j: RenderJobDoc, now = new Date()): JobView {
@@ -29,7 +29,7 @@ export function toJobView(j: RenderJobDoc, now = new Date()): JobView {
     etaSec: active && j.progress >= 8 && elapsed > 0 ? Math.max(1, Math.round((elapsed * (100 - j.progress)) / j.progress)) : null,
     kind: j.kind, attempt: j.attempt, sceneIds: j.sceneIds ?? [],
     error: j.error ? { code: j.error.code, message: j.error.message } : null,
-    startedAt: j.startedAt?.toISOString() ?? null, warnings: j.warnings ?? [],
+    startedAt: j.startedAt?.toISOString() ?? null, renderSec: j.renderSec ?? null, warnings: j.warnings ?? [],
   };
 }
 

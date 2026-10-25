@@ -206,7 +206,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
   async function generate() {
     await flushSettings();
     await chain.current;
-    router.push(`/videos/${video.id}/generate`);
+    router.push(`/videos/${video.id}/generate?start=1`);
   }
 
   const words = video.scenes.reduce((n, s) => n + s.words, 0);

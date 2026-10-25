@@ -4,7 +4,37 @@ const STEPS = ['Idea', 'Review', 'Generate', 'Post'] as const;
  * The 4-step indicator. Stitch draws it two ways: "dots" on Step 1 (thin line, small dots) and "line" on Step 2
  * (check circles joined by lines, current ring); both are kept so each screen matches its design.
  */
-export function Stepper({ current, variant }: { current: 1 | 2 | 3 | 4; variant: 'dots' | 'line' }) {
+export function Stepper({ current, variant }: { current: 1 | 2 | 3 | 4; variant: 'dots' | 'line' | 'stack' }) {
+  if (variant === 'stack') {
+    // Step 3 (Generate) draws a narrow centred stepper with the label under each circle.
+    return (
+      <div className="flex items-center justify-between max-w-xl mx-auto relative" aria-label="Creation progress">
+        <div className="absolute left-3 right-3 top-2.5 h-[1.5px] bg-[#B9C5B5] -z-0" />
+        {STEPS.map((label, i) => {
+          const now = i + 1 === current;
+          const done = i + 1 < current;
+          return (
+            <div key={label} className={`flex flex-col items-center gap-1.5 z-10 bg-[#EEF1EC] px-2 ${!now && !done ? 'opacity-60' : ''}`} aria-current={now ? 'step' : undefined}>
+              {done ? (
+                <div className="w-5 h-5 rounded-full bg-[#145A41] text-white flex items-center justify-center shadow-sm">
+                  <span className="material-symbols-outlined text-[13px] leading-none">check</span>
+                </div>
+              ) : now ? (
+                <div className="w-5 h-5 rounded-full bg-white border-2 border-[#145A41] flex items-center justify-center shadow-sm">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#145A41]" />
+                </div>
+              ) : (
+                <div className="w-5 h-5 rounded-full bg-[#EEF1EC] border border-[#B9C5B5] flex items-center justify-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B9C5B5]" />
+                </div>
+              )}
+              <span className={`text-xs ${now ? 'font-semibold text-[#145A41] font-code-sm' : 'font-medium text-[#54675D]'}`}>{label}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
   if (variant === 'dots') {
     return (
       <div className="w-full mb-8" aria-label="Creation progress">

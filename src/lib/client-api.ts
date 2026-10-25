@@ -2,11 +2,11 @@ export type ApiError = { code: string; message: string; details?: Record<string,
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: ApiError };
 
 /** JSON fetch for the browser: never throws; failures come back as `{ ok: false, error }`. */
-export async function api<T>(url: string, init: { method?: string; body?: unknown; signal?: AbortSignal } = {}): Promise<ApiResult<T>> {
+export async function api<T>(url: string, init: { method?: string; body?: unknown; signal?: AbortSignal; headers?: Record<string, string> } = {}): Promise<ApiResult<T>> {
   try {
     const res = await fetch(url, {
       method: init.method ?? (init.body === undefined ? 'GET' : 'POST'),
-      headers: init.body === undefined ? undefined : { 'content-type': 'application/json' },
+      headers: init.body === undefined ? init.headers : { 'content-type': 'application/json', ...init.headers },
       body: init.body === undefined ? undefined : JSON.stringify(init.body), signal: init.signal,
     });
     const json = await res.json().catch(() => null);
