@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import { VOICES } from '@/config/voices';
 import { clock } from '@/lib/time';
 
@@ -15,8 +16,33 @@ type Props = {
   estimatedSec: number; lengthSec: number; warning: string | null; longest: number[];
 };
 
+type SampleState = { id: string; phase: 'loading' | 'playing' } | null;
+
+/** One voice sample at a time: starting another stops the first. A sample that cannot load marks its button unavailable. */
+function useVoiceSamples() {
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const [state, setState] = useState<SampleState>(null);
+  const [failed, setFailed] = useState<string[]>([]);
+  const stop = () => { audio.current?.pause(); audio.current = null; setState(null); };
+  useEffect(() => () => { audio.current?.pause(); }, []);
+  const toggle = (id: string) => {
+    if (state?.id === id) return stop();
+    audio.current?.pause();
+    const a = new Audio(`/api/voices/${id}/sample`);
+    audio.current = a;
+    setState({ id, phase: 'loading' });
+    const fail = () => { if (audio.current === a) { stop(); setFailed((f) => [...f, id]); } };
+    a.onplaying = () => setState({ id, phase: 'playing' });
+    a.onended = () => { if (audio.current === a) stop(); };
+    a.onerror = fail;
+    a.play().catch(fail);
+  };
+  return { state, failed, toggle };
+}
+
 /** Right-hand "Reel settings" panel of Stitch Review: voice, pacing, theme, music, captions, duration meter. */
 export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, lengthSec, warning, longest }: Props) {
+  const samples = useVoiceSamples();
   const over = estimatedSec > lengthSec;
   const pct = Math.min(100, Math.round((estimatedSec / Math.max(1, lengthSec)) * 100));
   return (
@@ -43,9 +69,16 @@ export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, l
               >
                 <div className="flex items-center gap-2.5">
                   <button
-                    type="button" disabled title="Voice samples arrive with the voice step" aria-label={`Preview ${v.name} (not available yet)`}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 opacity-60 cursor-not-allowed ${on ? 'bg-[#145A41] text-white' : 'bg-[#E1E7DF] text-[#145A41]'}`}
-                  ><span className="material-symbols-outlined text-[16px] ml-0.5">play_arrow</span></button>
+                    type="button" onClick={(e) => { e.stopPropagation(); samples.toggle(v.id); }}
+                    disabled={samples.failed.includes(v.id)}
+                    title={samples.failed.includes(v.id) ? 'Sample unavailable right now' : 'Preview voice sample'}
+                    aria-label={`${samples.state?.id === v.id ? 'Stop' : 'Preview'} ${v.name}${samples.failed.includes(v.id) ? ' (unavailable)' : ''}`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${on || samples.state?.id === v.id ? 'bg-[#145A41] text-white hover:bg-[#0F4632]' : 'bg-[#E1E7DF] text-[#145A41] hover:bg-[#145A41] hover:text-white'}`}
+                  >
+                    <span className={`material-symbols-outlined text-[16px] ${samples.state?.id === v.id ? '' : 'ml-0.5'} ${samples.state?.id === v.id && samples.state.phase === 'loading' ? 'animate-spin' : ''}`}>
+                      {samples.state?.id === v.id ? (samples.state.phase === 'loading' ? 'progress_activity' : 'pause') : samples.failed.includes(v.id) ? 'volume_off' : 'play_arrow'}
+                    </span>
+                  </button>
                   <div>
                     <span className={`font-ui-medium text-body-sm text-[#0F2A20] ${on ? 'font-semibold' : ''}`}>{v.name}</span>
                     <p className="text-[11px] text-[#54675D]">{v.blurb}</p>
@@ -61,7 +94,7 @@ export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, l
             );
           })}
         </div>
-        <p className="text-[11px] text-[#54675D] mt-2">Voice samples arrive soon. Changing the voice or pace re-records the narration when you generate.</p>
+        <p className="text-[11px] text-[#54675D] mt-2">Changing the voice or pace re-records the narration when you generate.</p>
       </fieldset>
 
       <div className="mb-5 pb-5 border-b border-[#EEF1EC]">

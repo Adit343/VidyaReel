@@ -154,7 +154,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 3.11 ✅ | `MediaProvider` adapters + licence record in `assets` | Portrait clip found |
 | 3.12 ✅ | Stock-clip template with 9:16 crop | Renders |
 | 3.13 ⬜ | Music tracks in R2 + ducking under speech | Volume drops on words |
-| 3.14 ⬜ | Voice list + cached 5 s samples (`/api/voices`) | Samples play |
+| 3.14 ✅ | Voice list + cached 5 s samples (`/api/voices`) | Samples play |
 | 3.15 ⬜ | Fix prototype problem: first element cue within first second | Empty-screen case gone |
 
 ## Phase 4: Render workflow and Library

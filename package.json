@@ -13,6 +13,7 @@
     "remotion:bundle": "remotion bundle src/remotion/index.ts --out-dir=build/remotion-bundle",
     "spike:inngest": "tsx scripts/spike-inngest-render.mts",
     "spike:voice": "tsx scripts/spike-voice-sync.mts",
+    "check:voice-samples": "tsx scripts/check-voice-samples.mts",
     "check:media": "tsx scripts/check-media.mts",
     "check:storyboards": "tsx scripts/check-storyboards.mts",
     "ui:harness": "tsx scripts/ui-harness.mts",

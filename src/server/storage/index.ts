@@ -1,4 +1,4 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import type { StorageProvider } from '@/server/providers';
 import { env } from '@/server/env';
@@ -27,6 +27,15 @@ export function createR2Storage(cfg: R2Config = r2Config(), endpoint = `https://
       await client.send(new PutObjectCommand({ Bucket: cfg.bucket, Key: key, Body: body, ContentType: type }));
     },
     signedGet: (key, ttlSec) => getSignedUrl(client, new GetObjectCommand({ Bucket: cfg.bucket, Key: key }), { expiresIn: ttlSec }),
+    async exists(key) {
+      try {
+        await client.send(new HeadObjectCommand({ Bucket: cfg.bucket, Key: key }));
+        return true;
+      } catch (e) {
+        if ((e as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode === 404) return false;
+        throw e;
+      }
+    },
     async delete(key) {
       await client.send(new DeleteObjectCommand({ Bucket: cfg.bucket, Key: key }));
     },

@@ -22,6 +22,7 @@ export interface MediaProvider {
 export interface StorageProvider {
   put(key: string, body: Buffer, type: string): Promise<void>;
   signedGet(key: string, ttlSec: number): Promise<string>;
+  exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
 }
 export interface Renderer {
