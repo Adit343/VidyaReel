@@ -1,4 +1,5 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { clock } from '@/lib/time';
 import type { SceneView } from '@/server/videos/view';
@@ -8,8 +9,11 @@ export const TEMPLATE_LABEL: Record<string, string> = {
   stat: 'Stat', comparison: 'Comparison', timeline: 'Timeline', formula: 'Formula', 'stock-clip': 'Clip', recap: 'Recap',
 };
 
-/** The 9:16 plate: the scene's real on-screen text laid out per template (not a rendered frame). */
-function Plate({ scene, tone }: { scene: SceneView; tone: string }) {
+// Browser only: the video templates load fonts and use the Remotion player.
+const ScenePreview = dynamic(() => import('./ScenePreviewPlayer'), { ssr: false });
+
+/** The 9:16 plate: the real video template for the scene, drawn by the player. The text layout below shows while it loads. */
+function Plate({ scene, tone, theme }: { scene: SceneView; tone: string; theme: string }) {
   const [a, b] = scene.onScreenText;
   return (
     <div className={`w-[90px] h-[160px] rounded-xl bg-[#E1E7DF] border ${tone} shrink-0 relative overflow-hidden flex flex-col items-center justify-center p-2 shadow-inner text-center`}>
@@ -36,7 +40,8 @@ function Plate({ scene, tone }: { scene: SceneView; tone: string }) {
           <span className="block font-body-sm text-[8px] leading-[10px] text-[#54675D] line-clamp-5 break-words">{b}</span>
         </div>
       )}
-      <span className="absolute top-1.5 left-1.5 font-code-sm text-[9px] px-1 py-0.5 rounded bg-white/80 border border-[#D3DBD0] text-[#54675D]">9:16</span>
+      <div className="absolute inset-0"><ScenePreview scene={scene} theme={theme} /></div>
+      <span className="absolute top-1.5 left-1.5 z-10 font-code-sm text-[9px] px-1 py-0.5 rounded bg-white/80 border border-[#D3DBD0] text-[#54675D]">9:16</span>
     </div>
   );
 }
@@ -46,7 +51,7 @@ export type SceneActions = {
 };
 
 type Props = {
-  scene: SceneView; index: number; count: number; busy: boolean; editing: boolean; regenerating: boolean; confirmingDelete: boolean;
+  scene: SceneView; theme: string; index: number; count: number; busy: boolean; editing: boolean; regenerating: boolean; confirmingDelete: boolean;
   actions: SceneActions;
   onSave: (v: { narration: string; text: string }) => void;
   onCancelEdit: () => void; onCancelRegenerate: () => void; onConfirmDelete: () => void; onCancelDelete: () => void;
@@ -92,7 +97,7 @@ export function SceneCard(p: Props) {
   return (
     <article id={`scene-${scene.id}`} className="bg-white rounded-2xl border border-[#D3DBD0] p-4 sm:p-5 transition-all duration-200 hover:shadow-[0_8px_24px_-4px_rgba(15,42,32,0.06)] hover:border-[#B9C5B5] group">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-        <Plate scene={scene} tone="border-[#D3DBD0]" />
+        <Plate scene={scene} tone="border-[#D3DBD0]" theme={p.theme} />
         <div className="flex-1 flex flex-col justify-between min-w-0">
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -175,7 +180,7 @@ function EditingCard(p: Props & { label: string }) {
       className="bg-white rounded-2xl border-2 border-[#145A41] ring-4 ring-[#145A41]/10 p-4 sm:p-5 shadow-[0_12px_32px_-8px_rgba(20,90,65,0.08)] transition-all duration-200"
     >
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-        <Plate scene={scene} tone="border-[#145A41]/30" />
+        <Plate scene={scene} tone="border-[#145A41]/30" theme={p.theme} />
         <div className="flex-1 flex flex-col justify-between min-w-0">
           <div>
             <div className="flex items-center justify-between mb-2">

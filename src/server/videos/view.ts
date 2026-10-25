@@ -7,7 +7,7 @@ import { estimateSec, wordCount } from '@/server/ai/storyboard';
 
 /** One scene as the browser sees it: no word times, no storage keys. */
 export type SceneView = {
-  id: string; order: number; template: Scene['template']; title: string | null; narration: string;
+  id: string; order: number; template: Scene['template']; diagram: Scene['diagram'] | null; title: string | null; narration: string;
   onScreenText: string[]; needsCheck: boolean; checkNote: string | null; elements: { id: string; type: string; text: string; cue: string }[];
   words: number; estimatedSec: number; durationMs: number | null; hasAudio: boolean;
 };
@@ -21,7 +21,7 @@ export type VideoView = {
 };
 
 const sceneView = (s: Scene): SceneView => ({
-  id: s.id, order: s.order, template: s.template, title: s.title ?? null, narration: s.narration,
+  id: s.id, order: s.order, template: s.template, diagram: s.diagram ?? null, title: s.title ?? null, narration: s.narration,
   onScreenText: s.elements.map((e) => e.text), needsCheck: s.needsCheck, checkNote: s.checkNote ?? null,
   elements: s.elements.map((e) => ({ id: e.id, type: e.type, text: e.text, cue: e.cue })),
   words: wordCount(s.narration), estimatedSec: estimateSec([s]), durationMs: s.durationMs ?? null, hasAudio: !!s.audio,

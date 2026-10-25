@@ -319,7 +319,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
               <div className="flex flex-col gap-4" id="scenes-container">
                 {video.scenes.map((scene, i) => (
                   <SceneCard
-                    key={scene.id} scene={scene} index={i} count={video.scenes.length} busy={locked || busy}
+                    key={scene.id} scene={scene} theme={settings.theme} index={i} count={video.scenes.length} busy={locked || busy}
                     editing={editingId === scene.id} regenerating={regenId === scene.id} confirmingDelete={deleteId === scene.id}
                     actions={{
                       edit: () => { setDeleteId(null); setEditingId(scene.id); },
