@@ -13,7 +13,7 @@ import { SettingsPanel, type Settings } from './SettingsPanel';
 type SaveState = 'saved' | 'saving' | 'conflict' | 'error';
 type Pending = Partial<Settings> & { title?: string };
 
-const settingsOf = (v: VideoView): Settings => ({ voiceId: v.voiceId, speed: v.speed, theme: v.theme, captionsOn: v.captionsOn });
+const settingsOf = (v: VideoView): Settings => ({ voiceId: v.voiceId, speed: v.speed, theme: v.theme, captionsOn: v.captionsOn, musicId: v.musicId, musicVolume: v.musicVolume });
 
 /** Review, Step 2 (Stitch "Create — Step 2: Review Script & Storyboard"): all seven reviewer states plus the inline menus. */
 export function ReviewClient({ initial }: { initial: VideoView }) {

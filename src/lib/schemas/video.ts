@@ -25,6 +25,8 @@ export const updateVideoSchema = z.object({
   speed: z.number().min(0.8).max(1.2).optional(),
   theme: z.enum(THEMES).optional(),
   musicId: z.string().max(60).nullable().optional(),
+  /** Percent, the music level while the narrator speaks. */
+  musicVolume: z.number().int().min(0).max(100).optional(),
   captionsOn: z.boolean().optional(),
   caption: z.string().max(2200).optional(),
   hashtags: z.array(z.string().max(40)).max(15).optional(),

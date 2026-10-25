@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import type { z } from 'zod';
+import { DEFAULT_MUSIC_VOLUME, findTrack } from '@/config/music';
 import { VOICES } from '@/config/voices';
 import { AppError } from '@/lib/errors';
 import type { Scene } from '@/lib/schemas/storyboard';
@@ -74,7 +75,7 @@ export async function createVideo(owner: Owner, input: z.infer<typeof createVide
   const draft: VideoDoc = {
     _id: new ObjectId(), userId: owner.id, title: input.topic.slice(0, 60), status: 'draft', topic: input.topic,
     angle: input.angle, lengthSec: input.lengthSec, language: input.language, audience: input.audience,
-    voiceId, speed: 1, theme: 'forest', accent: '#145A41', musicId: null, captionsOn: true, caption: '', hashtags: [],
+    voiceId, speed: 1, theme: 'forest', accent: '#145A41', musicId: null, musicVolume: DEFAULT_MUSIC_VOLUME, captionsOn: true, caption: '', hashtags: [],
     estimatedSec: 0, safety: { checkedAt: now, result: 'ok' }, scenes: [], version: 1, createdAt: now, updatedAt: now,
   };
   await videos().insertOne(draft);
@@ -126,6 +127,7 @@ export async function updateVideo(userId: ObjectId, id: string, body: z.infer<ty
   const { version: _version, ...fields } = body;
   void _version;
   if (fields.voiceId && !VOICES.some((x) => x.id === fields.voiceId)) throw new AppError('INVALID', 'Unknown voice.', 400);
+  if (fields.musicId && !findTrack(fields.musicId)) throw new AppError('INVALID', 'Unknown music track.', 400);
   return commit(v, fields as Partial<VideoDoc>);
 }
 

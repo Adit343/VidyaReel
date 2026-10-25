@@ -153,7 +153,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 3.10 ✅ | Pixabay key (Pexels has paused new keys) | Test search works (`npm run check:media`) |
 | 3.11 ✅ | `MediaProvider` adapters + licence record in `assets` | Portrait clip found |
 | 3.12 ✅ | Stock-clip template with 9:16 crop | Renders |
-| 3.13 ⬜ | Music tracks in R2 + ducking under speech | Volume drops on words |
+| 3.13 🟡 | Music tracks in R2 + ducking under speech | Volume drops on words (code done and ducking measured in a render; the two MP3s still need to be uploaded) |
 | 3.14 ✅ | Voice list + cached 5 s samples (`/api/voices`) | Samples play |
 | 3.15 ⬜ | Fix prototype problem: first element cue within first second | Empty-screen case gone |
 

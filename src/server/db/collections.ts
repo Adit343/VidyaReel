@@ -20,7 +20,7 @@ export type RateLimitDoc = { _id: string; count: number; expiresAt: Date };
 export type VideoDoc = {
   _id: ObjectId; userId: ObjectId; title: string; status: VideoStatus; failureReason?: string;
   topic?: string; angle?: string; lengthSec?: number; language?: string; audience?: string;
-  voiceId?: string; speed?: number; theme?: string; accent?: string; musicId?: string | null; captionsOn?: boolean;
+  voiceId?: string; speed?: number; theme?: string; accent?: string; musicId?: string | null; musicVolume?: number; captionsOn?: boolean;
   caption?: string; hashtags?: string[]; estimatedSec?: number; safety?: { checkedAt: Date; result: 'ok' };
   scenes: Scene[]; outputKey?: string; output?: { sizeBytes: number; validatedAt: Date };
   version: number; createdAt: Date; updatedAt: Date; deletedAt?: Date;

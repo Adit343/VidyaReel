@@ -14,6 +14,7 @@
     "spike:inngest": "tsx scripts/spike-inngest-render.mts",
     "spike:voice": "tsx scripts/spike-voice-sync.mts",
     "check:voice-samples": "tsx scripts/check-voice-samples.mts",
+    "upload:music": "tsx scripts/upload-music.mts",
     "check:media": "tsx scripts/check-media.mts",
     "check:storyboards": "tsx scripts/check-storyboards.mts",
     "ui:harness": "tsx scripts/ui-harness.mts",

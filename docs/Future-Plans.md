@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 23)
+Last updated: 2026-10-25 (prompt 24)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
@@ -10,11 +10,12 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 
 ## Next up
 
-- [ ] Phase 3 (templates and media), what is left: music with ducking (3.13; needs royalty-free tracks from the owner)
+- [ ] Phase 3 gate: owner downloads the two Pixabay MP3s into `assets/music/` (see the README there), then `npm run upload:music`; after that Phase 3 can be signed off
 - [ ] Phase 4: call `attachClip` for stock-clip scenes in `renderVideo` and put a signed `media.url` in the render props; fall back to another template when no clip is found; add an index for `assets`
 - [ ] Add Pexels as a second media source if its API keys open again
+- [ ] Phase 4: put the narration audio and the music `url` (signed link) in the render props; `Video` already plays the music and ducks it
 - [ ] Run `npm run check:storyboards` against the real model to confirm the wider template list still gives valid storyboards (10 of 10)
-- [ ] Review polish waiting on Phase 3: music select, preview and volume slider (3.13; Stitch draws a select, a preview button and a 35% volume slider), a real frame preview per scene
+- [ ] Review polish: a real frame preview per scene
 - [ ] Monthly voice-credit check at `POST /api/videos` (`VOICE_CREDITS_LOW`, step 6.2)
 - [ ] `POST /api/videos/:id/duplicate` (Phase 4, step 4.17)
 - [ ] Library "Try again" on a failed card with no scenes should open Review (today it goes to the Generate placeholder)

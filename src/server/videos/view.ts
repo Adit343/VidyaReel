@@ -1,3 +1,4 @@
+import { DEFAULT_MUSIC_VOLUME } from '@/config/music';
 import { clock } from '@/lib/time';
 import type { Scene } from '@/lib/schemas/storyboard';
 import type { VideoStatus } from '@/lib/schemas/video';
@@ -15,7 +16,7 @@ export type SceneView = {
 export type VideoView = {
   id: string; version: number; title: string; topic: string; lengthSec: number; language: string; audience: string;
   angle: string | null; status: VideoStatus; failureReason: string | null; voiceId: string; speed: number; theme: string;
-  accent: string; musicId: string | null; captionsOn: boolean; caption: string; hashtags: string[];
+  accent: string; musicId: string | null; musicVolume: number; captionsOn: boolean; caption: string; hashtags: string[];
   estimatedSec: number; warnings: string[]; scenes: SceneView[]; createdAt: string; updatedAt: string;
 };
 
@@ -39,7 +40,7 @@ export function toVideoView(v: VideoDoc): VideoView {
     id: String(v._id), version: v.version, title: v.title, topic: v.topic ?? '', lengthSec, language: v.language ?? 'en',
     audience: v.audience ?? 'General', angle: v.angle ?? null, status: v.status, failureReason: v.failureReason ?? null,
     voiceId: v.voiceId ?? '', speed: v.speed ?? 1, theme: v.theme ?? 'forest', accent: v.accent ?? '#145A41',
-    musicId: v.musicId ?? null, captionsOn: v.captionsOn ?? true, caption: v.caption ?? '', hashtags: v.hashtags ?? [],
+    musicId: v.musicId ?? null, musicVolume: v.musicVolume ?? DEFAULT_MUSIC_VOLUME, captionsOn: v.captionsOn ?? true, caption: v.caption ?? '', hashtags: v.hashtags ?? [],
     estimatedSec: estimateSec(v.scenes), warnings: warningsFor(v.scenes, lengthSec),
     scenes: v.scenes.map(sceneView), createdAt: v.createdAt.toISOString(), updatedAt: v.updatedAt.toISOString(),
   };
