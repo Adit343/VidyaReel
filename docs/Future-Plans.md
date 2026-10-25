@@ -1,16 +1,16 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 24)
+Last updated: 2026-10-25 (prompt 25)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (3.1 to 3.12 and 3.14 done: themes, captions, all templates, stock clips, voice samples).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (all steps done, waiting for owner sign-off).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] Phase 3 gate: owner downloads the two Pixabay MP3s into `assets/music/` (see the README there), then `npm run upload:music`; after that Phase 3 can be signed off
+- [ ] Phase 3 sign-off by the owner (everything is built; try the Review screen voice samples and music in the browser). Optional before Phase 4: run `npm run check:storyboards` after the Gemini daily quota resets (12:30 PM IST until 1 Nov, then 1:30 PM IST)
 - [ ] Phase 4: call `attachClip` for stock-clip scenes in `renderVideo` and put a signed `media.url` in the render props; fall back to another template when no clip is found; add an index for `assets`
 - [ ] Add Pexels as a second media source if its API keys open again
 - [ ] Phase 4: put the narration audio and the music `url` (signed link) in the render props; `Video` already plays the music and ducks it
