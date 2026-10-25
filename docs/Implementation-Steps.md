@@ -150,7 +150,7 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 3.7 ✅ | Templates: stat, comparison | ✓ |
 | 3.8 ✅ | Templates: timeline, formula | ✓ |
 | 3.9 ✅ | Templates: diagram (flow, raindrop, orbit), recap | ✓ |
-| 3.10 👤 | Pexels and Pixabay keys | Test search works |
+| 3.10 ✅ | Pixabay key (Pexels has paused new keys) | Test search works (`npm run check:media`) |
 | 3.11 ✅ | `MediaProvider` adapters + licence record in `assets` | Portrait clip found |
 | 3.12 ✅ | Stock-clip template with 9:16 crop | Renders |
 | 3.13 ⬜ | Music tracks in R2 + ducking under speech | Volume drops on words |
