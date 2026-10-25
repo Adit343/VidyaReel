@@ -6,7 +6,7 @@ import { VOICES } from '@/config/voices';
 import { clock, whenLabel } from '@/lib/time';
 import type { VideoCardData } from '@/server/videos/list';
 import { Select } from '../ui/Select';
-import { FILTER_GROUPS, HOME_STATUS, NEXT_STEP } from '../video/status';
+import { FILTER_GROUPS, HOME_STATUS, nextStepFor } from '../video/status';
 
 const SUBJECTS = ['Biology', 'Chemistry', 'World History', 'Literature'];
 const MAX = 800;
@@ -238,7 +238,7 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
 
 function RecentCard({ v, timeZone }: { v: VideoCardData; timeZone: string }) {
   const s = HOME_STATUS[v.status];
-  const next = NEXT_STEP[v.status];
+  const next = nextStepFor(v);
   const action =
     v.status === 'ready' ? { label: 'Publish', icon: 'send', cls: 'bg-[#145A41] hover:bg-[#0F4632] text-white' }
     : v.status === 'storyboard_ready' ? { label: 'Edit script', cls: 'border border-[#D3DBD0] hover:bg-[#EEF1EC] text-[#0F2A20]' }
@@ -249,9 +249,11 @@ function RecentCard({ v, timeZone }: { v: VideoCardData; timeZone: string }) {
   return (
     <article className="bg-white rounded-[16px] border border-[#D3DBD0] p-2.5 sm:p-4 flex flex-col justify-between hover:border-[#145A41] transition-all group">
       <div className="space-y-3">
-        <Link href={next.to(v.id)} className="block relative w-full aspect-[9/12] sm:aspect-[16/9] rounded-xl overflow-hidden bg-gradient-to-br from-[#0F2A20] to-[#145A41] border border-[#D3DBD0]" aria-label={`Open ${v.title}`}>
+        <Link href={next.to(v.id)} className="block relative w-full aspect-[9/12] sm:aspect-[16/9] rounded-xl overflow-hidden bg-gradient-to-br from-[#0F2A20] to-[#145A41] border border-[#D3DBD0]" aria-label={`Open ${v.title}`}
+          style={v.thumbUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,32,22,.35), rgba(10,32,22,.1) 50%, rgba(10,32,22,.4)), url(${v.thumbUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}>
           <span className="absolute inset-0 flex items-center justify-center text-white/70">
             <span className="material-symbols-outlined text-[34px]">{v.status === 'failed' ? 'error' : v.status === 'rendering' ? 'autorenew' : 'play_circle'}</span>
+            {v.render && <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/75 text-[#FF9F1C] font-code-xs text-[10px]">{v.render.progress}%</span>}
           </span>
           {v.durationSec != null && <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-white font-code-xs text-[10px]">{clock(v.durationSec).padStart(5, '0')}</span>}
           <span className={`absolute top-2 right-2 px-2.5 py-0.5 rounded-full border font-code-xs text-[10px] flex items-center gap-1 shadow-sm ${s.pill}`}>

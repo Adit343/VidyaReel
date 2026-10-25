@@ -1,12 +1,14 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { api } from '@/lib/client-api';
 import type { VideoStatus } from '@/lib/schemas/video';
 import { clock, whenLabel } from '@/lib/time';
 import type { VideoCardData } from '@/server/videos/list';
 import { useToast } from '../shell/Toast';
 import { Select } from '../ui/Select';
-import { NEXT_STEP } from '../video/status';
+import { nextStepFor } from '../video/status';
 
 const PAGE = 8;
 const FILTERS: [string, string, readonly VideoStatus[] | null][] = [
@@ -37,6 +39,7 @@ const PILL: Record<VideoStatus, { label: string; cls: string; icon?: string; dot
 
 export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCardData[]; timeZone: string }) {
   const toast = useToast();
+  const router = useRouter();
   const [videos, setVideos] = useState(initial);
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState('all');
@@ -56,6 +59,22 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
     document.addEventListener('keydown', close);
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close); };
   }, [menuId]);
+
+  // While a render is running, refresh the cards every 15 seconds (API-Design 4).
+  const anyRendering = videos.some((v) => v.status === 'rendering');
+  const refresh = useCallback(async () => {
+    const res = await api<{ items: VideoCardData[] }>('/api/library?limit=100');
+    if (res.ok) {
+      // Cards that changed are replaced in place; older ones beyond the first 100 stay as they were.
+      const fresh = new Map(res.data.items.map((c) => [c.id, c]));
+      setVideos((cur) => cur.filter((c) => fresh.has(c.id) || !fresh.size || c.createdAt < res.data.items[res.data.items.length - 1].createdAt).map((c) => fresh.get(c.id) ?? c));
+    }
+  }, []);
+  useEffect(() => {
+    if (!anyRendering) return;
+    const t = setInterval(() => { if (!document.hidden) void refresh(); }, 15_000);
+    return () => clearInterval(t);
+  }, [anyRendering, refresh]);
 
   const list = useMemo(() => {
     const statuses = FILTERS.find(([k]) => k === filter)?.[2];
@@ -79,6 +98,16 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
     } else {
       toast('error', 'We could not delete that video. Please try again.');
     }
+  }
+
+  async function duplicate(id: string) {
+    setMenuId(null);
+    setBusyId(id);
+    const res = await api<{ id: string }>(`/api/videos/${id}/duplicate`, { method: 'POST', body: {} });
+    setBusyId(null);
+    if (!res.ok) { toast('error', res.error.message); return; }
+    toast('success', 'Copied. Review the script and generate it when you are ready.');
+    router.push(`/videos/${res.data.id}/review`);
   }
 
   const reset = () => { setQ(''); setFilter('all'); };
@@ -164,7 +193,7 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
                 menuOpen={menuId === v.id} menuRef={menuRef}
                 onMenu={() => setMenuId(menuId === v.id ? null : v.id)}
                 onAskDelete={() => { setMenuId(null); setConfirmId(v.id); }}
-                onCancel={() => setConfirmId(null)} onDelete={() => void remove(v.id)}
+                onCancel={() => setConfirmId(null)} onDelete={() => void remove(v.id)} onDuplicate={() => void duplicate(v.id)}
               />
             ))}
           </div>
@@ -184,9 +213,9 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
   );
 }
 
-function Card({ v, timeZone, confirming, busy, menuOpen, menuRef, onMenu, onAskDelete, onCancel, onDelete }: {
+function Card({ v, timeZone, confirming, busy, menuOpen, menuRef, onMenu, onAskDelete, onCancel, onDelete, onDuplicate }: {
   v: VideoCardData; timeZone: string; confirming: boolean; busy: boolean; menuOpen: boolean;
-  menuRef: React.RefObject<HTMLDivElement | null>; onMenu: () => void; onAskDelete: () => void; onCancel: () => void; onDelete: () => void;
+  menuRef: React.RefObject<HTMLDivElement | null>; onMenu: () => void; onAskDelete: () => void; onCancel: () => void; onDelete: () => void; onDuplicate: () => void;
 }) {
   const meta = [v.durationSec != null ? clock(v.durationSec) : null, `${v.sceneCount} scene${v.sceneCount === 1 ? '' : 's'}`, 'English', whenLabel(v.createdAt, timeZone).replace(/^Today, .*/, 'Today')]
     .filter(Boolean).join(' · ');
@@ -221,20 +250,21 @@ function Card({ v, timeZone, confirming, busy, menuOpen, menuRef, onMenu, onAskD
 
   const plate = PLATE[v.status];
   const pill = PILL[v.status];
-  const next = NEXT_STEP[v.status];
+  const next = nextStepFor(v);
   const failed = v.status === 'failed';
   return (
     <article className="card-lift bg-white rounded-[16px] border border-[#D3DBD0] p-4 flex flex-col justify-between group relative">
       <div>
         <Link href={next.to(v.id)} aria-label={`Open ${v.title}`}
-          className={`relative w-full aspect-[9/16] max-h-[260px] rounded-[12px] overflow-hidden ${plate.gradient} border ${failed ? 'border-[#FFDAD6]/50' : 'border-[#B9C5B5]/40'} mb-3.5 flex flex-col justify-between p-3.5`}>
+          style={v.thumbUrl ? { backgroundImage: `linear-gradient(180deg, rgba(10,32,22,.55), rgba(10,32,22,.1) 40%, rgba(10,32,22,.7)), url(${v.thumbUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+          className={`relative w-full aspect-[9/16] max-h-[260px] rounded-[12px] overflow-hidden ${v.thumbUrl ? 'bg-[#0F2A20]' : plate.gradient} border ${failed ? 'border-[#FFDAD6]/50' : 'border-[#B9C5B5]/40'} mb-3.5 flex flex-col justify-between p-3.5`}>
           <div className="flex items-center justify-between">
             <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-code-xs text-[10px] ${plate.badgeCls}`}>
               {plate.dot && <span className={`w-1.5 h-1.5 rounded-full ${plate.dot}`} />}{plate.badge}
             </span>
             <span className="material-symbols-outlined text-white/70 text-[18px]">{plate.icon}</span>
           </div>
-          <div className="my-auto text-center px-1">
+          <div className={`my-auto text-center px-1 ${v.thumbUrl ? 'invisible' : ''}`}>
             <div className="w-10 h-10 rounded-full border border-dashed border-[#FF9F1C] mx-auto mb-2 flex items-center justify-center">
               <span className="w-3.5 h-3.5 rounded-full bg-[#FF9F1C]" />
             </div>
@@ -256,15 +286,19 @@ function Card({ v, timeZone, confirming, busy, menuOpen, menuRef, onMenu, onAskD
           <div className="mb-2">
             <div className="flex justify-between items-center text-code-xs font-code-xs mb-1">
               <span className="text-[#0F2A20] font-medium flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-[#FF9F1C]" />Rendering</span>
-              <span className="text-[#54675D]">in progress</span>
+              <span className="text-[#54675D] tabular-nums">{v.render ? `${v.render.progress}%` : 'in progress'}</span>
             </div>
-            <div className="w-full bg-[#E1E7DF] h-1.5 rounded-full overflow-hidden">
-              <div className="h-full w-full shimmer-sage" style={{ background: 'linear-gradient(90deg,#145A41,#1A8F5A,#FF9F1C)', opacity: 0.6 }} />
+            <div className="w-full bg-[#E1E7DF] h-1.5 rounded-full overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={v.render?.progress}>
+              {v.render ? (
+                <div className="h-full rounded-full transition-all duration-700" style={{ width: `${Math.max(4, v.render.progress)}%`, background: 'linear-gradient(90deg,#145A41,#1A8F5A,#FF9F1C)' }} />
+              ) : (
+                <div className="h-full w-full shimmer-sage" style={{ background: 'linear-gradient(90deg,#145A41,#1A8F5A,#FF9F1C)', opacity: 0.6 }} />
+              )}
             </div>
           </div>
         )}
         <div className="flex items-center justify-between pt-2 border-t border-[#EEF1EC]">
-          {v.status === 'rendering' ? <span className="text-code-xs font-code-xs text-[#54675D]">Usually under 2 min</span> : (
+          {v.status === 'rendering' ? <span className="text-code-xs font-code-xs text-[#54675D]">{v.render?.stageLabel ?? 'Starting'}</span> : (
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-code-xs text-[11px] font-medium ${pill.cls}`}>
               {pill.dot && <span className={`w-1.5 h-1.5 rounded-full ${pill.dot}`} />}
               {pill.icon && <span className="material-symbols-outlined text-[13px]">{pill.icon}</span>}
@@ -281,6 +315,11 @@ function Card({ v, timeZone, confirming, busy, menuOpen, menuRef, onMenu, onAskD
                 <Link role="menuitem" href={next.to(v.id)} className="flex items-center gap-2 px-3 py-2 text-[13px] text-[#0F2A20] hover:bg-[#EEF1EC]">
                   <span className="material-symbols-outlined text-[16px] text-[#54675D]">open_in_new</span>Open
                 </Link>
+                {v.sceneCount > 0 && (
+                  <button role="menuitem" onClick={onDuplicate} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[#0F2A20] hover:bg-[#EEF1EC]">
+                    <span className="material-symbols-outlined text-[16px] text-[#54675D]">content_copy</span>Duplicate
+                  </button>
+                )}
                 <button role="menuitem" onClick={onAskDelete} className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[#C93A2E] hover:bg-[#FDF4F3]">
                   <span className="material-symbols-outlined text-[16px]">delete</span>Delete
                 </button>

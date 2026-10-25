@@ -204,3 +204,31 @@ export async function regenerateOneScene(owner: Owner, id: string, sceneId: stri
   if (signal?.aborted) throw new AppError('INVALID', 'Cancelled.', 499);
   return commit(v, withScenes(v.scenes.map((s, n) => (n === at ? fresh : s))));
 }
+
+/**
+ * A copy of a video's script and settings (API-Design 6.9). Voice, timings, clips and the finished video are not
+ * copied: they are made again on the copy's first render, so deleting the original never breaks the copy.
+ */
+export async function duplicateVideo(owner: Owner, id: string) {
+  const v = await loadOwned(owner.id, id);
+  if (!v.scenes.length) throw new AppError('INVALID_STATE', 'There is no script to copy yet.', 409);
+  const quota = await getQuota(owner.id, owner.email, owner.timeZone);
+  if (quota.left <= 0) throw new AppError('DAILY_LIMIT', `You have used all ${quota.limit} videos today.`, 429);
+
+  const now = new Date();
+  const scenes: Scene[] = v.scenes.map((s) => {
+    const { audio: _audio, durationMs: _dur, media, ...rest } = s;
+    void _audio; void _dur;
+    return {
+      ...rest, id: newSceneId(), elements: s.elements.map(({ startMs: _start, ...el }) => { void _start; return el; }),
+      ...(media ? { media: { query: media.query } } : {}),
+    };
+  });
+  const copy: VideoDoc = {
+    ...v, _id: new ObjectId(), title: `${v.title} (copy)`.slice(0, 100), status: 'storyboard_ready', scenes, version: 1, createdAt: now, updatedAt: now,
+    estimatedSec: estimateSec(scenes),
+  };
+  for (const key of ['failureReason', 'outputKey', 'thumbKey', 'output', 'currentJobId', 'deletedAt'] as const) delete copy[key];
+  await videos().insertOne(copy);
+  return toVideoView(copy);
+}

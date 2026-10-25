@@ -24,6 +24,11 @@ export const NEXT_STEP: Record<VideoStatus, { label: string; to: (id: string) =>
   failed: { label: 'Try again', to: (id) => `/videos/${id}/generate`, icon: 'refresh' },
 };
 
+/** A failed video that never got a script has nothing to render again: it goes back to Review to write one. */
+export function nextStepFor(v: { status: VideoStatus; sceneCount: number }) {
+  return v.status === 'failed' && v.sceneCount === 0 ? { ...NEXT_STEP.failed, to: (id: string) => `/videos/${id}/review` } : NEXT_STEP[v.status];
+}
+
 export const FILTER_GROUPS = {
   drafts: ['draft', 'storyboard_ready'], ready: ['ready', 'scheduled'], posted: ['posted'],
 } as const;
