@@ -11,7 +11,7 @@
     "inngest:dev": "npx inngest-cli@latest dev -u http://localhost:3000/api/inngest",
     "remotion:studio": "remotion studio src/remotion/index.ts",
     "remotion:bundle": "remotion bundle src/remotion/index.ts --out-dir=build/remotion-bundle",
-    "spike:inngest": "tsx scripts/spike-inngest-render.mts",
+    "check:render": "tsx scripts/check-render.mts",
     "spike:voice": "tsx scripts/spike-voice-sync.mts",
     "check:voice-samples": "tsx scripts/check-voice-samples.mts",
     "upload:music": "tsx scripts/upload-music.mts",

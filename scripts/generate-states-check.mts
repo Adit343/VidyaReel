@@ -20,7 +20,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const mongo = await MongoMemoryServer.create();
 const uri = `${mongo.getUri()}harness`;
-const env = { ...process.env, MONGODB_URI: uri, APP_URL: BASE, ADMIN_EMAIL: 'owner@example.com', NEXT_TELEMETRY_DISABLED: '1' };
+const env = { ...process.env, MONGODB_URI: uri, APP_URL: BASE, ADMIN_EMAIL: 'owner@example.com', NEXT_TELEMETRY_DISABLED: '1', INNGEST_DEV: 'http://localhost:9' }; // events go nowhere: the start call must fail cleanly
 const server = spawn('npx', ['next', 'dev', '-p', String(PORT)], { env, shell: true, stdio: 'pipe' });
 let log = '';
 server.stdout.on('data', (d) => { log += d; });
@@ -157,6 +157,29 @@ try {
     job({ status: 'failed', stage: 'render', progress: 62, error: { code: 'RENDER_FAILED', message: 'The video could not be assembled. Please try again.', step: 'render' }, finishedAt: new Date() }));
   await open();
   await shot('10-failed');
+
+  // API plumbing over HTTP with the signed-in cookie
+  const call = async (path: string, init: RequestInit = {}, auth = true) => {
+    const res = await fetch(`${BASE}${path}`, { ...init, headers: { 'content-type': 'application/json', ...(auth ? { cookie: cookies.join('; ') } : {}) } });
+    return { status: res.status, body: await res.json().catch(() => null) as Record<string, any> | null };
+  };
+  await setState({ status: 'storyboard_ready' });
+  const start = await call(`/api/videos/${videoId}/render`, { method: 'POST', body: JSON.stringify({ version: 1 }) });
+  console.log('start with no workflow service:', start.status, start.body?.error?.code, '(want 503 PROVIDER_UNAVAILABLE)');
+  console.log('video unlocked again:', (await db.collection('videos').findOne({ _id: videoId }))?.status, '(want storyboard_ready)');
+  console.log('start without a session:', (await call(`/api/videos/${videoId}/render`, { method: 'POST', body: JSON.stringify({ version: 1 }) }, false)).status, '(want 401)');
+  console.log('start with a stale version:', (await call(`/api/videos/${videoId}/render`, { method: 'POST', body: JSON.stringify({ version: 7 }) })).body?.error?.code, '(want VERSION_CONFLICT)');
+  console.log('status:', JSON.stringify((await call(`/api/videos/${videoId}/render/status`)).body));
+  console.log('media before render:', (await call(`/api/videos/${videoId}/media`)).status, '(want 409)');
+  console.log('cancel with nothing running:', (await call(`/api/videos/${videoId}/render/cancel`, { method: 'POST', body: '{}' })).body?.error?.code, '(want INVALID_STATE)');
+  await setState({ status: 'ready', outputKey: TEST_KEY });
+  const media = await call(`/api/videos/${videoId}/media`);
+  console.log('media after render:', media.status, Object.keys(media.body ?? {}).join(','), String(media.body?.downloadUrl).includes('response-content-disposition'));
+  const lib = await call('/api/library?status=ready,failed&q=seasons');
+  console.log('library:', lib.status, lib.body?.items?.length, lib.body?.items?.[0]?.thumbUrl === null ? 'no poster' : 'poster');
+  console.log('library bad status:', (await call('/api/library?status=nope')).status, '(want 400)');
+  const dup = await call(`/api/videos/${videoId}/duplicate`, { method: 'POST', body: '{}' });
+  console.log('duplicate:', dup.status, dup.body?.title, dup.body?.status);
 } finally {
   await r2.delete(TEST_KEY).catch(() => undefined);
   ws.close();

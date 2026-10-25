@@ -161,23 +161,23 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 
 | Step | Task | Check |
 | --- | --- | --- |
-| 4.1 ⬜ | `render_jobs` repository, one active job per video | Duplicate start refused |
-| 4.2 ⬜ | `POST /api/videos/:id/render` with `Idempotency-Key` | Same key returns same job |
-| 4.3 ⬜ | renderVideo step: voice per scene (hash skip) | Unchanged scenes reuse audio |
-| 4.4 ⬜ | Step: sync and scene durations | Timings saved |
-| 4.5 ⬜ | Step: fetch stock media to R2 | Files in R2 |
-| 4.6 ⬜ | Step: build props, upload to R2 | Props JSON stored |
-| 4.7 ⬜ | Step: Sandbox render + poll + upload MP4 | `outputKey` set |
-| 4.8 ⬜ | Step: finish (thumbnail, status `ready`, usage log) | Video `ready` |
-| 4.9 ⬜ | Failure path: mark `failed`, refund cap, notify | Forced failure refunds |
-| 4.10 ⬜ | `GET /render/status` + `POST /render/cancel` | Progress and cancel work |
-| 4.11 ⬜ | `GET /api/videos/:id/media` signed URLs | Player/download links |
-| 4.12 ⬜ | Generate Step 3 UI: progress bar polling (3 s) | Matches Stitch |
-| 4.13 ⬜ | Preview player + download | Plays MP4 |
-| 4.14 ⬜ | Fix-a-scene flow | Only changed scene re-voiced |
-| 4.15 ⬜ | `GET /api/library` with search/status filter | Cards listed |
-| 4.16 ⬜ | Library UI + video detail | Matches Stitch |
-| 4.17 ⬜ | Duplicate and soft delete | `deletedAt` set |
+| 4.1 ✅ | `render_jobs` repository, one active job per video | Duplicate start refused |
+| 4.2 ✅ | `POST /api/videos/:id/render` with `Idempotency-Key` | Same key returns same job |
+| 4.3 ✅ | renderVideo step: voice per scene (hash skip) | Unchanged scenes reuse audio |
+| 4.4 ✅ | Step: sync and scene durations | Timings saved |
+| 4.5 ✅ | Step: fetch stock media to R2 | Files in R2 |
+| 4.6 ✅ | Step: build props, upload to R2 | Props JSON stored |
+| 4.7 ✅ | Step: Sandbox render + poll + upload MP4 | `outputKey` set |
+| 4.8 ✅ | Step: finish (thumbnail, status `ready`, usage log) | Video `ready` |
+| 4.9 ✅ | Failure path: mark `failed`, refund cap, notify | Forced failure refunds |
+| 4.10 ✅ | `GET /render/status` + `POST /render/cancel` | Progress and cancel work |
+| 4.11 ✅ | `GET /api/videos/:id/media` signed URLs | Player/download links |
+| 4.12 ✅ | Generate Step 3 UI: progress bar polling (3 s) | Matches Stitch |
+| 4.13 ✅ | Preview player + download | Plays MP4 |
+| 4.14 ✅ | Fix-a-scene flow | Only changed scene re-voiced |
+| 4.15 ✅ | `GET /api/library` with search/status filter | Cards listed |
+| 4.16 ✅ | Library UI + video detail | Matches Stitch |
+| 4.17 ✅ | Duplicate and soft delete | `deletedAt` set |
 
 ## Phase 5: Instagram
 

@@ -17,6 +17,9 @@ export async function startSandbox(): Promise<string> {
 
 export async function uploadBundle(name: string): Promise<void> {
   const sandbox = await Sandbox.get({ name, resume: true });
+  // addBundleToSandbox makes each sub-folder of the bundle (for example `public/`) without making the bundle folder
+  // itself first, which fails as soon as the bundle has a sub-folder; make the folder ourselves.
+  await sandbox.mkDir('remotion-bundle').catch(() => undefined);
   await addBundleToSandbox({ sandbox, bundleDir: bundleDir() });
 }
 
