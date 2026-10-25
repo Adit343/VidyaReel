@@ -23,12 +23,15 @@ export function repairScene(s: LlmScene): LlmScene {
   const words = s.narration.split(/\s+/).filter(Boolean);
   const text = ` ${norm(s.narration)} `;
   const at = (cue: string) => text.indexOf(` ${norm(cue)} `);
-  const elements = s.elements.map((el) => {
+  const elements = s.elements.map((el, k) => {
     if (at(el.cue) >= 0) return el;
     // The first narration word the element's own words point at (for example a heading "Axial Tilt" -> "tilt").
     const wanted = new Set(norm(`${el.cue} ${el.text}`).split(' ').filter((w) => w.length > 3));
     const hit = words.findIndex((w) => wanted.has(norm(w)));
-    return hit < 0 ? el : { ...el, cue: words.slice(hit, hit + 2).join(' ') };
+    // Still nothing in the narration (the model cued a word it never says): spread such elements over the narration in list order.
+    const spread = Math.min(words.length - 1, Math.floor((k / Math.max(1, s.elements.length)) * words.length));
+    const from = hit < 0 ? spread : hit;
+    return { ...el, cue: words.slice(from, from + 2).join(' ') };
   });
   const ordered = elements.every((e) => at(e.cue) >= 0)
     ? [...elements].sort((a, b) => at(a.cue) - at(b.cue))

@@ -14,6 +14,13 @@ const TOPICS: [string, number][] = [
   ['What is inflation?', 30], ['How does the water cycle work?', 60], ['Difference between mitosis and meiosis', 90], ['How do magnets work?', 60],
 ];
 
+// Optional: a topic number (1 to 10) or your own topic text to try just one: npm run check:storyboards -- "How do vaccines work?"
+const only = process.argv[2];
+if (only) {
+  const n = Number(only);
+  TOPICS.splice(0, TOPICS.length, ...(Number.isInteger(n) && n >= 1 && n <= TOPICS.length ? [TOPICS[n - 1]] : [[only, 60] as [string, number]]));
+}
+
 let calls = 0;
 const real = createGeminiProvider();
 const counting = {

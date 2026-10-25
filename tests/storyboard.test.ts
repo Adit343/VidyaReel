@@ -67,6 +67,12 @@ describe('storyboard validation', () => {
     expect(fixed.elements.map((e) => e.cue)).toEqual(['Earth is', 'around the Sun']);
     expect(sceneProblems(fixed, 'S')).toEqual([]);
   });
+  it('points a cue the narration never says at a spread position, in list order, so the script is still valid', () => {
+    const s = { ...goodScene(0), elements: [{ type: 'a', text: 'Zebra', cue: 'hypotenuse' }, { type: 'b', text: 'Giraffe', cue: 'right triangles' }] };
+    const fixed = repairScene(s as never);
+    expect(sceneProblems(fixed, 'S')).toEqual([]);
+    expect(fixed.elements.map((e) => e.text)).toEqual(['Zebra', 'Giraffe']);
+  });
   it('flags cues listed out of spoken order', () => {
     const s = { ...goodScene(0), elements: [{ type: 'a', text: 'x', cue: 'around the Sun' }, { type: 'b', text: 'y', cue: 'Earth is tilted' }] };
     expect(sceneProblems(s as never, 'Scene 1').join()).toMatch(/spoken order/);
@@ -139,18 +145,18 @@ describe('creating a video', () => {
   it('retries a bad storyboard once with the problems listed, then succeeds', async () => {
     const owner = await member();
     const bad = goodBoard(4);
-    bad.scenes[0].elements[0] = { type: 'bullet', text: 'Zebra', cue: 'not in the narration' };
+    bad.scenes.forEach((sc) => { sc.narration = 'Earth is tilted around the Sun.'; }); // far too short for 60 s
     const llm = fakeLlm([safe, bad, goodBoard(4)]);
     setLlm(llm);
     const v = await createVideo(owner, input as never);
     expect(v.status).toBe('storyboard_ready');
-    expect(llm.prompts[2].user).toContain('not in the narration');
+    expect(llm.prompts[2].user).toContain('only 24 words');
   });
 
   it('fails cleanly after the retry: draft marked failed, refunded, details carry the video id', async () => {
     const owner = await member();
     const bad = goodBoard(4);
-    bad.scenes[0].elements[0] = { type: 'bullet', text: 'Zebra', cue: 'nope' };
+    bad.scenes.forEach((sc) => { sc.narration = 'Earth is tilted around the Sun.'; });
     setLlm(fakeLlm([safe, bad, bad]));
     const err = (await createVideo(owner, input as never).catch((e) => e)) as AppError;
     expect(err).toMatchObject({ code: 'STORYBOARD_FAILED', status: 422 });

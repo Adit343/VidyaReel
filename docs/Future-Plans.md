@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 26)
+Last updated: 2026-10-25 (prompt 27)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
@@ -10,7 +10,7 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 
 ## Next up
 
-- [ ] Phase 3 sign-off by the owner (everything is built; try the Review screen voice samples and music in the browser). Optional before Phase 4: run `npm run check:storyboards` after the Gemini daily quota resets (12:30 PM IST until 1 Nov, then 1:30 PM IST)
+- [ ] Phase 3 sign-off by the owner (everything is built; try the Review screen voice samples and music in the browser). Re-run `npm run check:storyboards` now and then (it uses free Gemini quota; the daily quota resets at 12:30 PM IST until 1 Nov, then 1:30 PM IST)
 - [ ] Phase 4: call `attachClip` for stock-clip scenes in `renderVideo` and put a signed `media.url` in the render props; fall back to another template when no clip is found; add an index for `assets`
 - [ ] Add Pexels as a second media source if its API keys open again
 - [ ] Phase 4: put the narration audio and the music `url` (signed link) in the render props; `Video` already plays the music and ducks it

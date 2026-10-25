@@ -56,10 +56,14 @@ const SCENE_RULES = `Scene rules:
   - recap: the closing scene, 2 to 4 "point" elements. Use it as the last scene.
   - stock-clip: a real-world video behind 1 or 2 short "caption" elements. Add "mediaQuery": 2 to 4 plain English nouns to search a stock video site for (for example "green leaves sunlight"). Use it for scenes about something you can film (nature, weather, machines, places), at most 2 per video.
   Use a variety of templates that fit the content; do not use bullet-reveal for every scene.
+- Write every string as plain text: formulas like "v = d / t" or "a^2 + b^2 = c^2", no LaTeX, no backslashes, no double quotes inside text (use single quotes).
 - "narration" is exactly what a narrator says aloud: plain sentences, no stage directions, no emoji, numbers written so they can be read aloud.
 - Every element has a "cue": a short phrase (1 to 4 words) copied EXACTLY from the narration of that scene. The element appears when the narrator says the cue. List the elements in the order their cues are spoken.
 - "text" is the short text shown on screen (under 60 characters; do not repeat the whole narration).
 - Set "needsCheck": true and a short "checkNote" for scenes with a number, date, formula or factual claim a teacher should verify.`;
+
+/** Words each scene should carry: the total spread over the middle of the scene-count range. */
+const perScene = (lengthSec: number, words: number) => Math.round(words / (lengthSec <= 30 ? 3.8 : lengthSec <= 60 ? 5.5 : 7.5));
 
 export function storyboardPrompt(i: StoryboardInput, previousErrors: string[] = []): Prompt {
   const words = Math.round(i.lengthSec * WORDS_PER_SEC);
@@ -68,7 +72,7 @@ export function storyboardPrompt(i: StoryboardInput, previousErrors: string[] = 
     system: `You write scripts and storyboards for short vertical teaching videos (Instagram Reels) for Indian classrooms. Clear, warm, accurate, no hype. ${JSON_ONLY}`,
     user: `Topic: """${i.topic}"""
 Audience: ${i.audience}. Language: ${i.language === 'en' ? 'English' : i.language}.
-Target length: ${i.lengthSec} seconds, so the narration must total about ${words} words, no fewer than ${Math.round(words * 0.9)} (speech runs at about ${WORDS_PER_SEC} words per second). Count them. Use ${scenes} scenes.
+Target length: ${i.lengthSec} seconds, so the narration must total about ${words} words, no fewer than ${Math.round(words * 0.9)} (speech runs at about ${WORDS_PER_SEC} words per second). Count them. Use ${scenes} scenes, so every scene's narration is about ${perScene(i.lengthSec, words)} words (never under ${Math.round(perScene(i.lengthSec, words) * 0.75)}). The narration is the full spoken explanation: a scene with little on-screen text (stat, formula, timeline, recap, diagram) still gets its full share of narration.
 ${i.angle && ANGLE_TEXT[i.angle] ? `Approach: ${ANGLE_TEXT[i.angle]}\n` : ''}Start with a hook in the first scene and end with a one-line takeaway.
 
 ${SCENE_RULES}

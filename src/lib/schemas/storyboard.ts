@@ -53,7 +53,8 @@ export const llmSceneSchema = z.object({
   // The prompt shows "diagram":"" for scenes that are not diagrams, so an empty string counts as absent.
   diagram: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.enum(['flow', 'raindrop', 'orbit']).optional()),
   // Search words for a stock-clip scene (2 to 4 plain nouns); ignored for other templates.
-  mediaQuery: z.string().max(60).optional(),
+  // The model sometimes sends the words as a list; join them.
+  mediaQuery: z.preprocess((v) => (Array.isArray(v) ? v.join(' ') : v === null ? undefined : v), z.string().max(60).optional()),
   title: z.string().min(1).max(80).optional(),
   narration: z.string().min(1).max(600),
   needsCheck: z.boolean().default(false),
