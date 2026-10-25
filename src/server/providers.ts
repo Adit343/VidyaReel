@@ -2,7 +2,10 @@ import type { ZodType, ZodTypeDef } from 'zod';
 
 export type Word = { word: string; startMs: number; endMs: number };
 export type Prompt = { system: string; user: string };
-export type MediaCandidate = { id: string; url: string; source: 'pexels' | 'pixabay'; licence: string; attribution?: string };
+export type MediaCandidate = {
+  id: string; url: string; pageUrl: string; source: 'pexels' | 'pixabay'; licence: string; attribution?: string;
+  durationSec: number; width: number; height: number;
+};
 export type Connection = { igUserId: string; accessToken: string };
 
 export interface LlmProvider {

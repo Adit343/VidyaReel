@@ -53,6 +53,10 @@
         { "id": "e1", "type": "point", "text": "Seasons come from tilt", "cue": "seasons come", "startMs": 300 },
         { "id": "e2", "type": "point", "text": "Not from distance", "cue": "not distance", "startMs": 1800 },
         { "id": "e3", "type": "point", "text": "More direct sunlight = summer", "cue": "direct sunlight", "startMs": 3000 } ], "durationMs": 5000 },
+    { "id": "a13", "order": 12, "template": "stock-clip", "title": "Leaves at work", "narration": "Leaves soak up sunlight all day long.",
+      "media": { "query": "green leaves sunlight" },
+      "elements": [
+        { "id": "e1", "type": "caption", "text": "Leaves soak up sunlight", "cue": "soak up sunlight", "startMs": 400 } ], "durationMs": 4000 },
     { "id": "a12", "order": 11, "template": "bullet-reveal", "title": "Key points", "narration": "Three things to keep in mind.",
       "elements": [
         { "id": "e1", "type": "bullet", "text": "Tilt stays fixed in space", "cue": "tilt", "startMs": 300 },

@@ -1,16 +1,18 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-25 (prompt 21)
+Last updated: 2026-10-25 (prompt 22)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0, 1 and 2 are done and signed off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (3.1 to 3.9 done: themes, captions, all templates except stock-clip).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **3 Template library and media** (3.1 to 3.12 done: themes, captions, all templates, stock clips).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] Phase 3 (templates and media), what is left, in order: stock clips (3.10 to 3.12; needs free Pexels and Pixabay keys from the owner), music with ducking (3.13; needs royalty-free tracks), voice samples (3.14), then add `stock-clip` to `ENABLED_TEMPLATES`
+- [ ] Phase 3 (templates and media), what is left, in order: voice samples (3.14), music with ducking (3.13; needs royalty-free tracks from the owner)
+- [ ] Phase 4: call `attachClip` for stock-clip scenes in `renderVideo` and put a signed `media.url` in the render props; fall back to another template when no clip is found; add an index for `assets`
+- [ ] Add Pexels as a second media source if its API keys open again
 - [ ] Run `npm run check:storyboards` against the real model to confirm the wider template list still gives valid storyboards (10 of 10)
 - [ ] Review polish waiting on Phase 3: voice sample playback (3.14), music select and volume (3.13), a real frame preview per scene
 - [ ] Monthly voice-credit check at `POST /api/videos` (`VOICE_CREDITS_LOW`, step 6.2)

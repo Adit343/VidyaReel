@@ -7,7 +7,7 @@ export const TEMPLATES = [
 
 /** Templates the renderer can draw today (src/remotion/templates). The storyboard prompt only offers these; Phase 3 widens it. */
 export const ENABLED_TEMPLATES = [
-  'title-hook', 'bullet-reveal', 'definition-callout', 'step-flow', 'stat', 'comparison', 'timeline', 'formula', 'diagram', 'recap',
+  'title-hook', 'bullet-reveal', 'definition-callout', 'step-flow', 'stat', 'comparison', 'timeline', 'formula', 'diagram', 'recap', 'stock-clip',
 ] as const;
 
 export const wordSchema = z.object({ word: z.string(), startMs: z.number(), endMs: z.number() });
@@ -30,7 +30,8 @@ export const sceneSchema = z.object({
   needsCheck: z.boolean().default(false),
   checkNote: z.string().optional(),
   elements: z.array(elementSchema),
-  media: z.object({ assetId: z.string(), query: z.string() }).optional(),
+  // `url` and `durationSec` are filled in when the render props are built (a signed link to the cached clip).
+  media: z.object({ assetId: z.string().optional(), query: z.string(), url: z.string().optional(), durationSec: z.number().optional() }).optional(),
   audio: z.object({
     key: z.string(), hash: z.string(), durationMs: z.number(), words: z.array(wordSchema),
   }).optional(),
@@ -51,6 +52,8 @@ export const llmSceneSchema = z.object({
   template: z.enum(ENABLED_TEMPLATES),
   // The prompt shows "diagram":"" for scenes that are not diagrams, so an empty string counts as absent.
   diagram: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.enum(['flow', 'raindrop', 'orbit']).optional()),
+  // Search words for a stock-clip scene (2 to 4 plain nouns); ignored for other templates.
+  mediaQuery: z.string().max(60).optional(),
   title: z.string().min(1).max(80).optional(),
   narration: z.string().min(1).max(600),
   needsCheck: z.boolean().default(false),

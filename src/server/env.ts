@@ -14,6 +14,7 @@ const schema = z.object({
   R2_ACCESS_KEY_ID: optional,
   R2_SECRET_ACCESS_KEY: optional,
   R2_BUCKET: optional,
+  PIXABAY_API_KEY: optional,
 });
 
 export type Env = z.infer<typeof schema>;

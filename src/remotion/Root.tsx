@@ -1,12 +1,13 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { storyboardSchema, type Scene } from '@/lib/schemas/storyboard';
+import { sceneSchema, type Scene } from '@/lib/schemas/storyboard';
 import allTemplates from './fixtures/all-templates.json';
 import spike from './fixtures/spike-3-scenes.json';
 import { Video, type VideoProps } from './Video';
 import { FPS, HEIGHT, WIDTH } from './theme';
 
-const parse = (scenes: unknown) => storyboardSchema.shape.scenes.parse(scenes);
+// Samples may hold more scenes than a real storyboard (12).
+const parse = (scenes: unknown) => sceneSchema.array().parse(scenes);
 
 /** Sample scenes get evenly spaced word times so the captions show up in Studio and in stills. */
 function withWords(scenes: Scene[]): Scene[] {

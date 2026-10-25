@@ -7,11 +7,11 @@ import { Diagram } from './Diagram';
 import { Formula } from './Formula';
 import { Recap } from './Recap';
 import { Stat } from './Stat';
+import { StockClip } from './StockClip';
 import { StepFlow } from './StepFlow';
 import { Timeline } from './Timeline';
 import { TitleHook } from './TitleHook';
 
-/** Every template except `stock-clip`, which needs a media file and arrives with the media provider. */
 export const templates: Partial<Record<Scene['template'], React.FC<{ scene: Scene }>>> = {
   'title-hook': TitleHook,
   'bullet-reveal': BulletReveal,
@@ -23,4 +23,5 @@ export const templates: Partial<Record<Scene['template'], React.FC<{ scene: Scen
   formula: Formula,
   diagram: Diagram,
   recap: Recap,
+  'stock-clip': StockClip,
 };

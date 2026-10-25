@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import allTemplates from '@/remotion/fixtures/all-templates.json';
 import { captionPage } from '@/remotion/captionPage';
-import { ENABLED_TEMPLATES, llmSceneSchema, storyboardSchema } from '@/lib/schemas/storyboard';
+import { ENABLED_TEMPLATES, llmSceneSchema, sceneSchema } from '@/lib/schemas/storyboard';
 import { toScene } from '@/server/ai/storyboard';
 
 const words = ['Why', 'is', 'the', 'sky', 'blue', 'today'].map((word, i) => ({ word, startMs: i * 500, endMs: i * 500 + 400 }));
 
 describe('template library', () => {
   it('has a sample scene for every enabled template and every diagram kind', () => {
-    const scenes = storyboardSchema.shape.scenes.parse(allTemplates.scenes);
+    const scenes = sceneSchema.array().parse(allTemplates.scenes);
     for (const t of ENABLED_TEMPLATES) expect(scenes.some((s) => s.template === t), t).toBe(true);
     for (const d of ['flow', 'raindrop', 'orbit']) expect(scenes.some((s) => s.diagram === d), d).toBe(true);
   });
@@ -17,13 +17,22 @@ describe('template library', () => {
     const base = { narration: 'Water evaporates then falls.', elements: [{ type: 'node', text: 'Evaporation', cue: 'Water evaporates' }] };
     expect(llmSceneSchema.parse({ ...base, template: 'timeline', diagram: '' }).diagram).toBeUndefined();
     expect(llmSceneSchema.parse({ ...base, template: 'diagram', diagram: 'orbit' }).diagram).toBe('orbit');
-    expect(llmSceneSchema.safeParse({ ...base, template: 'stock-clip' }).success).toBe(false);
+    expect(llmSceneSchema.safeParse({ ...base, template: 'sparkles' }).success).toBe(false);
   });
 
   it('keeps the diagram kind on a diagram scene and defaults it to flow', () => {
     const base = llmSceneSchema.parse({ template: 'diagram', narration: 'Water cycles.', elements: [{ type: 'node', text: 'Cycle', cue: 'Water cycles' }] });
     expect(toScene(base, 0).diagram).toBe('flow');
     expect(toScene({ ...base, template: 'stat' }, 0).diagram).toBeUndefined();
+  });
+});
+
+describe('stock-clip scenes', () => {
+  it('keep the search words on the scene, falling back to the title', () => {
+    const base = { template: 'stock-clip', title: 'Leaves', narration: 'Leaves work.', elements: [{ type: 'caption', text: 'Leaves', cue: 'Leaves work' }] };
+    expect(toScene(llmSceneSchema.parse({ ...base, mediaQuery: ' green leaves ' }), 0).media).toEqual({ query: 'green leaves' });
+    expect(toScene(llmSceneSchema.parse({ ...base, mediaQuery: '' }), 0).media).toEqual({ query: 'Leaves' });
+    expect(toScene(llmSceneSchema.parse({ ...base, template: 'recap' }), 0).media).toBeUndefined();
   });
 });
 

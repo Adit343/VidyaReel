@@ -26,6 +26,14 @@ export type VideoDoc = {
   version: number; createdAt: Date; updatedAt: Date; deletedAt?: Date;
 };
 
+/** Licence record for every stock clip, image or music track used (docs/Database-Design.md section 4.7). */
+export type AssetDoc = {
+  _id: ObjectId; videoId?: ObjectId; sceneId?: string;
+  kind: 'clip' | 'image' | 'music' | 'icon'; source: 'pexels' | 'pixabay' | 'bundled';
+  sourceId: string; sourceUrl: string; licence: string; attribution?: string; storageKey: string; createdAt: Date;
+};
+
+export const assets = () => db().collection<AssetDoc>('assets');
 export const users = () => db().collection<UserDoc>('users');
 export const videos = () => db().collection<VideoDoc>('videos');
 export const sessions = () => db().collection<SessionDoc>('sessions');
