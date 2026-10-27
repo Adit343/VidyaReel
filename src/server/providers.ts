@@ -32,5 +32,7 @@ export interface Renderer {
 export interface SocialPublisher {
   createContainer(conn: Connection, videoUrl: string, caption: string): Promise<string>;
   status(conn: Connection, containerId: string): Promise<'IN_PROGRESS' | 'FINISHED' | 'ERROR'>;
+  /** Plain-language reason for a container that ended in `ERROR`. */
+  statusMessage(conn: Connection, containerId: string): Promise<string>;
   publish(conn: Connection, containerId: string): Promise<{ mediaId: string; permalink: string }>;
 }

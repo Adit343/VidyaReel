@@ -30,9 +30,16 @@ export async function ensureIndexes() {
     { key: { videoId: 1 } },
     { key: { source: 1, sourceId: 1 } },
   ]);
+  await d.collection('instagram_connections').createIndexes([
+    { key: { userId: 1 }, unique: true },
+    { key: { status: 1, tokenExpiresAt: 1 } },
+  ]);
   await d.collection('posts').createIndexes([
     { key: { status: 1, scheduledAt: 1 } },
-    { key: { videoId: 1 } },
+    { key: { videoId: 1, createdAt: -1 } },
+    // One live (scheduled or publishing) post per video; a second start finds the first instead of racing it.
+    { key: { videoId: 1, live: 1 }, unique: true, partialFilterExpression: { live: true } },
+    { key: { userId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } },
   ]);
   await d.collection('usage_log').createIndex({ userId: 1, type: 1, createdAt: -1 });
   await d.collection('rate_limits').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });

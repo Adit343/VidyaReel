@@ -13,7 +13,7 @@ export type PasswordResetDoc = { _id: ObjectId; userId: ObjectId; tokenHash: str
 export type ApprovedEmailDoc = {
   _id: ObjectId; email: string; role: Role; dailyLimit: number; addedBy?: ObjectId; addedAt: Date; removedAt?: Date;
 };
-export type OauthStateDoc = { _id: ObjectId; state: string; purpose: 'google' | 'instagram'; codeVerifier?: string; userId?: ObjectId; expiresAt: Date };
+export type OauthStateDoc = { _id: ObjectId; state: string; purpose: 'google' | 'instagram'; codeVerifier?: string; userId?: ObjectId; returnTo?: string; expiresAt: Date };
 export type RateLimitDoc = { _id: string; count: number; expiresAt: Date };
 
 // The central document (docs/Database-Design.md section 4.3). Render fields are written by the render workflow.
@@ -49,10 +49,27 @@ export type AssetDoc = {
   sourceId: string; sourceUrl: string; licence: string; attribution?: string; storageKey: string; createdAt: Date;
 };
 
+/** A member's connected Instagram account (docs/Database-Design.md section 4.5). The token is only ever stored encrypted. */
+export type InstagramConnectionDoc = {
+  _id: ObjectId; userId: ObjectId; igUserId: string; username: string; accountType: 'BUSINESS' | 'CREATOR'; profilePictureUrl?: string;
+  tokenEnc: string; tokenIv: string; tokenTag: string; keyVersion: number; tokenExpiresAt: Date; scopes: string[];
+  status: 'connected' | 'needs_reconnect'; lastRefreshAt?: Date; connectedAt: Date;
+};
+
+/** One post now or scheduled (docs/Database-Design.md section 4.6). `rev` changes on every reschedule or cancel so an older workflow run stops. */
+export type PostDoc = {
+  _id: ObjectId; videoId: ObjectId; userId: ObjectId; connectionId: ObjectId; caption: string; mode: 'now' | 'scheduled'; scheduledAt?: Date;
+  status: 'scheduled' | 'publishing' | 'posted' | 'failed' | 'cancelled'; containerId?: string; igMediaId?: string; permalink?: string;
+  lateByMs?: number; error?: { code: string; message: string }; retryCount: number; paused?: boolean; live?: true; rev: number;
+  idempotencyKey?: string; createdAt: Date; updatedAt: Date;
+};
+
 export const assets = () => db().collection<AssetDoc>('assets');
 export const users = () => db().collection<UserDoc>('users');
 export const videos = () => db().collection<VideoDoc>('videos');
 export const renderJobs = () => db().collection<RenderJobDoc>('render_jobs');
+export const instagramConnections = () => db().collection<InstagramConnectionDoc>('instagram_connections');
+export const posts = () => db().collection<PostDoc>('posts');
 export const usageLog = () => db().collection<UsageDoc>('usage_log');
 export const sessions = () => db().collection<SessionDoc>('sessions');
 export const passwordResets = () => db().collection<PasswordResetDoc>('password_resets');
