@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-27 (prompt 30)
+Last updated: 2026-10-27 (prompt 34)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
@@ -11,6 +11,7 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 ## Next up
 
 - [ ] **Phase 5 live check (needs you):** in the Meta developer dashboard, open the Instagram product, "API setup with Instagram login", and add the redirect URI (local: `http://localhost:3000/api/instagram/callback`; production: your Vercel URL plus `/api/instagram/callback`). Instagram may insist on https; if so use a free tunnel (cloudflared quick tunnel) and set `APP_URL` and `META_REDIRECT_URI` to it. `META_APP_ID` and `META_APP_SECRET` must be the **Instagram** app id and secret shown on that page (not the main Meta app id). Add each teammate's Instagram account as an Instagram Tester and have them accept. Put `IG_TOKEN_KEY` in Vercel (a key is already in your `.env.local`). Then connect, post once now, schedule one five minutes ahead, and reschedule and cancel another
+- [ ] Run `npm run remotion:bundle` so new renders use the caption fix (older videos keep the cut-off captions; make a new video or duplicate one to re-render)
 - [ ] Phase 5 sign-off: try Settings (connect, reconnect, disconnect, profile) and Post (now, scheduled, edit, cancel, retry) in the browser; each real post goes to your real Instagram account
 - [ ] Going live for other educators (outside the Meta app's roles) needs Meta app review, a privacy policy URL and business verification; the Terms and Privacy pages are not built yet
 - [ ] Optional: a Posts page (`/posts` still says coming soon) listing scheduled and published posts
