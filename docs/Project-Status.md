@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-27 (prompt 34)
+Last updated: 2026-10-27 (prompt 36)
 
 Current phase: **Phase 5 (Instagram) is built and checked with a fake Instagram; the live connect and a real post still need your Meta app settings (see Not yet verified)**: connect Instagram, post now, schedule, reschedule, cancel, retry, daily token refresh, Post and Settings screens. **Phase 4 (render workflow and Library) is built and passed its automated gate; awaiting your sign-off**: click Generate, get a finished video (voice, sync, stock clips, music, captions, Sandbox render, R2), progress screen, player and download, fix a scene, cancel, Library with live progress, duplicate. **Phase 3 (template library and media) is done and signed off (2026-10-25)**: themes, captions, all eleven templates, stock clips, voice samples and music with ducking. **Phase 2 (storyboard AI and Review) is done and signed off (2026-10-25)**; its music tracks and voice samples (step 2.18) arrived in Phase 3. **Phase 1 (pipeline spike) is complete**: all five experiments passed and the architecture stands (decision in [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started: local Remotion work (1.1 to 1.3) the Vercel Sandbox render to R2 (1.4 to 1.6), the Inngest `renderVideo` workflow (1.7 to 1.9) and the ElevenLabs voice and cue sync (1.10 to 1.13) are done; see [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md).
 
@@ -118,3 +118,7 @@ Choosing a Google account that is not on the invite list ended in the generic "s
 ## Fixes after the first real Instagram post (2026-10-27)
 
 - The first real connect and post worked end to end through ngrok. Three things were found and fixed: the same-origin check refused POSTs behind the tunnel (it now also accepts `APP_URL` and the forwarded host); the connect and callback redirects went to `localhost` instead of `APP_URL`; and the video captions ran off both sides of the frame, because the words were separate spans with no spaces and could not wrap (`src/remotion/Captions.tsx` is now a wrapping row with a smaller font for long phrases; checked with a rendered still). Videos made before this fix keep the old captions; run `npm run remotion:bundle` so new renders use the fix.
+
+## Posts screen (2026-10-27)
+
+`/posts` now lists your Instagram posts in three groups (Upcoming, Published, Failed or cancelled), newest first: video title, status chip, scheduled time with a countdown or the time it went out, the failure reason, View on Instagram, and Manage / Open (back to that video's Post step). Times are in your time zone. Stitch has no Posts screen, so this follows the Library card style. Posts of deleted videos are hidden. 1 new test (170 total).

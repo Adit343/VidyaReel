@@ -511,3 +511,17 @@ describe('daily token refresh and disconnect', () => {
     expect(await sessions().countDocuments({ userId: s.userId })).toBe(0);
   });
 });
+
+describe('listPosts (Posts screen)', () => {
+  it('lists the member\'s posts with video titles, newest first, and hides other members\' and deleted videos\' posts', async () => {
+    const { listPosts } = await import('@/server/posts/service');
+    const a = await setup({ title: 'First' });
+    const { post } = await createPost(a.owner, String(a.doc._id), { caption: 'x', scheduledAt: iso(3600e3) }, deps());
+    const b = await setup({ title: 'Second' });
+    await createPost(b.owner, String(b.doc._id), { caption: 'y' }, deps());
+    const rows = await listPosts(a.userId);
+    expect(rows.map((r) => [r.id, r.title])).toEqual([[post.id, 'First']]);
+    await videos().updateOne({ _id: a.doc._id }, { $set: { deletedAt: new Date() } });
+    expect(await listPosts(a.userId)).toEqual([]);
+  });
+});

@@ -252,3 +252,13 @@ export async function resumePausedPosts(userId: ObjectId, deps: PostDeps = defau
   }
   return rows.length;
 }
+
+export type PostListItem = PostView & { title: string };
+
+/** The member's posts, newest first, with the title of each video (the Posts screen). Deleted videos' posts are left out. */
+export async function listPosts(userId: ObjectId, limit = 100): Promise<PostListItem[]> {
+  const rows = await posts().find({ userId }).sort({ createdAt: -1 }).limit(limit).toArray();
+  const vids = await videos().find({ _id: { $in: [...new Set(rows.map((p) => String(p.videoId)))].map((id) => new ObjectId(id)) }, deletedAt: { $exists: false } }, { projection: { title: 1 } }).toArray();
+  const titles = new Map(vids.map((v) => [String(v._id), v.title]));
+  return rows.filter((p) => titles.has(String(p.videoId))).map((p) => ({ ...toPostView(p), title: titles.get(String(p.videoId))! }));
+}

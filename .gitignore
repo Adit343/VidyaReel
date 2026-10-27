@@ -10,3 +10,5 @@ build
 public/sample-clip.mp4
 assets/music/*.mp3
 public/tone.wav
+
+build\remotion-bundle
