@@ -22,7 +22,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const mongo = await MongoMemoryServer.create();
 const uri = `${mongo.getUri()}harness`;
-const env = { ...process.env, MONGODB_URI: uri, APP_URL: BASE, ADMIN_EMAIL: 'owner@example.com', NEXT_TELEMETRY_DISABLED: '1', INNGEST_DEV: 'http://localhost:9' };
+const env = { ...process.env, MONGODB_URI: uri, APP_URL: BASE, ADMIN_EMAIL: 'owner@example.com', NEXT_TELEMETRY_DISABLED: '1', INNGEST_DEV: 'http://localhost:9', INNGEST_BASE_URL: 'http://localhost:9' };
 const server = spawn('npx', ['next', 'dev', '-p', String(PORT)], { env, shell: true, stdio: 'pipe' });
 let log = '';
 server.stdout.on('data', (d) => { log += d; });
@@ -203,6 +203,23 @@ try {
   await view(390);
   await open('/settings');
   await shot('s6-settings-mobile', 390);
+  await view(1280);
+
+  // Posts screen: one of each kind
+  await setConnection(connection());
+  await setState({ status: 'posted' },
+    postDoc({ status: 'posted', permalink: 'https://www.instagram.com/reel/De4psPxj0VT/', createdAt: new Date(Date.now() - 3600e3) }),
+    postDoc({ mode: 'scheduled', scheduledAt: at, status: 'scheduled', live: true, createdAt: new Date() }),
+    postDoc({ status: 'failed', error: { code: 'IG_REJECTED', message: 'Instagram does not support this video format.' }, createdAt: new Date(Date.now() - 7200e3) }),
+    postDoc({ status: 'cancelled', createdAt: new Date(Date.now() - 9000e3) }));
+  await open('/posts');
+  await shot('p1-posts');
+  await open('/posts?show=published');
+  await shot('p2-posts-published');
+  await setState({}); await open('/posts');
+  await shot('p3-posts-empty');
+  await view(390); await setState({ status: 'posted' }, postDoc({ status: 'posted', permalink: 'https://www.instagram.com/reel/x/' })); await open('/posts');
+  await shot('p4-posts-mobile', 390);
   await view(1280);
 
   // API plumbing over HTTP with the signed-in cookie

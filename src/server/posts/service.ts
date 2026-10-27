@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { AppError } from '@/lib/errors';
 import { instagramConnections, posts, videos, type PostDoc, type VideoDoc } from '@/server/db/collections';
+import type { StorageProvider } from '@/server/providers';
 import { loadOwned, type Owner } from '@/server/videos/service';
 import { inngest } from '@/workflows/inngest';
 
@@ -253,12 +254,15 @@ export async function resumePausedPosts(userId: ObjectId, deps: PostDeps = defau
   return rows.length;
 }
 
-export type PostListItem = PostView & { title: string };
+export type PostListItem = PostView & { title: string; thumbUrl: string | null };
 
-/** The member's posts, newest first, with the title of each video (the Posts screen). Deleted videos' posts are left out. */
-export async function listPosts(userId: ObjectId, limit = 100): Promise<PostListItem[]> {
+/** The member's posts, newest first, with each video's title and poster (the Posts screen). Posts of deleted videos are left out. */
+export async function listPosts(userId: ObjectId, st?: StorageProvider, limit = 100): Promise<PostListItem[]> {
   const rows = await posts().find({ userId }).sort({ createdAt: -1 }).limit(limit).toArray();
-  const vids = await videos().find({ _id: { $in: [...new Set(rows.map((p) => String(p.videoId)))].map((id) => new ObjectId(id)) }, deletedAt: { $exists: false } }, { projection: { title: 1 } }).toArray();
-  const titles = new Map(vids.map((v) => [String(v._id), v.title]));
-  return rows.filter((p) => titles.has(String(p.videoId))).map((p) => ({ ...toPostView(p), title: titles.get(String(p.videoId))! }));
+  const ids = [...new Set(rows.map((p) => String(p.videoId)))].map((id) => new ObjectId(id));
+  const vids = await videos().find({ _id: { $in: ids }, deletedAt: { $exists: false } }, { projection: { title: 1, thumbKey: 1 } }).toArray();
+  const byId = new Map(vids.map((v) => [String(v._id), v]));
+  const thumbs = new Map<string, string | null>();
+  for (const v of vids) thumbs.set(String(v._id), st && v.thumbKey ? await st.signedGet(v.thumbKey, 3600).catch(() => null) : null);
+  return rows.filter((p) => byId.has(String(p.videoId))).map((p) => ({ ...toPostView(p), title: byId.get(String(p.videoId))!.title, thumbUrl: thumbs.get(String(p.videoId)) ?? null }));
 }

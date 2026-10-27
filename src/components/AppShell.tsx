@@ -80,7 +80,7 @@ export function AppShell({ user, quota, notices, children }: Props) {
           </div>
         </header>
 
-        {children}
+        <div className="flex-1">{children}</div>
 
         <footer className="hidden md:block mt-16 border-t border-[#D3DBD0] bg-white py-6 text-xs">
           <div className="max-w-[1120px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
