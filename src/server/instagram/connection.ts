@@ -134,3 +134,6 @@ export async function refreshDueTokens(f: Fetch = fetch, now = new Date()): Prom
   }
   return out;
 }
+
+/** Where redirects point: the public address (`APP_URL`, e.g. the tunnel), since behind a proxy the request URL can say localhost. */
+export const appBase = (req: Request) => process.env.APP_URL || req.url;
