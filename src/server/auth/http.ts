@@ -4,7 +4,15 @@ import { limitAuth } from './rate-limit';
 
 export function assertSameOrigin(req: Request) {
   const origin = req.headers.get('origin');
-  if (origin && origin !== new URL(req.url).origin) throw new AppError('FORBIDDEN', 'Bad origin', 403);
+  if (!origin) return;
+  // Behind a tunnel or proxy (ngrok, Vercel) the request URL can say http while the browser used https, so the
+  // configured APP_URL and the forwarded host and protocol count as the same site too.
+  const allowed = new Set([new URL(req.url).origin]);
+  if (process.env.APP_URL) allowed.add(new URL(process.env.APP_URL).origin);
+  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host');
+  const proto = req.headers.get('x-forwarded-proto');
+  if (host && proto) allowed.add(`${proto.split(',')[0].trim()}://${host}`);
+  if (!allowed.has(origin)) throw new AppError('FORBIDDEN', 'Bad origin', 403);
 }
 
 /** Same-origin check + zod parse for JSON bodies. */
