@@ -540,8 +540,7 @@ The UI never calls these. Listed here so the API and workflow docs stay linked.
 | --- | --- | --- |
 | `video/render.requested` | `POST /render` | `{ videoId, jobId, userId, sceneIds? }` |
 | `video/render.cancel` | `POST /render/cancel` | `{ videoId }` |
-| `post/requested` | `POST /post`, `/retry` | `{ postId }` |
-| `post/updated` | `PATCH /posts/:id` (reschedule) | `{ postId, scheduledAt }` |
+| `post/requested` | `POST /post`, `/retry`, `PATCH /posts/:id` (reschedule), reconnect (resumes paused posts) | `{ postId, userId, rev }`; a newer `rev` retires any older run of the same post (built this way instead of cancelling with `post/updated`) |
 | `post/cancel` | `PATCH /posts/:id`, `DELETE /instagram/connection`, `DELETE /videos/:id` | `{ postId }` |
 | Cron | Inngest | `refreshInstagramTokens`, `cleanupDeletedVideos` (daily) |
 

@@ -1,5 +1,16 @@
-import { ComingSoon } from '@/components/shell/ComingSoon';
+import { redirect } from 'next/navigation';
+import { SettingsClient } from '@/components/settings/SettingsClient';
+import { getAppContext } from '@/server/app-data';
+import { posts } from '@/server/db/collections';
+import { getConnection } from '@/server/instagram/connection';
 
-export default function Page() {
-  return <ComingSoon icon="tune" title="Settings" text="Sign-in methods and your Instagram connection will live here. This screen arrives with the posting release." />;
+export const dynamic = 'force-dynamic';
+
+export default async function Page({ searchParams }: { searchParams: Promise<{ ig?: string }> }) {
+  const ctx = await getAppContext();
+  if (!ctx) redirect('/sign-in');
+  const [{ connection }, scheduled] = await Promise.all([
+    getConnection(ctx.userId), posts().countDocuments({ userId: ctx.userId, status: 'scheduled' }),
+  ]);
+  return <SettingsClient name={ctx.name} email={ctx.user.email} timeZone={ctx.timeZone} connection={connection} scheduledCount={scheduled} flag={(await searchParams).ig ?? null} />;
 }

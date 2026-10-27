@@ -56,3 +56,25 @@ describe('password rules (Stitch states)', () => {
     expect(checkPassword('Solstice-Autumn-924!', 'a@b.co')).toMatchObject({ status: 'ok', level: 4, message: 'Looks good' });
   });
 });
+
+import { dateTimeLabel, untilLabel, utcLabel, utcToZoned, zonedToUtc } from '@/lib/time';
+
+describe('time zones for scheduling', () => {
+  it('reads wall-clock time in a zone as the right UTC instant, and back', () => {
+    expect(zonedToUtc('2026-10-27', '09:00', 'Asia/Kolkata').toISOString()).toBe('2026-10-27T03:30:00.000Z');
+    expect(zonedToUtc('2026-01-15', '09:00', 'America/New_York').toISOString()).toBe('2026-01-15T14:00:00.000Z');
+    expect(zonedToUtc('2026-07-15', '09:00', 'America/New_York').toISOString()).toBe('2026-07-15T13:00:00.000Z'); // daylight time
+    expect(utcToZoned(new Date('2026-10-27T03:30:00.000Z'), 'Asia/Kolkata')).toEqual({ date: '2026-10-27', time: '09:00' });
+    expect(utcToZoned(new Date('2026-10-26T22:00:00.000Z'), 'Asia/Kolkata')).toEqual({ date: '2026-10-27', time: '03:30' });
+  });
+  it('labels', () => {
+    expect(utcLabel('Asia/Kolkata')).toBe('UTC+5:30');
+    expect(utcLabel('UTC')).toBe('UTC+0');
+    expect(dateTimeLabel('2026-10-27T03:30:00.000Z', 'Asia/Kolkata')).toBe('27 Oct 2026 at 9:00 AM');
+    const now = Date.parse('2026-10-27T00:00:00Z');
+    expect(untilLabel('2026-10-27T18:24:00Z', now)).toBe('in 18h 24m');
+    expect(untilLabel('2026-10-27T00:05:00Z', now)).toBe('in 5m');
+    expect(untilLabel('2026-10-29T01:10:00Z', now)).toBe('in 2d 1h 10m');
+    expect(untilLabel('2026-10-26T00:00:00Z', now)).toBe('any moment now');
+  });
+});

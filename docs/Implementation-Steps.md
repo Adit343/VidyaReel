@@ -183,19 +183,19 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 
 | Step | Task | Check |
 | --- | --- | --- |
-| 5.1 ⬜ | Token encryption helpers (`IG_TOKEN_KEY`) | Round trip test |
-| 5.2 ⬜ | `GET /api/instagram/connect` (state) | Redirect to Meta |
-| 5.3 ⬜ | `GET /api/instagram/callback` (verify state, exchange, store encrypted) | Connection saved |
-| 5.4 ⬜ | Account eligibility check (`IG_NOT_ELIGIBLE`) | Personal account rejected |
-| 5.5 ⬜ | `GET/DELETE /api/instagram/connection` | Token never returned; disconnect deletes it |
-| 5.6 ⬜ | `SocialPublisher` implementation | Container/status/publish calls |
-| 5.7 ⬜ | `POST /api/videos/:id/post` (now or scheduled) | Post row created |
-| 5.8 ⬜ | `publishInstagram` workflow (sleep, container, poll, publish, permalink) | Post goes live |
-| 5.9 ⬜ | Reschedule and cancel (`PATCH /api/posts/:id`) | Sleep restarts or ends |
-| 5.10 ⬜ | Retry failed post | Returns to `publishing` |
-| 5.11 ⬜ | `refreshInstagramTokens` daily job | Near-expiry token refreshed |
-| 5.12 ⬜ | Post Step 4 UI (connect, caption, schedule) | Matches Stitch |
-| 5.13 ⬜ | Settings page: connection status, disconnect, delete my data | Works |
+| 5.1 ✅ | Token encryption helpers (`IG_TOKEN_KEY`) | Round trip test |
+| 5.2 ✅ | `GET /api/instagram/connect` (state) | Redirect to Meta |
+| 5.3 ✅ | `GET /api/instagram/callback` (verify state, exchange, store encrypted) | Connection saved |
+| 5.4 ✅ | Account eligibility check (`IG_NOT_ELIGIBLE`) | Personal account rejected |
+| 5.5 ✅ | `GET/DELETE /api/instagram/connection` | Token never returned; disconnect deletes it |
+| 5.6 ✅ | `SocialPublisher` implementation | Container/status/publish calls |
+| 5.7 ✅ | `POST /api/videos/:id/post` (now or scheduled) | Post row created |
+| 5.8 ✅ | `publishInstagram` workflow (sleep, container, poll, publish, permalink) | Post goes live |
+| 5.9 ✅ | Reschedule and cancel (`PATCH /api/posts/:id`) | Sleep restarts or ends |
+| 5.10 ✅ | Retry failed post | Returns to `publishing` |
+| 5.11 ✅ | `refreshInstagramTokens` daily job | Near-expiry token refreshed |
+| 5.12 ✅ | Post Step 4 UI (connect, caption, schedule) | Matches Stitch |
+| 5.13 ✅ | Settings page: connection status, disconnect, delete my data | Works |
 
 ## Phase 6: Hardening and team launch
 

@@ -21,13 +21,15 @@ const defaultDeps = (): PostDeps => ({ send: (name, data) => inngest.send({ name
 export type PostView = {
   id: string; videoId: string; status: PostDoc['status']; mode: PostDoc['mode']; scheduledAt: string | null; caption: string;
   permalink: string | null; error: { code: string; message: string } | null; lateByMs: number | null; retryCount: number; paused: boolean;
-  createdAt: string; updatedAt: string;
+  /** While publishing: `sending` until Instagram has the video, then `processing`. */
+  stage: 'sending' | 'processing' | null; createdAt: string; updatedAt: string;
 };
 
 export const toPostView = (p: PostDoc): PostView => ({
   id: String(p._id), videoId: String(p.videoId), status: p.status, mode: p.mode, scheduledAt: p.scheduledAt?.toISOString() ?? null,
   caption: p.caption, permalink: p.permalink || null, error: p.error ?? null, lateByMs: p.lateByMs ?? null, retryCount: p.retryCount,
-  paused: !!p.paused && p.status === 'scheduled', createdAt: p.createdAt.toISOString(), updatedAt: p.updatedAt.toISOString(),
+  paused: !!p.paused && p.status === 'scheduled',
+  stage: p.status === 'publishing' ? (p.containerId ? 'processing' : 'sending') : null, createdAt: p.createdAt.toISOString(), updatedAt: p.updatedAt.toISOString(),
 });
 
 /** Instagram allows 2,200 characters and 30 hashtags. */
