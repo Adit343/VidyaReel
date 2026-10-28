@@ -4,12 +4,13 @@ Last updated: 2026-10-28 (prompt 40)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **5 Instagram**, built and checked with a fake Instagram; the live connect and a real post wait for the Meta settings below. **4 Render workflow and Library** waits for your sign-off. **6 Hardening and team launch** is in progress (steps 6.1 to 6.8 done; 6.9 mobile pass, 6.10 production deploy and 6.11 team test remain).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **5 Instagram**, built and checked with a fake Instagram; the live connect and a real post wait for the Meta settings below. **4 Render workflow and Library** waits for your sign-off. **6 Hardening and team launch** is in progress (steps 6.1 to 6.9 done; 6.10 production deploy and 6.11 team test need you).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
+- [ ] **6.10 and 6.11 (needs you):** finish the Vercel setup below, open `/api/health` on the live URL (expect `ok: true`), then each team member makes and posts one video and the PRD checklist is ticked; Phase 6 is signed off when that passes
 - [ ] **Vercel production setup (needs you):** (1) in Inngest Cloud, Apps, Sync new app, use `https://vidya-reel1.vercel.app/api/inngest`, then check the app lists the four functions; (2) Vercel env vars: `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`, `APP_URL=https://vidya-reel1.vercel.app`, `MONGODB_URI`, `ADMIN_EMAIL`, `R2_*`, `GEMINI_API_KEY`, `ELEVENLABS_*`, `PIXABAY_API_KEY`, `GOOGLE_*`, `META_*`, `IG_TOKEN_KEY`, `RESEND_*`; (3) redeploy after changing them; (4) Mongo Atlas network access must allow Vercel (0.0.0.0/0 on the free tier)
 - [ ] **Phase 5 live check (needs you):** in the Meta developer dashboard, open the Instagram product, "API setup with Instagram login", and add the redirect URI (local: `http://localhost:3000/api/instagram/callback`; production: your Vercel URL plus `/api/instagram/callback`). Instagram may insist on https; if so use a free tunnel (cloudflared quick tunnel) and set `APP_URL` and `META_REDIRECT_URI` to it. `META_APP_ID` and `META_APP_SECRET` must be the **Instagram** app id and secret shown on that page (not the main Meta app id). Add each teammate's Instagram account as an Instagram Tester and have them accept. Put `IG_TOKEN_KEY` in Vercel (a key is already in your `.env.local`). Then connect, post once now, schedule one five minutes ahead, and reschedule and cancel another
 - [ ] Run `npm run remotion:bundle` so new renders use the caption fix (older videos keep the cut-off captions; make a new video or duplicate one to re-render)

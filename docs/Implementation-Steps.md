@@ -209,6 +209,6 @@ Legend: ✅ done (code exists) · 🟡 code exists, not verified · ⬜ not star
 | 6.6 ✅ | Security pass (headers, CSRF origin check on all mutations, ownership tests) | Tests green |
 | 6.7 ✅ | Observability: structured logs, health route, Inngest alerts | Failures visible |
 | 6.8 ✅ | Mongo scheduled export | Backup file exists |
-| 6.9 ⬜ | Mobile layout pass (Stitch mobile Home) | Usable at 390 px |
+| 6.9 ✅ | Mobile layout pass (Stitch mobile Home) | Usable at 390 px |
 | 6.10 ⬜ | Deploy to Vercel production; set env vars; smoke test | `/api/health` ok |
 | 6.11 ⬜ | Team test run with PRD checklist | Each member posts a video |

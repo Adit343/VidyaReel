@@ -17,6 +17,7 @@
     "upload:music": "tsx scripts/upload-music.mts",
     "check:media": "tsx scripts/check-media.mts",
     "check:storyboards": "tsx scripts/check-storyboards.mts",
+    "check:mobile": "tsx scripts/mobile-check.mts",
     "ui:harness": "tsx scripts/ui-harness.mts",
     "spike:instagram": "tsx scripts/spike-instagram.mts",
     "spike:sandbox": "tsx scripts/spike-sandbox-render.mts",
