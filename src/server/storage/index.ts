@@ -42,6 +42,16 @@ export function createR2Storage(cfg: R2Config = r2Config(), endpoint = `https://
     async delete(key) {
       await client.send(new DeleteObjectCommand({ Bucket: cfg.bucket, Key: key }));
     },
+    async list(prefix) {
+      const keys: string[] = [];
+      let token: string | undefined;
+      do {
+        const page = await client.send(new ListObjectsV2Command({ Bucket: cfg.bucket, Prefix: prefix, ContinuationToken: token }));
+        for (const o of page.Contents ?? []) if (o.Key) keys.push(o.Key);
+        token = page.IsTruncated ? page.NextContinuationToken : undefined;
+      } while (token);
+      return keys;
+    },
     async deletePrefix(prefix) {
       let deleted = 0;
       let token: string | undefined;

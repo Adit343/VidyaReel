@@ -1,3 +1,4 @@
+import { errorFields, log } from '@/lib/log';
 import { assets, notifications, posts, renderJobs, usageLog, videos } from '@/server/db/collections';
 import type { StorageProvider } from '@/server/providers';
 
@@ -28,10 +29,11 @@ export async function cleanupDeletedVideos(store: StorageProvider, now = new Dat
       out.videos += 1;
     } catch (e) {
       out.failed += 1;
-      console.error(JSON.stringify({ level: 'error', msg: 'cleanup failed for a video', videoId: String(_id), error: e instanceof Error ? e.message : String(e) }));
+      log('error', 'cleanup failed for a video', { videoId: String(_id), ...errorFields(e) });
     }
   }
   out.jobs += (await renderJobs().deleteMany({ active: { $exists: false }, finishedAt: { $lt: new Date(now.getTime() - JOB_DAYS * DAY) } })).deletedCount;
   out.usageRows = (await usageLog().deleteMany({ createdAt: { $lt: new Date(now.getTime() - 396 * DAY) } })).deletedCount;
+  log('info', 'cleanup finished', out);
   return out;
 }

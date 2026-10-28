@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { AppError } from '@/lib/errors';
+import { errorFields, log } from '@/lib/log';
 import { renderJobs, usageLog, videos, type RenderJobDoc, type RenderStage, type VideoDoc } from '@/server/db/collections';
 import { notifyRenderFailed } from '@/server/notifications';
 import { getQuota } from '@/server/quota';
@@ -190,6 +191,7 @@ export async function failJob(jobId: string, error: unknown) {
   const _id = new ObjectId(jobId);
   const job = await renderJobs().findOne({ _id });
   if (!job || !job.active) return; // cancelled or finished already
+  log('error', 'render failed', { jobId, videoId: String(job.videoId), stage: job.stage, ...errorFields(error) });
   const message = REASON[job.stage] ?? 'The video could not be rendered. Please try again.';
   const detail = error instanceof Error ? error.message.slice(0, 200) : undefined;
   await renderJobs().updateOne({ _id, active: true }, {

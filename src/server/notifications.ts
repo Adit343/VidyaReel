@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { errorFields, log } from '@/lib/log';
 import { notifications, users, videos, type NotificationDoc } from '@/server/db/collections';
 
 export type Notice = {
@@ -19,7 +20,7 @@ export async function notify(n: Input) {
       { upsert: true },
     );
   } catch (e) {
-    console.error(JSON.stringify({ level: 'warn', msg: 'notify failed', kind: n.kind, error: e instanceof Error ? e.message : String(e) }));
+    log('warn', 'notify failed', { kind: n.kind, ...errorFields(e) });
   }
 }
 

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { log } from '@/lib/log';
 import { instagramConnections, posts, videos, type InstagramConnectionDoc, type PostDoc } from '@/server/db/collections';
 import { decryptToken } from '@/server/instagram/crypto';
 import { InstagramError } from '@/server/instagram/api';
@@ -133,6 +134,7 @@ export async function finish(d: PublishDeps, postId: string, containerId: string
  */
 export async function failPost(postId: string, error: unknown) {
   const e = toPostError(error);
+  log('error', 'post failed', { postId, code: e.code, message: e.message });
   const p = await posts().findOneAndUpdate(
     { _id: new ObjectId(postId), live: true },
     { $set: { status: 'failed', error: { code: e.code, message: e.message }, updatedAt: new Date() }, $unset: { live: '', paused: '' } },

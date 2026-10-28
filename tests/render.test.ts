@@ -13,7 +13,7 @@ function fakeStorage() {
   const files = new Map<string, Buffer>();
   const storage: StorageProvider = {
     put: async (k, b) => void files.set(k, b),
-    deletePrefix: async () => 0, exists: async (k) => files.has(k),
+    list: async () => [], deletePrefix: async () => 0, exists: async (k) => files.has(k),
     delete: async (k) => void files.delete(k),
     signedGet: async (k, ttl, o) => `https://signed.example/${k}?ttl=${ttl}${o?.downloadName ? `&dl=${encodeURIComponent(o.downloadName)}` : ''}`,
   };

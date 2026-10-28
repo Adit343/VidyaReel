@@ -1,3 +1,5 @@
+import { errorFields, log } from './log';
+
 export type ErrorCode =
   | 'DAILY_LIMIT' | 'VOICE_CREDITS_LOW' | 'UNSAFE_TOPIC' | 'VERSION_CONFLICT'
   | 'IG_NOT_ELIGIBLE' | 'INVITE_ONLY' | 'NOT_APPROVED' | 'INVALID_CREDENTIALS'
@@ -21,5 +23,6 @@ export function errorResponse(e: unknown) {
       headers: e.retryAfter ? { 'retry-after': String(e.retryAfter) } : undefined,
     });
   }
+  log('error', 'unhandled error in a route', errorFields(e));
   return Response.json({ error: { code: 'INVALID', message: 'Unexpected error' } }, { status: 500 });
 }

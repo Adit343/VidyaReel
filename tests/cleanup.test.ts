@@ -10,7 +10,7 @@ const NOW = new Date('2026-11-01T00:00:00Z');
 function fakeStore(files: Set<string>, failOn?: string): StorageProvider {
   return {
     put: async () => undefined, exists: async (k) => files.has(k), delete: async (k) => { files.delete(k); }, signedGet: async (k) => k,
-    deletePrefix: async (p) => {
+    list: async () => [], deletePrefix: async (p) => {
       if (failOn && p.includes(failOn)) throw new Error('R2 down');
       const hit = [...files].filter((k) => k.startsWith(p));
       hit.forEach((k) => files.delete(k));
@@ -73,5 +73,25 @@ describe('cleanup', () => {
     expect(r).toMatchObject({ jobs: 1, usageRows: 1 });
     expect(await renderJobs().countDocuments()).toBe(2);
     expect(await usageLog().countDocuments()).toBe(1);
+  });
+});
+
+describe('backup', () => {
+  it('writes one gzip export with restorable types and keeps only the newest four', async () => {
+    const { exportBackup } = await import('@/server/backup');
+    const { gunzipSync } = await import('node:zlib');
+    const { BSON } = await import('mongodb');
+    await video();
+    const files = new Map<string, Buffer>(['2026-09-01', '2026-09-08', '2026-09-15', '2026-09-22', '2026-09-29'].map((d) => [`backups/${d}.json.gz`, Buffer.from('x')]));
+    const store: StorageProvider = {
+      put: async (k, b) => { files.set(k, b); }, exists: async (k) => files.has(k), delete: async (k) => { files.delete(k); }, signedGet: async (k) => k,
+      list: async (p) => [...files.keys()].filter((k) => k.startsWith(p)), deletePrefix: async () => 0,
+    };
+    const r = await exportBackup(store, NOW);
+    expect(r.key).toBe('backups/2026-11-01.json.gz');
+    expect([...files.keys()].sort()).toEqual(['backups/2026-09-15.json.gz', 'backups/2026-09-22.json.gz', 'backups/2026-09-29.json.gz', 'backups/2026-11-01.json.gz']);
+    const out = BSON.EJSON.parse(gunzipSync(files.get(r.key)!).toString(), { relaxed: false }) as { collections: { videos: { _id: ObjectId; createdAt: Date }[] } };
+    expect(out.collections.videos[0]._id).toBeInstanceOf(ObjectId);
+    expect(out.collections.videos[0].createdAt).toBeInstanceOf(Date);
   });
 });

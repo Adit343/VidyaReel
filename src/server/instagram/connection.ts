@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { ObjectId } from 'mongodb';
+import { log } from '@/lib/log';
 import { instagramConnections, oauthStates, type InstagramConnectionDoc } from '@/server/db/collections';
 import { notifyNeedsReconnect } from '@/server/notifications';
 import { cancelScheduledPosts, pauseScheduledPosts, resumePausedPosts, type PostDeps } from '@/server/posts/service';
@@ -135,6 +136,7 @@ export async function refreshDueTokens(f: Fetch = fetch, now = new Date()): Prom
     await notifyNeedsReconnect(c.userId);
     out.needsReconnect += 1;
   }
+  log('info', 'instagram token refresh finished', out);
   return out;
 }
 

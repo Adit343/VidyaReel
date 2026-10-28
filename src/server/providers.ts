@@ -25,6 +25,8 @@ export interface StorageProvider {
   signedGet(key: string, ttlSec: number, opts?: { downloadName?: string }): Promise<string>;
   exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
+  /** Keys of every object whose key starts with `prefix`. */
+  list(prefix: string): Promise<string[]>;
   /** Deletes every object whose key starts with `prefix` (a video's folder); returns how many went. */
   deletePrefix(prefix: string): Promise<number>;
 }

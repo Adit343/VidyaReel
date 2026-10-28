@@ -1,3 +1,4 @@
+import { exportBackup as runBackup } from '@/server/backup';
 import { cleanupDeletedVideos as runCleanup } from '@/server/cleanup';
 import { refreshDueTokens } from '@/server/instagram/connection';
 import { storage } from '@/server/storage';
@@ -15,4 +16,11 @@ export const cleanupDeletedVideos = inngest.createFunction(
   { id: 'cleanup-deleted-videos' },
   { cron: '0 4 * * *' },
   async ({ step }) => step.run('cleanup', () => runCleanup(storage())),
+);
+
+// Sundays at 02:00 UTC: a gzip export of the main collections to the private bucket, newest four kept.
+export const exportBackup = inngest.createFunction(
+  { id: 'export-backup' },
+  { cron: '0 2 * * 0' },
+  async ({ step }) => step.run('export', () => runBackup(storage())),
 );
