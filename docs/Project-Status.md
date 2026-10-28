@@ -81,7 +81,7 @@ Choosing a Google account that is not on the invite list ended in the generic "s
 
 ## Not yet verified
 
-- **Instagram live connect and a real scheduled post (Phase 5).** The code is tested against a fake Instagram only. It needs the redirect URI added in the Meta dashboard, `META_APP_ID` and `META_APP_SECRET` to be the Instagram app id and secret, and `IG_TOKEN_KEY` set on Vercel (a local key was added to `.env.local`). See Future-Plans.
+- **Instagram on the live account (Phase 5).** The live connect and a real post now worked (2026-10-27, through ngrok). Not yet recorded as tried on the real account: a scheduled post, reschedule, cancel, retry, reconnect and disconnect. For Vercel, `IG_TOKEN_KEY` and the redirect URI for the Vercel address must also be set.
 
 - Resend: `EMAIL_FROM` is now `onboarding@resend.dev`; Resend accepted a direct send and a forgot-password request (200). Waiting for you to confirm the reset email arrived and the link works end to end. It delivers only to the Resend account owner's address, so other members' resets need a verified domain.
 - Browser walk-through with the existing admin account: password sign-in, Google sign-in, admin add/remove from the UI. The admin account already existed in Atlas, so scripted signup/login with a fresh password could not be repeated.
