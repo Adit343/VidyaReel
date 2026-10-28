@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-28 (prompt 40)
+Last updated: 2026-10-28 (prompt 42)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
@@ -17,8 +17,7 @@ What is left to implement. Updated on every prompt; finished items move to [Proj
 - [ ] Phase 5 sign-off: try Settings (connect, reconnect, disconnect, profile) and Post (now, scheduled, edit, cancel, retry) in the browser; each real post goes to your real Instagram account
 - [ ] Going live for other educators (outside the Meta app's roles) needs Meta app review, a privacy policy URL and business verification; the Terms and Privacy pages are not built yet
 - [ ] Run `npm run db:indexes` once against Atlas (new `notifications` collection and its indexes)
-- [ ] After the next deploy, sync the Inngest app again so it lists the new weekly `export-backup` function (five functions in all); check the first Sunday export appears under `backups/` in R2
-- [ ] Inngest alerts: in Inngest Cloud, Settings, set an email alert for failed functions (dashboard setting, free)
+- [ ] After the next deploy, sync the Inngest app again so it lists the new weekly `export-backup` and `alert-on-failure` functions (six functions in all); check the first Sunday export appears under `backups/` in R2
 - [ ] Optional: a Content-Security-Policy header (left out because Next inline scripts, the Remotion player and Google fonts need a nonce set-up)
 - [ ] Settings: the "Sign-In Methods" section (separate Stitch screen)
 - [ ] Re-run `npm run check:storyboards` now and then (it uses free Gemini quota; the daily quota resets at 12:30 PM IST until 1 Nov, then 1:30 PM IST)

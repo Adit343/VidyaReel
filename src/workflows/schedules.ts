@@ -1,3 +1,4 @@
+import { ALERT_FUNCTION_ID, sendFailureAlert, type FailedEventData } from '@/server/alerts';
 import { exportBackup as runBackup } from '@/server/backup';
 import { cleanupDeletedVideos as runCleanup } from '@/server/cleanup';
 import { refreshDueTokens } from '@/server/instagram/connection';
@@ -23,4 +24,11 @@ export const exportBackup = inngest.createFunction(
   { id: 'export-backup' },
   { cron: '0 2 * * 0' },
   async ({ step }) => step.run('export', () => runBackup(storage())),
+);
+
+// Any Inngest function that fails after its retries: email the admin (Inngest Cloud has no built-in email alert).
+export const alertOnFailure = inngest.createFunction(
+  { id: ALERT_FUNCTION_ID, retries: 1 },
+  { event: 'inngest/function.failed' },
+  async ({ event, step }) => step.run('email', () => sendFailureAlert(event.data as FailedEventData)),
 );
