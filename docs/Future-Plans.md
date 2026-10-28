@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-28 (prompt 43; open: confirm Google login works on Vercel after redeploy, using the new log line if it fails)
+Last updated: 2026-10-29 (prompt 46; open: get script writing and rendering working on Vercel; use the `llm call failed` and Inngest run errors to find what is missing)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 

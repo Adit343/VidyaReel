@@ -1,5 +1,6 @@
 import type { ObjectId } from 'mongodb';
 import { AppError } from '@/lib/errors';
+import { errorFields, log } from '@/lib/log';
 import { rateLimits } from '@/server/db/collections';
 import { LlmError } from './gemini';
 
@@ -23,7 +24,10 @@ export async function limitLlm(userId: ObjectId, limit = LLM_PER_HOUR, now = Dat
 /** Provider trouble (down, slow, nonsense outside the retry loop) becomes a clean 503. */
 export async function guardLlm<T>(fn: () => Promise<T>): Promise<T> {
   try { return await fn(); } catch (e) {
-    if (e instanceof LlmError) throw new AppError('PROVIDER_UNAVAILABLE', 'The AI service is busy. Try again in a moment.', 503);
+    if (e instanceof LlmError) {
+      log('error', 'llm call failed', { kind: e.kind, ...errorFields(e) });
+      throw new AppError('PROVIDER_UNAVAILABLE', 'The AI service is busy. Try again in a moment.', 503);
+    }
     throw e;
   }
 }
