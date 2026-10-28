@@ -88,7 +88,7 @@ Work moves one phase at a time; the step-by-step breakdown is in [Implementation
 - Security checks, backups/export, observability, PRD test checklist
 - Mobile layout pass, deployment to Vercel production
 
-**Gate:** each team member makes and posts a video; failures show clear messages; checklist done.
+**Gate:** the owner makes and posts a video on the live site; failures show clear messages; checklist done (a solo project, so no team run).
 
 ## Rules for moving between phases
 

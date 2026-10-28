@@ -4,13 +4,13 @@ Last updated: 2026-10-28 (prompt 42)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
-Work is organised in phases: see [Phases.md](Phases.md). Current phase: **5 Instagram**, built and checked with a fake Instagram; the live connect and a real post wait for the Meta settings below. **4 Render workflow and Library** waits for your sign-off. **6 Hardening and team launch** is in progress (steps 6.1 to 6.9 done; 6.10 production deploy and 6.11 team test need you).
+Work is organised in phases: see [Phases.md](Phases.md). Current phase: **6 Hardening and launch**; Phase 5's live connect and first real post worked (2026-10-27). **4 Render workflow and Library** waits for your sign-off. **6 Hardening and team launch** is in progress (steps 6.1 to 6.9 done; 6.10 production deploy and 6.11 team test need you).
 
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
 
-- [ ] **6.10 and 6.11 (needs you):** finish the Vercel setup below, open `/api/health` on the live URL (expect `ok: true`), then each team member makes and posts one video and the PRD checklist is ticked; Phase 6 is signed off when that passes
+- [ ] **6.10 and 6.11 (needs you):** finish the Vercel setup below, open `/api/health` on the live URL (expect `ok: true`), then do a solo run on the live site: make a video, fix a scene, post it now, schedule one, cancel one, and tick the PRD checklist. Phase 6 is signed off when that passes (the project has one user, so there is no team test)
 - [ ] **Vercel production setup (needs you):** (1) in Inngest Cloud, Apps, Sync new app, use `https://vidya-reel1.vercel.app/api/inngest`, then check the app lists the four functions; (2) Vercel env vars: `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`, `APP_URL=https://vidya-reel1.vercel.app`, `MONGODB_URI`, `ADMIN_EMAIL`, `R2_*`, `GEMINI_API_KEY`, `ELEVENLABS_*`, `PIXABAY_API_KEY`, `GOOGLE_*`, `META_*`, `IG_TOKEN_KEY`, `RESEND_*`; (3) redeploy after changing them; (4) Mongo Atlas network access must allow Vercel (0.0.0.0/0 on the free tier)
 - [ ] Run `npm run remotion:bundle` so new renders use the caption fix (older videos keep the cut-off captions; make a new video or duplicate one to re-render)
 - [ ] Phase 5 sign-off: the live connect and a real post already worked (2026-10-27, through ngrok); still to try on the real account: schedule a post a few minutes ahead, reschedule, cancel, retry, reconnect, disconnect. Each real post goes to your real Instagram account
