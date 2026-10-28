@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 import { AppError } from '@/lib/errors';
 import { normalizeEmail } from '@/server/auth/approved';
-import { approvedEmails, sessions, users, videos, type ApprovedEmailDoc, type UserDoc } from '@/server/db/collections';
+import { approvedEmails, notifications, sessions, users, videos, type ApprovedEmailDoc, type UserDoc } from '@/server/db/collections';
 
 const role = z.enum(['member', 'admin']);
 const dailyLimit = z.number().int().min(1).max(100);
@@ -113,5 +113,6 @@ export async function removeApproved(id: string, adminId: string, { deleteVideos
   if (account) await sessions().deleteMany({ userId: account._id });
   if (account && deleteVideos) {
     await videos().updateMany({ userId: account._id, deletedAt: { $exists: false } }, { $set: { deletedAt: new Date() } });
+    await notifications().deleteMany({ userId: account._id });
   }
 }

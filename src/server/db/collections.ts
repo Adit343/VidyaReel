@@ -64,6 +64,13 @@ export type PostDoc = {
   idempotencyKey?: string; createdAt: Date; updatedAt: Date;
 };
 
+/** An in-app notice (docs/Database-Design.md section 4.10). Stored once per event; a TTL index removes it after 90 days. */
+export type NotificationDoc = {
+  _id: ObjectId; userId: ObjectId; kind: 'render_ready' | 'render_failed' | 'post_posted' | 'post_failed' | 'ig_needs_reconnect';
+  refId: ObjectId; title: string; body: string; href: string; retry: boolean; createdAt: Date;
+};
+
+export const notifications = () => db().collection<NotificationDoc>('notifications');
 export const assets = () => db().collection<AssetDoc>('assets');
 export const users = () => db().collection<UserDoc>('users');
 export const videos = () => db().collection<VideoDoc>('videos');

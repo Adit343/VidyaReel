@@ -50,7 +50,7 @@ describe('music ducking', () => {
 describe('music tracks', () => {
   const files = new Set<string>();
   const storage = {
-    exists: async (k: string) => files.has(k),
+    deletePrefix: async () => 0, exists: async (k: string) => files.has(k),
     signedGet: async (k: string) => `https://signed.example/${k}`,
   } as unknown as StorageProvider;
 

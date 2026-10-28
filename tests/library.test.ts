@@ -9,7 +9,7 @@ import { duplicateVideo } from '@/server/videos/service';
 import { approve } from './helpers';
 
 const code = async (p: Promise<unknown>) => p.then(() => 'ok', (e: AppError) => e.code);
-const st: StorageProvider = { put: async () => undefined, exists: async () => true, delete: async () => undefined, signedGet: async (k) => `https://signed.example/${k}` };
+const st: StorageProvider = { put: async () => undefined, deletePrefix: async () => 0, exists: async () => true, delete: async () => undefined, signedGet: async (k) => `https://signed.example/${k}` };
 
 async function add(userId: ObjectId, title: string, status: VideoDoc['status'], extra: Partial<VideoDoc> = {}) {
   const now = new Date();

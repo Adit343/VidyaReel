@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { AppError } from '@/lib/errors';
 import { renderJobs, usageLog, videos, type RenderJobDoc, type RenderStage, type VideoDoc } from '@/server/db/collections';
+import { notifyRenderFailed } from '@/server/notifications';
 import { getQuota } from '@/server/quota';
 import { storage } from '@/server/storage';
 import { loadOwned, type Owner } from '@/server/videos/service';
@@ -197,6 +198,7 @@ export async function failJob(jobId: string, error: unknown) {
   });
   const v = await videos().findOne({ _id: job.videoId });
   if (v) await restoreStatus(v._id, v.outputKey, 'failed', message);
+  await notifyRenderFailed(job.videoId, job.userId, message);
 }
 
 /** Progress write from inside a step; ignored once the job was cancelled, and never moves backwards. */

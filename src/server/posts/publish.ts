@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { instagramConnections, posts, videos, type InstagramConnectionDoc, type PostDoc } from '@/server/db/collections';
 import { decryptToken } from '@/server/instagram/crypto';
 import { InstagramError } from '@/server/instagram/api';
+import { notifyNeedsReconnect, notifyPostFailed, notifyPosted } from '@/server/notifications';
 import type { SocialPublisher, StorageProvider } from '@/server/providers';
 import { pauseScheduledPosts, settleVideoStatus } from './service';
 
@@ -122,6 +123,7 @@ export async function finish(d: PublishDeps, postId: string, containerId: string
     { $set: { status: 'posted', igMediaId: r.mediaId, permalink: r.permalink, updatedAt: new Date() }, $unset: { live: '', error: '', paused: '' } },
   );
   await settleVideoStatus(p.videoId);
+  await notifyPosted(p._id, p.videoId, p.userId);
   return { permalink: r.permalink };
 }
 
@@ -137,11 +139,13 @@ export async function failPost(postId: string, error: unknown) {
   );
   if (!p) return;
   await settleVideoStatus(p.videoId);
+  await notifyPostFailed(p._id, p.videoId, p.userId, e.message);
   if (e.code === 'IG_NEEDS_RECONNECT') await markNeedsReconnect(p.userId);
 }
 
 /** Token expired or revoked: reconnect needed, and the member's other scheduled posts wait. */
 export async function markNeedsReconnect(userId: ObjectId) {
-  await instagramConnections().updateOne({ userId }, { $set: { status: 'needs_reconnect' } });
+  const r = await instagramConnections().updateOne({ userId, status: 'connected' }, { $set: { status: 'needs_reconnect' } });
+  if (r.modifiedCount) await notifyNeedsReconnect(userId);
   await pauseScheduledPosts(userId);
 }

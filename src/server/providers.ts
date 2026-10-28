@@ -25,6 +25,8 @@ export interface StorageProvider {
   signedGet(key: string, ttlSec: number, opts?: { downloadName?: string }): Promise<string>;
   exists(key: string): Promise<boolean>;
   delete(key: string): Promise<void>;
+  /** Deletes every object whose key starts with `prefix` (a video's folder); returns how many went. */
+  deletePrefix(prefix: string): Promise<number>;
 }
 export interface Renderer {
   render(props: unknown, opts: { sceneIds?: string[] }): Promise<{ outputKey: string; durationMs: number }>;

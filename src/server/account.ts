@@ -1,6 +1,6 @@
 import type { ObjectId } from 'mongodb';
 import { AppError } from '@/lib/errors';
-import { instagramConnections, sessions, users, videos } from '@/server/db/collections';
+import { instagramConnections, notifications, sessions, users, videos } from '@/server/db/collections';
 import { cancelScheduledPosts, type PostDeps } from '@/server/posts/service';
 
 const validZone = (tz: string) => {
@@ -26,4 +26,5 @@ export async function deleteMyData(userId: ObjectId, deps: PostDeps) {
   const now = new Date();
   await videos().updateMany({ userId, deletedAt: { $exists: false } }, { $set: { deletedAt: now, updatedAt: now } });
   await sessions().deleteMany({ userId });
+  await notifications().deleteMany({ userId });
 }

@@ -1,4 +1,6 @@
+import { cleanupDeletedVideos as runCleanup } from '@/server/cleanup';
 import { refreshDueTokens } from '@/server/instagram/connection';
+import { storage } from '@/server/storage';
 import { inngest } from './inngest';
 
 // Daily at 03:00 UTC: renew Instagram tokens that expire within 10 days (docs/System-Design.md 8.2).
@@ -8,8 +10,9 @@ export const refreshInstagramTokens = inngest.createFunction(
   async ({ step }) => step.run('refresh', () => refreshDueTokens()),
 );
 
+// Daily at 04:00 UTC: files and rows of videos deleted over 7 days ago, old render jobs and usage rows.
 export const cleanupDeletedVideos = inngest.createFunction(
   { id: 'cleanup-deleted-videos' },
   { cron: '0 4 * * *' },
-  async ({ step }) => { await step.run('noop', async () => null); },
+  async ({ step }) => step.run('cleanup', () => runCleanup(storage())),
 );

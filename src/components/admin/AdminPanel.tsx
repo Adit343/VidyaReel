@@ -453,7 +453,7 @@ function UsagePanel({ usage }: { usage: UsageSummary }) {
             {usage.voice.used == null ? '—' : usage.voice.used.toLocaleString()} <span className="text-[18px] font-normal text-[#54675D]">/ {usage.voice.total.toLocaleString()}</span>
           </p>
           <Bar pct={usage.voice.used == null ? 0 : Math.round((usage.voice.used / usage.voice.total) * 100)} />
-          <Foot left={usage.voice.tracked ? 'Warning threshold: 80%' : 'Tracking starts when voice generation is switched on'} right="" />
+          <Foot left={'Estimated: about one credit per narration character'} right="" />
         </StatCard>
       </div>
 

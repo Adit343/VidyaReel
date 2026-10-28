@@ -11,7 +11,7 @@ function fakes() {
   const spoken: string[] = [];
   const storage: StorageProvider = {
     put: async (k, b) => { files.set(k, b); },
-    exists: async (k) => files.has(k),
+    deletePrefix: async () => 0, exists: async (k) => files.has(k),
     signedGet: async (k, ttl) => `https://signed.example/${k}?ttl=${ttl}`,
     delete: async (k) => { files.delete(k); },
   };

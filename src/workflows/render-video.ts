@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { renderJobs, videos } from '@/server/db/collections';
 import { createMedia } from '@/server/media';
+import { notifyRenderReady } from '@/server/notifications';
 import { failJob, setProgress } from '@/server/render/jobs';
 import { buildProps, mediaScene, syncVideo, voiceScene, type RenderDeps } from '@/server/render/pipeline';
 import { readRendered, renderPoster, renderScenes, startSandbox, stopSandbox, uploadBundle } from '@/server/render/sandbox';
@@ -145,6 +146,7 @@ export const renderVideo = inngest.createFunction(
       for (const old of [before?.outputKey, before?.thumbKey]) {
         if (old && old !== saved.outputKey && old !== saved.thumbKey) await d.storage.delete(old).catch(() => undefined);
       }
+      if (before) await notifyRenderReady(before._id, before.userId);
       await stopSandbox(sandbox);
       return { videoId, outputKey: saved.outputKey, clipless };
     });

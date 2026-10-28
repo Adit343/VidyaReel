@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { ObjectId } from 'mongodb';
 import { instagramConnections, oauthStates, type InstagramConnectionDoc } from '@/server/db/collections';
+import { notifyNeedsReconnect } from '@/server/notifications';
 import { cancelScheduledPosts, pauseScheduledPosts, resumePausedPosts, type PostDeps } from '@/server/posts/service';
 import {
   authorizeUrl, exchangeCode, getProfile, InstagramError, normalizeAccountType, refreshToken, type Fetch,
@@ -121,6 +122,7 @@ export async function refreshDueTokens(f: Fetch = fetch, now = new Date()): Prom
       if (e instanceof InstagramError && e.kind === 'auth') {
         await instagramConnections().updateOne({ _id: c._id }, { $set: { status: 'needs_reconnect' } });
         await pauseScheduledPosts(c.userId);
+        await notifyNeedsReconnect(c.userId);
         out.needsReconnect += 1;
       }
     }
@@ -130,6 +132,7 @@ export async function refreshDueTokens(f: Fetch = fetch, now = new Date()): Prom
   for (const c of dead) {
     await instagramConnections().updateOne({ _id: c._id }, { $set: { status: 'needs_reconnect' } });
     await pauseScheduledPosts(c.userId);
+    await notifyNeedsReconnect(c.userId);
     out.needsReconnect += 1;
   }
   return out;

@@ -1,9 +1,9 @@
 import { approvedEmails, users, videos } from '@/server/db/collections';
 import { dayBounds } from '@/server/quota';
+import { monthlyVoiceCredits, voiceCreditsUsedThisMonth } from '@/server/render/jobs';
 
 const TZ = 'Asia/Kolkata';
 const DAYS = 14;
-const MONTHLY_CREDITS = () => Number(process.env.ELEVENLABS_MONTHLY_CREDITS) || 10_000;
 
 export type UsageSummary = {
   today: { videos: number; cap: number; resetsInMs: number };
@@ -12,19 +12,17 @@ export type UsageSummary = {
   members: { email: string; role: string; total: number; avgSec: number | null; spark: number[] }[];
 };
 
-/**
- * Numbers for the Admin "Usage" tab, from the videos collection. Voice credits are not logged yet
- * (usage_log arrives with step 6.2), so the used figure is reported as unknown instead of invented.
- */
+/** Numbers for the Admin "Usage" tab: videos from the videos collection, voice credits from usage_log (estimated, one per narration character). */
 export async function getUsage(now = new Date()): Promise<UsageSummary> {
   const { start: dayStart, end: dayEnd } = dayBounds(TZ, now);
   const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
   const sparkStart = new Date(dayStart.getTime() - (DAYS - 1) * 24 * 3600e3);
 
-  const [members, accounts, rows] = await Promise.all([
+  const [members, accounts, rows, voiceUsed] = await Promise.all([
     approvedEmails().find({ removedAt: { $exists: false } }).toArray(),
     users().find({}).toArray(),
     videos().find({ createdAt: { $gte: monthStart > sparkStart ? sparkStart : monthStart } }).toArray(),
+    voiceCreditsUsedThisMonth(now),
   ]);
   const emailOf = new Map(accounts.map((u) => [String(u._id), u.email]));
   const roleOf = new Map(members.map((m) => [m.email, m.role]));
@@ -57,7 +55,7 @@ export async function getUsage(now = new Date()): Promise<UsageSummary> {
   return {
     today: { videos: today, cap: members.reduce((n, m) => n + m.dailyLimit, 0), resetsInMs: dayEnd.getTime() - now.getTime() },
     month: { videos: monthTotal, ready, posted, label: now.toLocaleString('en-US', { month: 'short', year: 'numeric', timeZone: TZ }) },
-    voice: { used: null, total: MONTHLY_CREDITS(), tracked: false },
+    voice: { used: voiceUsed, total: monthlyVoiceCredits(), tracked: true },
     members: [...perMember.entries()]
       .map(([email, m]) => ({
         email, role: roleOf.get(email) ?? 'member', total: m.total,

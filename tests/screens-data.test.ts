@@ -4,7 +4,7 @@ import { AppError } from '@/lib/errors';
 import { addApproved, listApproved, removeApproved, updateApproved } from '@/server/admin/approved-emails';
 import { getUsage } from '@/server/admin/usage';
 import { approvedEmails, users, videos, type VideoDoc } from '@/server/db/collections';
-import { listNotices, markNoticesRead } from '@/server/notifications';
+import { listNotices, markNoticesRead, notifyPostFailed, notifyRenderFailed, notifyRenderReady } from '@/server/notifications';
 import { dayBounds, formatCountdown, getQuota } from '@/server/quota';
 import { listVideos, softDeleteVideo } from '@/server/videos/list';
 import { approve } from './helpers';
@@ -127,24 +127,35 @@ describe('admin usage numbers', () => {
     const u = await getUsage();
     expect([u.today.videos, u.month.videos, u.month.posted, u.month.ready]).toEqual([2, 3, 1, 2]);
     expect(u.today.cap).toBe(5);
-    expect(u.voice).toEqual({ used: null, total: 10000, tracked: false });
+    expect(u.voice).toEqual({ used: 0, total: 10000, tracked: true });
     expect(u.members[0]).toMatchObject({ email: 'a@example.com', total: 3, avgSec: 30 });
     expect(u.members[0].spark.at(-1)).toBe(3);
   });
 });
 
 describe('notifications', () => {
-  it('derives ready, failed and posted notices and tracks read state', async () => {
+  it('stores each event once, lists newest first and tracks read state', async () => {
     const id = await member('a@example.com');
-    await video(id, 'ready', { title: 'Seasons' });
-    await video(id, 'failed', { title: 'Water cycle', failureReason: 'Audio timed out' });
-    await video(id, 'draft');
+    const ready = await video(id, 'ready', { title: 'Seasons' });
+    const failed = await video(id, 'failed', { title: 'Water cycle' });
+    await notifyRenderReady(ready._id, id);
+    await notifyRenderReady(ready._id, id); // a retried workflow step must not double up
+    await notifyRenderFailed(failed._id, id, 'Audio timed out');
     const first = await listNotices(id);
     expect(first.unread).toBe(2);
-    expect(first.items.map((n) => n.kind).sort()).toEqual(['error', 'success']);
+    expect(first.items).toHaveLength(2);
     expect(first.items.find((n) => n.kind === 'error')).toMatchObject({ title: 'Water cycle failed', body: 'Audio timed out', retry: true });
     await markNoticesRead(id);
     const after = await listNotices(id);
     expect([after.unread, after.items.every((n) => !n.unread)]).toEqual([0, true]);
+    await notifyPostFailed(new ObjectId(), ready._id, id, 'Instagram refused the video.');
+    expect((await listNotices(id)).unread).toBe(1);
+  });
+
+  it('only shows a member their own notices', async () => {
+    const a = await member('a@example.com');
+    const b = await member('b@example.com');
+    await notifyRenderReady((await video(a, 'ready'))._id, a);
+    expect((await listNotices(b)).items).toEqual([]);
   });
 });
