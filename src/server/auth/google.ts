@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { AppError } from '@/lib/errors';
+import { log } from '@/lib/log';
 import { db } from '@/server/db/client';
 import { assertApproved, normalizeEmail } from './approved';
 import { createSession } from './sessions';
@@ -7,7 +8,7 @@ import { createSession } from './sessions';
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const USERINFO_URL = 'https://openidconnect.googleapis.com/v1/userinfo';
-const redirectUri = () => `${process.env.APP_URL}/api/auth/google/callback`;
+const redirectUri = () => `${process.env.APP_URL?.trim().replace(/\/+$/, '')}/api/auth/google/callback`;
 
 /** Returns the Google URL to redirect to; stores state + PKCE verifier. */
 export async function startGoogle(): Promise<string> {
@@ -36,7 +37,12 @@ export async function finishGoogle(code: string, state: string, userAgent?: stri
       redirect_uri: redirectUri(), grant_type: 'authorization_code', code_verifier: saved.codeVerifier,
     }),
   });
-  if (!tokenRes.ok) throw new AppError('INVALID', 'Google sign-in failed.', 400);
+  if (!tokenRes.ok) {
+    // Google's reason (invalid_client, redirect_uri_mismatch, ...) holds no secrets and is the only way to tell a bad secret from a bad redirect.
+    const body = (await tokenRes.json().catch(() => ({}))) as { error?: string; error_description?: string };
+    log('error', 'google token exchange failed', { status: tokenRes.status, google: body.error, description: body.error_description, redirectUri: redirectUri() });
+    throw new AppError('INVALID', 'Google sign-in failed.', 400);
+  }
   const { access_token } = (await tokenRes.json()) as { access_token: string };
 
   const info = (await (await fetch(USERINFO_URL, { headers: { authorization: `Bearer ${access_token}` } })).json()) as
