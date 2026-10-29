@@ -6,7 +6,7 @@ export const VIDEO_STATUSES = [
 export const videoStatusSchema = z.enum(VIDEO_STATUSES);
 export type VideoStatus = z.infer<typeof videoStatusSchema>;
 
-export const THEMES = ['forest', 'saffron', 'sage'] as const;
+export const THEMES = ['forest', 'saffron', 'sage', 'chalkboard', 'blackboard', 'slate', 'rose', 'ocean'] as const;
 export const ANGLES = ['everyday', 'step', 'mistake'] as const;
 
 export const createVideoSchema = z.object({

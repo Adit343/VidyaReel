@@ -1,6 +1,6 @@
 # Vidyareel: Project Status
 
-Last updated: 2026-10-29 (prompt 46: a failed Gemini call now logs its reason, `llm call failed`; earlier: Google sign-in failures log Google's reason, trailing slash on `APP_URL` is ignored in the Google redirect)
+Last updated: 2026-10-29 (prompt 50: five more video themes in the Visual Chalk Theme picker; earlier prompt 49: diagram scenes draw cycle, radial, layers and bars pictures with icons and motion, and the script prompt picks them by topic; earlier prompt 48: Home hero is now a "Create a new video" button, "Suggest more" is instant with 12 ideas; earlier prompt 46: a failed Gemini call now logs its reason, `llm call failed`; earlier: Google sign-in failures log Google's reason, trailing slash on `APP_URL` is ignored in the Google redirect)
 
 Current phase: **Phase 5 (Instagram) is built and checked with a fake Instagram; the live connect and a real post still need your Meta app settings (see Not yet verified)**: connect Instagram, post now, schedule, reschedule, cancel, retry, daily token refresh, Post and Settings screens. **Phase 4 (render workflow and Library) is built and passed its automated gate; awaiting your sign-off**: click Generate, get a finished video (voice, sync, stock clips, music, captions, Sandbox render, R2), progress screen, player and download, fix a scene, cancel, Library with live progress, duplicate. **Phase 3 (template library and media) is done and signed off (2026-10-25)**: themes, captions, all eleven templates, stock clips, voice samples and music with ducking. **Phase 2 (storyboard AI and Review) is done and signed off (2026-10-25)**; its music tracks and voice samples (step 2.18) arrived in Phase 3. **Phase 1 (pipeline spike) is complete**: all five experiments passed and the architecture stands (decision in [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md)). Phase 0 is complete and verified against real Atlas, Google, Resend and R2; Phase 1 has started: local Remotion work (1.1 to 1.3) the Vercel Sandbox render to R2 (1.4 to 1.6), the Inngest `renderVideo` workflow (1.7 to 1.9) and the ElevenLabs voice and cue sync (1.10 to 1.13) are done; see [Phase-1-Spike-Results.md](Phase-1-Spike-Results.md).
 
@@ -70,6 +70,18 @@ You tried Create and Review in the browser with the real Gemini model and confir
 ## Phase 3 sign-off (2026-10-25)
 
 You confirmed in the browser that Review works (voice samples, the music select and its volume) and asked for the dropdown fixes below. The Phase 3 gate was met: all templates render from sample props, stock clips crop to 9:16, the licence is recorded in `assets`, both music tracks are in R2, and 10 of 10 topics give valid storyboards with the wider template list.
+
+## More themes (2026-10-29)
+
+The Review screen's "Visual Chalk Theme" picker now offers eight themes: Forest, Saffron and Sage Dark as before, plus Chalkboard (green board, yellow and pink chalk), Blackboard (charcoal, blue and gold chalk), Slate Blue (navy, coral and lime chalk), Rose Paper and Ocean (two light themes). Added in `THEMES` (`src/lib/schemas/video.ts`), `src/remotion/theme.ts`, `SettingsPanel.tsx` and the Generate screen's name list. Existing videos keep their theme. Stills checked by eye for Chalkboard and Rose Paper.
+
+## Richer diagram scenes (2026-10-29)
+
+Diagram scenes were a plain box-and-arrow list. Now `diagram` can be `flow` (icon badges, a dot that keeps travelling down the connector), `cycle` (icons on a ring with arrows drawn between them and a dot circling), `radial` (centre idea with parts around it), `layers` (stacked bands that widen downwards: atmosphere, Earth, pyramids) or `bars` ("Name: 88 days" bars that grow with a counting number), besides the fixed `raindrop` and `orbit`. Elements pop in on their cue and then drift slightly; soft shapes move behind the picture. Each element can carry an `icon` (43 drawn line icons in `src/remotion/templates/icons.tsx`, names in `iconNames.ts`; not emoji, because the render sandbox has no emoji font; unknown names fall back to a number). The storyboard prompt now describes each kind, lists the icon names and asks for a diagram whenever the topic is a process, cycle, structure, parts or a comparison of amounts, so the picture follows the topic. `icon` is kept through the schema, `toScene` and the Review view. Four new sample scenes in `fixtures/all-templates.json`; stills checked by eye in Studio's renderer. 1 new test (184 total). Not done: a real-model run to see how well it chooses diagrams and icons, and the other templates (bullets, steps) are still text only.
+
+## Home and idea chips (2026-10-29)
+
+Home no longer has its own prompt box (it only handed the text to `/create`, and its subject chips and "60s" label did nothing). The hero is a "Create a new video" button to `/create` (or the daily-limit notice). On Create, "Need an idea?" shows 12 chips from a built-in list of 48 across subjects, and "Suggest more" reshuffles them in the browser, so it is instant and uses no AI call. `POST /api/ideas/suggest` still exists but the UI no longer calls it. Voice is picked on Review, as before.
 
 ## Dropdowns (2026-10-25)
 

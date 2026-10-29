@@ -10,7 +10,7 @@ describe('template library', () => {
   it('has a sample scene for every enabled template and every diagram kind', () => {
     const scenes = sceneSchema.array().parse(allTemplates.scenes);
     for (const t of ENABLED_TEMPLATES) expect(scenes.some((s) => s.template === t), t).toBe(true);
-    for (const d of ['flow', 'raindrop', 'orbit']) expect(scenes.some((s) => s.diagram === d), d).toBe(true);
+    for (const d of ['flow', 'cycle', 'radial', 'layers', 'bars', 'raindrop', 'orbit']) expect(scenes.some((s) => s.diagram === d), d).toBe(true);
   });
 
   it('accepts the new templates from the model and treats an empty diagram as absent', () => {
@@ -24,6 +24,21 @@ describe('template library', () => {
     const base = llmSceneSchema.parse({ template: 'diagram', narration: 'Water cycles.', elements: [{ type: 'node', text: 'Cycle', cue: 'Water cycles' }] });
     expect(toScene(base, 0).diagram).toBe('flow');
     expect(toScene({ ...base, template: 'stat' }, 0).diagram).toBeUndefined();
+  });
+});
+
+describe('diagram icons', () => {
+  it('keeps an element icon from the model, drops an empty one, and lists every drawn icon', async () => {
+    const { ICON_NAMES } = await import('@/remotion/templates/iconNames');
+    const { readFileSync } = await import('node:fs');
+    // icons.tsx has JSX, which the test runner does not parse, so compare its drawn names as text.
+    const drawn = [...readFileSync('src/remotion/templates/icons.tsx', 'utf8').matchAll(/^  (\w+): </gm)].map((m) => m[1]);
+    expect([...drawn].sort()).toEqual([...ICON_NAMES].sort());
+    const els = [{ type: 'node', text: 'Sun', cue: 'Sun', icon: 'sun' }, { type: 'node', text: 'Rain', cue: 'Rain', icon: '' }];
+    const scene = toScene(llmSceneSchema.parse({ template: 'diagram', diagram: 'cycle', narration: 'Sun then rain.', elements: els }), 0);
+    expect(scene.diagram).toBe('cycle');
+    expect(scene.elements.map((e) => e.icon)).toEqual(['sun', undefined]);
+    expect(ICON_NAMES.length).toBeGreaterThan(30);
   });
 });
 

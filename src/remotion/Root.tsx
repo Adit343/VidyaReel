@@ -40,7 +40,7 @@ const comp = (id: string, defaultProps: VideoProps) => (
 export const Root: React.FC = () => (
   <>
     {comp('Video', { scenes: parse(spike.scenes) })}
-    {/* One scene per template with captions; change `theme` in Studio to check forest, saffron and sage. */}
+    {/* One scene per template with captions; change `theme` in Studio to check every theme in theme.ts. */}
     {comp('AllTemplates', { scenes: withWords(parse(allTemplates.scenes)), theme: 'forest', captionsOn: true })}
   </>
 );

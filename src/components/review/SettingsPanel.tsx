@@ -13,6 +13,11 @@ const THEMES = [
   { id: 'forest', label: 'Forest', swatch: 'bg-[#145A41]' },
   { id: 'saffron', label: 'Saffron', swatch: 'bg-[#FF9F1C]' },
   { id: 'sage', label: 'Sage Dark', swatch: 'bg-[#0F2A20]' },
+  { id: 'chalkboard', label: 'Chalkboard', swatch: 'bg-[#2F4F43]' },
+  { id: 'blackboard', label: 'Blackboard', swatch: 'bg-[#1E1F21]' },
+  { id: 'slate', label: 'Slate Blue', swatch: 'bg-[#1F2F46]' },
+  { id: 'rose', label: 'Rose Paper', swatch: 'bg-[#B3305A]' },
+  { id: 'ocean', label: 'Ocean', swatch: 'bg-[#0E6E95]' },
 ] as const;
 
 type Props = {

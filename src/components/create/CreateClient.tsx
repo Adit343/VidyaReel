@@ -19,7 +19,7 @@ const ANGLES = [
 type AngleId = (typeof ANGLES)[number]['id'];
 
 type Idea = { label: string; text: string };
-// Shown first and as the fallback; "Suggest more" asks the AI for fresh ones.
+// The chips are picked from this list in the browser, so "Suggest more" is instant and costs no AI call.
 const POOL: Idea[] = [
   { label: 'Photosynthesis', text: 'Photosynthesis in leaf chloroplasts. Explain light and dark reactions for Class 7.' },
   { label: 'Water cycle', text: 'Water cycle and precipitation dynamics for Grade 7 earth science.' },
@@ -30,7 +30,58 @@ const POOL: Idea[] = [
   { label: 'Plate tectonics', text: 'Plate tectonics, fault lines, and why earthquakes happen.' },
   { label: "Newton's Third Law", text: "Newton's third law of motion: Action and reaction forces in sports." },
   { label: 'Mitochondria', text: 'Mitochondria: Cellular respiration and ATP production in animal cells.' },
+  { label: 'Acids and bases', text: 'Acids and bases: How the pH scale works, with lemon juice and soap as examples.' },
+  { label: 'Fall of Rome', text: 'Why did the Western Roman Empire fall? Key causes explained simply.' },
+  { label: 'Fractions', text: 'What are fractions? Explain with pizza slices for Class 5.' },
+  { label: 'Food chains', text: 'Food chains and food webs: Who eats whom in a forest ecosystem.' },
+  { label: 'Electric circuits', text: 'How a simple electric circuit works: Battery, wire, bulb and switch.' },
+  { label: 'Phases of the Moon', text: 'Why does the Moon change shape? The phases of the Moon for Class 6.' },
+  { label: 'Pythagoras theorem', text: 'Pythagoras theorem explained with a ladder against a wall.' },
+  { label: 'Indian Independence', text: 'Key events of the Indian freedom struggle from 1857 to 1947.' },
+  { label: 'States of matter', text: 'Solid, liquid, gas: How particles behave when matter is heated or cooled.' },
+  { label: 'Human digestion', text: 'The journey of a chapati through the human digestive system.' },
+  { label: 'Metaphor vs simile', text: 'Metaphor versus simile: How to tell them apart, with examples.' },
+  { label: 'Volcanoes', text: 'How volcanoes erupt: Magma, pressure and the ring of fire.' },
+  { label: 'Friction', text: 'Friction: Why a ball stops rolling and how we use friction every day.' },
+  { label: 'Prime numbers', text: 'Prime numbers: What makes a number prime and how to find them.' },
+  { label: 'Heart and circulation', text: 'How the heart pumps blood around the body, step by step.' },
+  { label: 'Industrial Revolution', text: 'The Industrial Revolution: How machines changed work and cities.' },
+  { label: 'Chemical reactions', text: 'Signs of a chemical reaction: Rusting, cooking and burning compared.' },
+  { label: 'Photosynthesis vs respiration', text: 'Photosynthesis versus respiration: Common mistake of mixing them up.' },
+  { label: 'Tides', text: 'What causes ocean tides? The pull of the Moon and Sun explained.' },
+  { label: 'Simple machines', text: 'Simple machines: Lever, pulley and inclined plane in daily life.' },
+  { label: 'Democracy', text: 'What is democracy? How voting and elections work in India.' },
+  { label: 'Parts of speech', text: 'Parts of speech: Nouns, verbs and adjectives with fun examples.' },
+  { label: 'Greenhouse effect', text: 'The greenhouse effect and why Earth is warming.' },
+  { label: 'Sound waves', text: 'How sound travels: Vibrations, waves and why we hear echoes.' },
+  { label: 'Area and perimeter', text: 'Area versus perimeter: A common mistake with a garden example.' },
+  { label: 'Mughal Empire', text: 'The Mughal Empire: Rise, achievements and decline in a few minutes.' },
+  { label: 'DNA', text: 'What is DNA? How genes carry instructions for a living thing.' },
+  { label: 'Magnetism', text: 'How magnets work: Poles, field lines and the Earth as a magnet.' },
+  { label: 'Percentages', text: 'Percentages in shopping: Discounts and sale prices for Class 7.' },
+  { label: 'Soil formation', text: 'How soil forms from rock over thousands of years.' },
+  { label: 'Light reflection', text: 'Reflection of light: Mirrors, angles and why you see yourself.' },
+  { label: 'Ancient Indus Valley', text: 'The Indus Valley Civilisation: Cities, drainage and trade.' },
+  { label: 'Cell division', text: 'Mitosis step by step: How one cell becomes two.' },
+  { label: 'Climate vs weather', text: 'Climate versus weather: A common mistake students make.' },
+  { label: 'Gravity', text: 'What is gravity? Why things fall and why the Moon stays in orbit.' },
+  { label: 'Haiku poetry', text: 'How to read and write a haiku: Syllables and imagery.' },
+  { label: 'Evaporation', text: 'Evaporation and condensation: Why a cold glass gets wet outside.' },
+  { label: 'Probability', text: 'Probability with a coin and a die: Simple chances for Class 7.' },
+  { label: 'Renewable energy', text: 'Solar, wind and hydro: How renewable energy is made.' },
+  { label: 'Respiratory system', text: 'How we breathe: Lungs, diaphragm and gas exchange.' },
+  { label: 'Fundamental rights', text: 'Fundamental Rights in the Indian Constitution in plain language.' },
 ];
+const SHOWN = 12;
+
+function shuffled<T>(items: readonly T[]): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 type Banner =
   | { kind: 'unsafe' }
@@ -48,9 +99,7 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
   const [angle, setAngle] = useState<AngleId | null>('everyday');
   const [lengthSec, setLengthSec] = useState<30 | 60 | 90>(60);
   const [audience, setAudience] = useState('Class 7');
-  const [ideas, setIdeas] = useState<Idea[]>(POOL.slice(0, 6));
-  const [poolAt, setPoolAt] = useState(0);
-  const [ideasBusy, setIdeasBusy] = useState(false);
+  const [ideas, setIdeas] = useState<Idea[]>(POOL.slice(0, SHOWN));
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState(false);
   const [used, setUsed] = useState(quota.used);
@@ -67,18 +116,11 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
     input.current?.focus();
   }
 
-  async function suggestMore() {
-    if (ideasBusy) return;
-    setIdeasBusy(true);
-    const res = await api<{ ideas: { topic: string; hint: string }[] }>('/api/ideas/suggest', { body: {} });
-    if (res.ok && res.data.ideas.length) {
-      setIdeas(res.data.ideas.slice(0, 6).map((i) => ({ label: i.topic.length > 28 ? `${i.topic.slice(0, 26)}…` : i.topic, text: i.topic })));
-    } else {
-      const next = (poolAt + 3) % POOL.length; // the AI is busy or rate limited: rotate the built-in ideas instead
-      setPoolAt(next);
-      setIdeas(Array.from({ length: 6 }, (_, k) => POOL[(next + k) % POOL.length]));
-    }
-    setIdeasBusy(false);
+  function suggestMore() {
+    const shown = new Set(ideas.map((i) => i.text));
+    const fresh = shuffled(POOL.filter((i) => !shown.has(i.text)));
+    // Once everything has been shown, start over with a new order.
+    setIdeas((fresh.length >= SHOWN ? fresh : [...fresh, ...shuffled(POOL.filter((i) => shown.has(i.text)))]).slice(0, SHOWN));
   }
 
   function fail(e: { code: string; message: string; details?: Record<string, unknown> }) {
@@ -182,8 +224,8 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
           <div className="mt-4 pt-1">
             <div className="flex items-center justify-between mb-2.5">
               <span className="text-[13px] font-medium text-[#54675D] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#FF9F1C]" />Need an idea?</span>
-              <button type="button" onClick={suggestMore} disabled={ideasBusy || loading} className="text-[13px] text-[#145A41] hover:text-[#0F4632] font-medium underline-offset-4 hover:underline rounded px-1 disabled:opacity-60">
-                {ideasBusy ? 'Thinking…' : 'Suggest more'}
+              <button type="button" onClick={suggestMore} disabled={loading} className="text-[13px] text-[#145A41] hover:text-[#0F4632] font-medium underline-offset-4 hover:underline rounded px-1 disabled:opacity-60">
+                Suggest more
               </button>
             </div>
             <div className="flex flex-wrap gap-2">

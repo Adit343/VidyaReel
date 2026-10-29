@@ -1,4 +1,5 @@
 import { ENABLED_TEMPLATES } from '@/lib/schemas/storyboard';
+import { ICON_NAMES } from '@/remotion/templates/iconNames';
 import type { Prompt } from '@/server/providers';
 
 export const WORDS_PER_SEC = 2.3;
@@ -52,7 +53,15 @@ const SCENE_RULES = `Scene rules:
   - comparison: a "left" element naming the first thing, then "left" detail elements, a "right" element naming the second thing, then "right" detail elements (1 or 2 details each).
   - timeline: 2 to 4 "event" elements written as "date: what happened" (the date is under 15 characters).
   - formula: a "formula" element (for example "v = d / t") and one "note" element per variable or rule.
-  - diagram: a process or picture. Add "diagram": "flow" (3 to 5 "node" elements in order), "raindrop" (light splitting in a raindrop, 3 "label" elements) or "orbit" (Earth around the Sun, 2 "label" elements). Use raindrop and orbit only for those topics.
+  - diagram: an animated picture drawn from your elements. Set "diagram" to the kind that matches the idea:
+    - "cycle": 3 to 5 "node" elements for something that loops (water cycle, carbon cycle, life cycle, day and night). The last step leads back to the first.
+    - "radial": the first element is the "center" idea, then 2 to 4 "part" elements around it (types of rock, parts of a cell, causes of an event, what a word covers).
+    - "layers": 3 to 5 "layer" elements from top to bottom (layers of the atmosphere or Earth, a food pyramid, levels of government).
+    - "bars": 2 to 5 "bar" elements written as "Name: number unit" (for example "Mercury: 88 days", "India: 1400 million"), to compare amounts. Only real numbers you are sure of.
+    - "flow": 3 to 5 "node" elements in order (a process, cause and effect, how something works).
+    - "raindrop": light splitting in a raindrop, 3 "label" elements. Only for rainbows. "orbit": Earth around the Sun, 2 "label" elements. Only for seasons or orbits.
+    Every diagram element has an "icon" chosen from: ${ICON_NAMES.join(', ')}. Pick the one that best pictures that element (sun for sunlight, drop for water, leaf for a leaf, atom for particles, ...); use "" only when nothing fits.
+    Diagram text is a short label of 1 to 4 words, never a sentence. Use at least one diagram scene whenever the topic is a process, a cycle, a structure, parts of something, or a comparison of amounts; the viewer should see the idea drawn, not only read it.
   - recap: the closing scene, 2 to 4 "point" elements. Use it as the last scene.
   - stock-clip: a real-world video behind 1 or 2 short "caption" elements. Add "mediaQuery": 2 to 4 plain English nouns to search a stock video site for (for example "green leaves sunlight"). Use it for scenes about something you can film (nature, weather, machines, places), at most 2 per video.
   Use a variety of templates that fit the content; do not use bullet-reveal for every scene.
@@ -78,7 +87,7 @@ ${i.angle && ANGLE_TEXT[i.angle] ? `Approach: ${ANGLE_TEXT[i.angle]}\n` : ''}Sta
 ${SCENE_RULES}
 
 Also write: a short video "title" (under 60 characters), an "accent" colour hex that suits the topic, an Instagram "caption" (under 300 characters, ends with a question for viewers) and up to 5 "hashtags" (each starting with #).
-Return {"title":"","accent":"#145A41","caption":"","hashtags":[],"scenes":[{"template":"","diagram":"","mediaQuery":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}]}.${rejected(previousErrors)}`,
+Return {"title":"","accent":"#145A41","caption":"","hashtags":[],"scenes":[{"template":"","diagram":"","mediaQuery":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":"","icon":""}]}]}.${rejected(previousErrors)}`,
   };
 }
 
@@ -95,6 +104,6 @@ Rewrite this scene${scene.title ? ` ("${scene.title}")` : ''}, currently: """${s
 ${instruction ? `Teacher instruction: ${instruction}` : 'Make it clearer and more engaging, about the same length.'}
 
 ${SCENE_RULES}
-Return one scene: {"template":"","diagram":"","mediaQuery":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":""}]}.${rejected(previousErrors)}`,
+Return one scene: {"template":"","diagram":"","mediaQuery":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":"","icon":""}]}.${rejected(previousErrors)}`,
   };
 }

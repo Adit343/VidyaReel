@@ -10,6 +10,9 @@ export const ENABLED_TEMPLATES = [
   'title-hook', 'bullet-reveal', 'definition-callout', 'step-flow', 'stat', 'comparison', 'timeline', 'formula', 'diagram', 'recap', 'stock-clip',
 ] as const;
 
+/** Drawings a diagram scene can show. The first three are generic; raindrop and orbit are fixed pictures for those topics. */
+export const DIAGRAMS = ['flow', 'cycle', 'radial', 'layers', 'bars', 'raindrop', 'orbit'] as const;
+
 export const wordSchema = z.object({ word: z.string(), startMs: z.number(), endMs: z.number() });
 
 export const elementSchema = z.object({
@@ -17,6 +20,8 @@ export const elementSchema = z.object({
   type: z.string(),
   text: z.string(),
   cue: z.string(),
+  /** Name of a drawn icon (src/remotion/templates/icons.tsx); unknown names are ignored when drawing. */
+  icon: z.string().optional(),
   startMs: z.number().optional(),
 });
 
@@ -24,7 +29,7 @@ export const sceneSchema = z.object({
   id: z.string(),
   order: z.number().int(),
   template: z.enum(TEMPLATES),
-  diagram: z.enum(['flow', 'raindrop', 'orbit']).optional(),
+  diagram: z.enum(DIAGRAMS).optional(),
   title: z.string().optional(),
   narration: z.string().min(1),
   needsCheck: z.boolean().default(false),
@@ -52,7 +57,7 @@ export type Storyboard = z.infer<typeof storyboardSchema>;
 export const llmSceneSchema = z.object({
   template: z.enum(ENABLED_TEMPLATES),
   // The prompt shows "diagram":"" for scenes that are not diagrams, so an empty string counts as absent.
-  diagram: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.enum(['flow', 'raindrop', 'orbit']).optional()),
+  diagram: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.enum(DIAGRAMS).optional()),
   // Search words for a stock-clip scene (2 to 4 plain nouns); ignored for other templates.
   // The model sometimes sends the words as a list; join them.
   mediaQuery: z.preprocess((v) => (Array.isArray(v) ? v.join(' ') : v === null ? undefined : v), z.string().max(60).optional()),
@@ -64,6 +69,8 @@ export const llmSceneSchema = z.object({
     type: z.string().min(1).max(30),
     text: z.string().min(1).max(120),
     cue: z.string().min(1).max(80),
+    // The model sends "" or null when an element has no icon.
+    icon: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.string().max(30).optional()),
   })).min(1).max(5),
 });
 

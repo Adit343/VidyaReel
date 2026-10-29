@@ -69,7 +69,7 @@ export const toScene = (s: LlmScene, order: number, id = newSceneId()): Scene =>
   id, order, template: s.template, ...(s.template === 'diagram' ? { diagram: s.diagram ?? 'flow' } : {}), title: s.title,
   ...(s.template === 'stock-clip' ? { media: { query: (s.mediaQuery || s.title || 'nature').trim() } } : {}), narration: s.narration.trim(),
   needsCheck: s.needsCheck, ...(s.needsCheck && s.checkNote ? { checkNote: s.checkNote } : {}),
-  elements: s.elements.map((e, n) => ({ id: `el_${n + 1}`, type: e.type, text: e.text.trim(), cue: e.cue.trim() })),
+  elements: s.elements.map((e, n) => ({ id: `el_${n + 1}`, type: e.type, text: e.text.trim(), cue: e.cue.trim(), ...(e.icon ? { icon: e.icon } : {}) })),
 });
 
 /** Asks the model, and on a bad answer asks once more with the problems listed (Implementation-Steps 2.7). */

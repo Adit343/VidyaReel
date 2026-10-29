@@ -1,65 +1,537 @@
 {
-  "scenes": [
-    { "id": "a1", "order": 0, "template": "title-hook", "title": "Why do seasons change?", "narration": "Why do we have summer and winter? The answer is not distance.",
-      "elements": [
-        { "id": "e1", "type": "title", "text": "Why do seasons change?", "cue": "summer and winter", "startMs": 300 },
-        { "id": "e2", "type": "subtitle", "text": "Hint: it is not distance", "cue": "not distance", "startMs": 2200 } ], "durationMs": 4000 },
-    { "id": "a2", "order": 1, "template": "step-flow", "title": "How a plant makes food", "narration": "First roots drink water. Then leaves catch sunlight. Finally sugar is made.",
-      "elements": [
-        { "id": "e1", "type": "step", "text": "Roots absorb water", "cue": "roots drink water", "startMs": 300 },
-        { "id": "e2", "type": "step", "text": "Leaves capture sunlight", "cue": "leaves catch sunlight", "startMs": 1800 },
-        { "id": "e3", "type": "step", "text": "Sugar is made", "cue": "sugar is made", "startMs": 3300 } ], "durationMs": 5000 },
-    { "id": "a3", "order": 2, "template": "stat", "title": "Earth's tilt", "narration": "Earth is tilted by twenty three and a half degrees. That tilt causes the seasons.",
-      "elements": [
-        { "id": "e1", "type": "value", "text": "23.5°", "cue": "twenty three and a half", "startMs": 300 },
-        { "id": "e2", "type": "label", "text": "Earth's axial tilt", "cue": "tilt causes", "startMs": 2400 },
-        { "id": "e3", "type": "note", "text": "This tilt causes the seasons", "cue": "seasons", "startMs": 3600 } ], "durationMs": 5000 },
-    { "id": "a4", "order": 3, "template": "comparison", "title": "Summer vs winter", "narration": "In summer our side leans toward the sun. In winter it leans away.",
-      "elements": [
-        { "id": "e1", "type": "left", "text": "Summer", "cue": "summer", "startMs": 300 },
-        { "id": "e2", "type": "left", "text": "Our side leans toward the sun", "cue": "leans toward", "startMs": 1200 },
-        { "id": "e3", "type": "right", "text": "Winter", "cue": "winter", "startMs": 2600 },
-        { "id": "e4", "type": "right", "text": "Our side leans away", "cue": "leans away", "startMs": 3600 } ], "durationMs": 5000 },
-    { "id": "a5", "order": 4, "template": "timeline", "title": "Idea of gravity", "narration": "In sixteen eighty seven Newton published his law. In nineteen fifteen Einstein improved it.",
-      "elements": [
-        { "id": "e1", "type": "event", "text": "1687: Newton publishes his law", "cue": "Newton published", "startMs": 300 },
-        { "id": "e2", "type": "event", "text": "1915: Einstein improves it", "cue": "Einstein improved", "startMs": 2600 },
-        { "id": "e3", "type": "event", "text": "Today: used in GPS", "cue": "today", "startMs": 4200 } ], "durationMs": 6000 },
-    { "id": "a6", "order": 5, "template": "formula", "title": "Speed", "narration": "Speed equals distance divided by time.",
-      "elements": [
-        { "id": "e1", "type": "formula", "text": "v = d / t", "cue": "speed equals", "startMs": 300 },
-        { "id": "e2", "type": "note", "text": "v is speed, d is distance", "cue": "distance", "startMs": 1700 },
-        { "id": "e3", "type": "note", "text": "t is time taken", "cue": "time", "startMs": 2600 } ], "durationMs": 4000 },
-    { "id": "a7", "order": 6, "template": "diagram", "diagram": "flow", "title": "The water cycle", "narration": "Water evaporates, forms clouds, then falls as rain.",
-      "elements": [
-        { "id": "e1", "type": "node", "text": "Evaporation", "cue": "evaporates", "startMs": 300 },
-        { "id": "e2", "type": "node", "text": "Clouds form", "cue": "clouds", "startMs": 1600 },
-        { "id": "e3", "type": "node", "text": "Rain falls", "cue": "rain", "startMs": 2800 } ], "durationMs": 4500 },
-    { "id": "a8", "order": 7, "template": "diagram", "diagram": "raindrop", "title": "Why a rainbow?", "narration": "Sunlight enters a raindrop and splits into colours.",
-      "elements": [
-        { "id": "e1", "type": "label", "text": "Sunlight", "cue": "sunlight", "startMs": 300 },
-        { "id": "e2", "type": "label", "text": "Raindrop", "cue": "raindrop", "startMs": 1500 },
-        { "id": "e3", "type": "label", "text": "Colours", "cue": "colours", "startMs": 2800 } ], "durationMs": 4500 },
-    { "id": "a9", "order": 8, "template": "diagram", "diagram": "orbit", "title": "Earth around the sun", "narration": "Earth circles the sun once a year, tilted all the way.",
-      "elements": [
-        { "id": "e1", "type": "label", "text": "Sun", "cue": "sun", "startMs": 300 },
-        { "id": "e2", "type": "label", "text": "Earth, tilted", "cue": "tilted", "startMs": 2400 } ], "durationMs": 4500 },
-    { "id": "a10", "order": 9, "template": "definition-callout", "title": "Axial tilt", "narration": "Axial tilt is the angle between a planet's axis and its orbit.",
-      "elements": [
-        { "id": "e1", "type": "term", "text": "Axial tilt", "cue": "axial tilt", "startMs": 300 },
-        { "id": "e2", "type": "definition", "text": "The angle between a planet's axis and its orbit", "cue": "angle between", "startMs": 1600 } ], "durationMs": 4500 },
-    { "id": "a11", "order": 10, "template": "recap", "title": "Remember", "narration": "Seasons come from tilt, not distance. Tilt means more direct sunlight.",
-      "elements": [
-        { "id": "e1", "type": "point", "text": "Seasons come from tilt", "cue": "seasons come", "startMs": 300 },
-        { "id": "e2", "type": "point", "text": "Not from distance", "cue": "not distance", "startMs": 1800 },
-        { "id": "e3", "type": "point", "text": "More direct sunlight = summer", "cue": "direct sunlight", "startMs": 3000 } ], "durationMs": 5000 },
-    { "id": "a13", "order": 12, "template": "stock-clip", "title": "Leaves at work", "narration": "Leaves soak up sunlight all day long.",
-      "media": { "query": "green leaves sunlight" },
-      "elements": [
-        { "id": "e1", "type": "caption", "text": "Leaves soak up sunlight", "cue": "soak up sunlight", "startMs": 400 } ], "durationMs": 4000 },
-    { "id": "a12", "order": 11, "template": "bullet-reveal", "title": "Key points", "narration": "Three things to keep in mind.",
-      "elements": [
-        { "id": "e1", "type": "bullet", "text": "Tilt stays fixed in space", "cue": "tilt", "startMs": 300 },
-        { "id": "e2", "type": "bullet", "text": "Hemispheres swap seasons", "cue": "hemispheres", "startMs": 1400 } ], "durationMs": 3500 }
-  ]
+ "scenes": [
+  {
+   "id": "a1",
+   "order": 0,
+   "template": "title-hook",
+   "title": "Why do seasons change?",
+   "narration": "Why do we have summer and winter? The answer is not distance.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "title",
+     "text": "Why do seasons change?",
+     "cue": "summer and winter",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "subtitle",
+     "text": "Hint: it is not distance",
+     "cue": "not distance",
+     "startMs": 2200
+    }
+   ],
+   "durationMs": 4000
+  },
+  {
+   "id": "a2",
+   "order": 1,
+   "template": "step-flow",
+   "title": "How a plant makes food",
+   "narration": "First roots drink water. Then leaves catch sunlight. Finally sugar is made.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "step",
+     "text": "Roots absorb water",
+     "cue": "roots drink water",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "step",
+     "text": "Leaves capture sunlight",
+     "cue": "leaves catch sunlight",
+     "startMs": 1800
+    },
+    {
+     "id": "e3",
+     "type": "step",
+     "text": "Sugar is made",
+     "cue": "sugar is made",
+     "startMs": 3300
+    }
+   ],
+   "durationMs": 5000
+  },
+  {
+   "id": "a3",
+   "order": 2,
+   "template": "stat",
+   "title": "Earth's tilt",
+   "narration": "Earth is tilted by twenty three and a half degrees. That tilt causes the seasons.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "value",
+     "text": "23.5\u00b0",
+     "cue": "twenty three and a half",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "label",
+     "text": "Earth's axial tilt",
+     "cue": "tilt causes",
+     "startMs": 2400
+    },
+    {
+     "id": "e3",
+     "type": "note",
+     "text": "This tilt causes the seasons",
+     "cue": "seasons",
+     "startMs": 3600
+    }
+   ],
+   "durationMs": 5000
+  },
+  {
+   "id": "a4",
+   "order": 3,
+   "template": "comparison",
+   "title": "Summer vs winter",
+   "narration": "In summer our side leans toward the sun. In winter it leans away.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "left",
+     "text": "Summer",
+     "cue": "summer",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "left",
+     "text": "Our side leans toward the sun",
+     "cue": "leans toward",
+     "startMs": 1200
+    },
+    {
+     "id": "e3",
+     "type": "right",
+     "text": "Winter",
+     "cue": "winter",
+     "startMs": 2600
+    },
+    {
+     "id": "e4",
+     "type": "right",
+     "text": "Our side leans away",
+     "cue": "leans away",
+     "startMs": 3600
+    }
+   ],
+   "durationMs": 5000
+  },
+  {
+   "id": "a5",
+   "order": 4,
+   "template": "timeline",
+   "title": "Idea of gravity",
+   "narration": "In sixteen eighty seven Newton published his law. In nineteen fifteen Einstein improved it.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "event",
+     "text": "1687: Newton publishes his law",
+     "cue": "Newton published",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "event",
+     "text": "1915: Einstein improves it",
+     "cue": "Einstein improved",
+     "startMs": 2600
+    },
+    {
+     "id": "e3",
+     "type": "event",
+     "text": "Today: used in GPS",
+     "cue": "today",
+     "startMs": 4200
+    }
+   ],
+   "durationMs": 6000
+  },
+  {
+   "id": "a6",
+   "order": 5,
+   "template": "formula",
+   "title": "Speed",
+   "narration": "Speed equals distance divided by time.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "formula",
+     "text": "v = d / t",
+     "cue": "speed equals",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "note",
+     "text": "v is speed, d is distance",
+     "cue": "distance",
+     "startMs": 1700
+    },
+    {
+     "id": "e3",
+     "type": "note",
+     "text": "t is time taken",
+     "cue": "time",
+     "startMs": 2600
+    }
+   ],
+   "durationMs": 4000
+  },
+  {
+   "id": "a7",
+   "order": 6,
+   "template": "diagram",
+   "diagram": "flow",
+   "title": "The water cycle",
+   "narration": "Water evaporates, forms clouds, then falls as rain.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "node",
+     "text": "Evaporation",
+     "cue": "evaporates",
+     "startMs": 300,
+     "icon": "sun"
+    },
+    {
+     "id": "e2",
+     "type": "node",
+     "text": "Clouds form",
+     "cue": "clouds",
+     "startMs": 1600,
+     "icon": "cloud"
+    },
+    {
+     "id": "e3",
+     "type": "node",
+     "text": "Rain falls",
+     "cue": "rain",
+     "startMs": 2800,
+     "icon": "rain"
+    }
+   ],
+   "durationMs": 4500
+  },
+  {
+   "id": "a8",
+   "order": 7,
+   "template": "diagram",
+   "diagram": "raindrop",
+   "title": "Why a rainbow?",
+   "narration": "Sunlight enters a raindrop and splits into colours.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "label",
+     "text": "Sunlight",
+     "cue": "sunlight",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "label",
+     "text": "Raindrop",
+     "cue": "raindrop",
+     "startMs": 1500
+    },
+    {
+     "id": "e3",
+     "type": "label",
+     "text": "Colours",
+     "cue": "colours",
+     "startMs": 2800
+    }
+   ],
+   "durationMs": 4500
+  },
+  {
+   "id": "a9",
+   "order": 8,
+   "template": "diagram",
+   "diagram": "orbit",
+   "title": "Earth around the sun",
+   "narration": "Earth circles the sun once a year, tilted all the way.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "label",
+     "text": "Sun",
+     "cue": "sun",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "label",
+     "text": "Earth, tilted",
+     "cue": "tilted",
+     "startMs": 2400
+    }
+   ],
+   "durationMs": 4500
+  },
+  {
+   "id": "a10",
+   "order": 9,
+   "template": "definition-callout",
+   "title": "Axial tilt",
+   "narration": "Axial tilt is the angle between a planet's axis and its orbit.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "term",
+     "text": "Axial tilt",
+     "cue": "axial tilt",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "definition",
+     "text": "The angle between a planet's axis and its orbit",
+     "cue": "angle between",
+     "startMs": 1600
+    }
+   ],
+   "durationMs": 4500
+  },
+  {
+   "id": "a11",
+   "order": 10,
+   "template": "recap",
+   "title": "Remember",
+   "narration": "Seasons come from tilt, not distance. Tilt means more direct sunlight.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "point",
+     "text": "Seasons come from tilt",
+     "cue": "seasons come",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "point",
+     "text": "Not from distance",
+     "cue": "not distance",
+     "startMs": 1800
+    },
+    {
+     "id": "e3",
+     "type": "point",
+     "text": "More direct sunlight = summer",
+     "cue": "direct sunlight",
+     "startMs": 3000
+    }
+   ],
+   "durationMs": 5000
+  },
+  {
+   "id": "a13",
+   "order": 12,
+   "template": "stock-clip",
+   "title": "Leaves at work",
+   "narration": "Leaves soak up sunlight all day long.",
+   "media": {
+    "query": "green leaves sunlight"
+   },
+   "elements": [
+    {
+     "id": "e1",
+     "type": "caption",
+     "text": "Leaves soak up sunlight",
+     "cue": "soak up sunlight",
+     "startMs": 400
+    }
+   ],
+   "durationMs": 4000
+  },
+  {
+   "id": "a12",
+   "order": 11,
+   "template": "bullet-reveal",
+   "title": "Key points",
+   "narration": "Three things to keep in mind.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "bullet",
+     "text": "Tilt stays fixed in space",
+     "cue": "tilt",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "bullet",
+     "text": "Hemispheres swap seasons",
+     "cue": "hemispheres",
+     "startMs": 1400
+    }
+   ],
+   "durationMs": 3500
+  },
+  {
+   "id": "a14",
+   "order": 13,
+   "template": "diagram",
+   "diagram": "cycle",
+   "title": "The water cycle",
+   "narration": "Water evaporates, forms clouds, falls as rain, then collects and starts again.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "node",
+     "text": "Evaporation",
+     "cue": "evaporates",
+     "icon": "sun",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "node",
+     "text": "Clouds form",
+     "cue": "clouds",
+     "icon": "cloud",
+     "startMs": 1600
+    },
+    {
+     "id": "e3",
+     "type": "node",
+     "text": "Rain falls",
+     "cue": "rain",
+     "icon": "rain",
+     "startMs": 2900
+    },
+    {
+     "id": "e4",
+     "type": "node",
+     "text": "Collects in rivers",
+     "cue": "collects",
+     "icon": "wave",
+     "startMs": 4200
+    }
+   ],
+   "durationMs": 6500
+  },
+  {
+   "id": "a15",
+   "order": 14,
+   "template": "diagram",
+   "diagram": "radial",
+   "title": "Parts of a cell",
+   "narration": "The cell has a nucleus, a membrane and mitochondria.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "center",
+     "text": "Animal cell",
+     "cue": "cell",
+     "icon": "cell",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "part",
+     "text": "Nucleus",
+     "cue": "nucleus",
+     "icon": "dna",
+     "startMs": 1600
+    },
+    {
+     "id": "e3",
+     "type": "part",
+     "text": "Membrane",
+     "cue": "membrane",
+     "icon": "check",
+     "startMs": 2900
+    },
+    {
+     "id": "e4",
+     "type": "part",
+     "text": "Mitochondria",
+     "cue": "mitochondria",
+     "icon": "bolt",
+     "startMs": 4200
+    }
+   ],
+   "durationMs": 6500
+  },
+  {
+   "id": "a16",
+   "order": 15,
+   "template": "diagram",
+   "diagram": "layers",
+   "title": "Layers of the atmosphere",
+   "narration": "The troposphere is closest, then the stratosphere, then the mesosphere.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "layer",
+     "text": "Mesosphere",
+     "cue": "mesosphere",
+     "icon": "star",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "layer",
+     "text": "Stratosphere",
+     "cue": "stratosphere",
+     "icon": "cloud",
+     "startMs": 1600
+    },
+    {
+     "id": "e3",
+     "type": "layer",
+     "text": "Troposphere",
+     "cue": "troposphere",
+     "icon": "rain",
+     "startMs": 2900
+    }
+   ],
+   "durationMs": 6500
+  },
+  {
+   "id": "a17",
+   "order": 16,
+   "template": "diagram",
+   "diagram": "bars",
+   "title": "Days to orbit the Sun",
+   "narration": "Mercury takes 88 days, Venus 225 and Earth 365.",
+   "elements": [
+    {
+     "id": "e1",
+     "type": "bar",
+     "text": "Mercury: 88 days",
+     "cue": "mercury",
+     "icon": "fire",
+     "startMs": 300
+    },
+    {
+     "id": "e2",
+     "type": "bar",
+     "text": "Venus: 225 days",
+     "cue": "venus",
+     "icon": "star",
+     "startMs": 1600
+    },
+    {
+     "id": "e3",
+     "type": "bar",
+     "text": "Earth: 365 days",
+     "cue": "earth",
+     "icon": "globe",
+     "startMs": 2900
+    }
+   ],
+   "durationMs": 6500
+  }
+ ]
 }

@@ -10,7 +10,7 @@ import { templates } from './templates';
 
 export type VideoProps = {
   scenes: Scene[];
-  /** 'forest' | 'saffron' | 'sage'; anything else falls back to forest. */
+  /** A name from THEMES in theme.ts (forest, saffron, sage, chalkboard, ...); anything else falls back to forest. */
   theme?: string;
   captionsOn?: boolean;
   /** Background track: a link to the file and the level (0 to 1) while the narrator speaks. */

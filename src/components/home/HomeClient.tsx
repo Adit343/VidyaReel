@@ -1,15 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useRef, useState, useTransition } from 'react';
-import { VOICES } from '@/config/voices';
+import { useState } from 'react';
 import { clock, whenLabel } from '@/lib/time';
 import type { VideoCardData } from '@/server/videos/list';
-import { Select } from '../ui/Select';
 import { FILTER_GROUPS, HOME_STATUS, nextStepFor } from '../video/status';
 
-const SUBJECTS = ['Biology', 'Chemistry', 'World History', 'Literature'];
-const MAX = 800;
 const FILTERS = [['all', 'All'], ['drafts', 'Drafts'], ['ready', 'Ready'], ['posted', 'Posted']] as const;
 type Filter = (typeof FILTERS)[number][0];
 
@@ -21,29 +16,14 @@ type Props = {
 };
 
 export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
-  const router = useRouter();
-  const input = useRef<HTMLTextAreaElement>(null);
-  const [text, setText] = useState('');
-  const [subject, setSubject] = useState(SUBJECTS[0]);
-  const [voice, setVoice] = useState(VOICES[0].id);
   const [filter, setFilter] = useState<Filter>('all');
-  const [hint, setHint] = useState(false);
-  const [pending, start] = useTransition();
 
   const limited = quota.used >= quota.limit;
-  const over = text.length > MAX;
   const left = Math.max(0, quota.limit - quota.used);
   const pct = Math.min(100, Math.round((quota.used / Math.max(1, quota.limit)) * 100));
   const shown = videos
     .filter((v) => filter === 'all' || (FILTER_GROUPS[filter] as readonly string[]).includes(v.status))
     .slice(0, 4);
-
-  function generate() {
-    if (limited || pending) return;
-    if (!text.trim()) { setHint(true); input.current?.focus(); return; }
-    if (over) return;
-    start(() => router.push(`/create?${new URLSearchParams({ topic: text.trim(), subject, voice })}`));
-  }
 
   return (
     <main className="flex-1 max-w-[1120px] w-full mx-auto px-4 sm:px-6 md:px-0 py-6 md:py-8 space-y-6 md:space-y-8">
@@ -71,69 +51,27 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
               Transform today&apos;s lesson idea into a 60-second classroom reel.
             </h1>
             <p className="font-body-md text-body-md text-secondary mt-2">
-              Paste a syllabus topic, textbook excerpt, or classroom discussion prompt. Vidyareel drafts a script and a scene-by-scene storyboard for you to review, then adds animation and voiceover.
+              Start with a syllabus topic, textbook excerpt, or classroom discussion prompt. Vidyareel drafts a script and a scene-by-scene storyboard for you to review, then adds animation and voiceover.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="relative rounded-xl border border-[#D3DBD0] bg-white transition-all focus-within:border-[#145A41] focus-within:ring-2 focus-within:ring-[#145A41]/10">
-              <textarea
-                ref={input} id="lesson-prompt-input" rows={3} value={text} aria-label="Lesson idea"
-                onChange={(e) => { setText(e.target.value); setHint(false); }}
-                placeholder={hint
-                  ? 'Please enter a topic before generating (e.g., Photosynthesis light reactions)…'
-                  : 'e.g., Explain capillary action in celery stalks for Grade 7 biology, highlighting xylem vessels, cohesion-adhesion forces, and real classroom beaker observations…'}
-                className="w-full rounded-xl border-none p-4 text-[#0F2A20] font-body-md placeholder:text-[#8D9C93] focus:ring-0 resize-none bg-transparent"
-              />
-              <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-[#F0F3EF] text-xs font-code-xs text-[#54675D]">
-                <span className="flex items-center gap-1.5 min-w-0">
-                  <span className="material-symbols-outlined text-sm text-[#145A41]">auto_awesome</span>
-                  <span className="truncate">Drafts a script and storyboard you can edit before anything renders</span>
-                </span>
-                <span className={`shrink-0 ml-3 ${over ? 'text-[#C93A2E] font-bold' : ''}`}>{text.length} / {MAX} chars</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex flex-wrap items-center gap-1 bg-[#EEF1EC] p-1 rounded-xl border border-[#D3DBD0]" role="group" aria-label="Subject">
-                  {SUBJECTS.map((s) => (
-                    <button
-                      key={s} type="button" aria-pressed={s === subject} onClick={() => setSubject(s)}
-                      className={`px-3 py-1 text-xs font-code-xs rounded-lg transition-all ${s === subject ? 'bg-[#145A41] text-white font-medium shadow-sm' : 'text-[#0F2A20] hover:bg-[#DCE3D9]'}`}
-                    >{s}</button>
-                  ))}
-                </div>
-                <label className="flex items-center gap-1.5 bg-white border border-[#D3DBD0] rounded-xl px-3 py-1.5 text-xs text-[#0F2A20]">
-                  <span className="material-symbols-outlined text-sm text-[#54675D]">graphic_eq</span>
-                  <span className="font-code-xs text-code-xs text-[#54675D]">Voice:</span>
-                  <Select
-                    value={voice} onChange={setVoice} variant="bare" ariaLabel="Narration voice"
-                    options={VOICES.map((v) => ({ value: v.id, label: v.name, hint: v.blurb }))}
-                  />
-                </label>
-                <div className="flex items-center gap-1 bg-white border border-[#D3DBD0] rounded-xl px-3 py-1.5 text-xs">
-                  <span className="material-symbols-outlined text-sm text-[#FF9F1C]">timer</span>
-                  <span className="font-code-xs text-code-xs font-medium text-[#0F2A20]">60s target reel</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                {limited && (
-                  <span className="hidden sm:flex font-code-xs text-code-xs bg-[#FFDCBC] text-[#543000] px-3 py-1.5 rounded-full font-bold items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#FF9F1C]" />Daily allowance: {quota.used}/{quota.limit} used
-                  </span>
-                )}
-                <button
-                  id="generate-script-btn" type="button" onClick={generate} disabled={limited || pending || over}
-                  className={`px-5 py-2.5 rounded-xl text-white font-ui-medium text-ui-medium transition-all flex items-center justify-center gap-2 w-full sm:w-auto ${
-                    limited ? 'bg-[#D3DBD0] !text-[#54675D] cursor-not-allowed' : 'bg-[#145A41] hover:bg-[#0F4632] active:scale-[0.99] shadow-sm disabled:opacity-70'}`}
-                >
-                  <span>{limited ? `Daily limit reached. Resets at 12:00 AM` : pending ? 'Synthesizing…' : 'Generate script'}</span>
-                  <span className={`material-symbols-outlined text-base ${pending ? 'animate-spin' : ''}`}>{limited ? 'lock_clock' : pending ? 'autorenew' : 'arrow_forward'}</span>
-                </button>
-              </div>
-            </div>
+          <div className="flex flex-wrap items-center gap-4">
+            {limited ? (
+              <span className="px-5 py-2.5 rounded-xl bg-[#D3DBD0] text-[#54675D] font-ui-medium text-ui-medium flex items-center gap-2 cursor-not-allowed">
+                Daily limit reached. Resets at 12:00 AM
+                <span className="material-symbols-outlined text-base">lock_clock</span>
+              </span>
+            ) : (
+              <Link href="/create" id="create-video-btn" className="px-5 py-2.5 rounded-xl bg-[#145A41] hover:bg-[#0F4632] active:scale-[0.99] shadow-sm text-white font-ui-medium text-ui-medium transition-all flex items-center gap-2">
+                <span className="material-symbols-outlined text-base">add</span>
+                Create a new video
+                <span className="material-symbols-outlined text-base">arrow_forward</span>
+              </Link>
+            )}
+            <span className="font-code-xs text-code-xs text-[#54675D] flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm text-[#145A41]">auto_awesome</span>
+              Drafts a script and storyboard you can edit before anything renders
+            </span>
           </div>
         </div>
       </section>
@@ -214,13 +152,12 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
             </div>
             <div className="max-w-md">
               <h3 className="font-headline-sm text-headline-sm text-[#0F2A20]">No videos yet in your atelier</h3>
-              <p className="font-body-md text-body-md text-secondary mt-1">Type a lesson idea in the box above to generate your first 60-second classroom reel.</p>
+              <p className="font-body-md text-body-md text-secondary mt-1">Create your first 60-second classroom reel from any lesson idea.</p>
             </div>
-            <button onClick={() => { input.current?.focus(); input.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}
-              className="px-5 py-2.5 rounded-xl bg-[#145A41] hover:bg-[#0F4632] text-white font-ui-medium text-ui-medium transition-all flex items-center gap-2">
-              <span>Start your first video</span>
-              <span className="material-symbols-outlined text-sm">arrow_upward</span>
-            </button>
+            <Link href="/create" className="px-5 py-2.5 rounded-xl bg-[#145A41] hover:bg-[#0F4632] text-white font-ui-medium text-ui-medium transition-all flex items-center gap-2">
+              <span>Create a new video</span>
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </Link>
           </div>
         ) : shown.length === 0 ? (
           <div className="rounded-[24px] border border-[#D3DBD0] bg-white p-10 text-center text-[#54675D]">Nothing in this view yet.</div>
