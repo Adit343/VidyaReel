@@ -16,6 +16,10 @@ const THEMES = [
   { id: 'chalkboard', label: 'Chalkboard', swatch: 'bg-[#2F4F43]' },
   { id: 'blackboard', label: 'Blackboard', swatch: 'bg-[#1E1F21]' },
   { id: 'slate', label: 'Slate Blue', swatch: 'bg-[#1F2F46]' },
+  { id: 'maroon', label: 'Maroon Board', swatch: 'bg-[#4A1F2A]' },
+  { id: 'teal', label: 'Teal Board', swatch: 'bg-[#12433F]' },
+  { id: 'plum', label: 'Plum Board', swatch: 'bg-[#2E1F47]' },
+  { id: 'olive', label: 'Olive Board', swatch: 'bg-[#363B25]' },
   { id: 'rose', label: 'Rose Paper', swatch: 'bg-[#B3305A]' },
   { id: 'ocean', label: 'Ocean', swatch: 'bg-[#0E6E95]' },
 ] as const;

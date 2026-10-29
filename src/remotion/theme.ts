@@ -6,7 +6,7 @@ import { loadFont as loadBody } from '@remotion/google-fonts/HankenGrotesk';
 const headline = loadHeadline('normal', { weights: ['800'], subsets: ['latin'] });
 const body = loadBody('normal', { weights: ['400', '600'], subsets: ['latin'] });
 
-export type ThemeName = 'forest' | 'saffron' | 'sage' | 'chalkboard' | 'blackboard' | 'slate' | 'rose' | 'ocean';
+export type ThemeName = 'forest' | 'saffron' | 'sage' | 'chalkboard' | 'blackboard' | 'slate' | 'rose' | 'ocean' | 'maroon' | 'teal' | 'plum' | 'olive';
 
 export type Theme = {
   canvas: string; surface: string; ink: string; muted: string;
@@ -41,21 +41,42 @@ export const THEMES: Record<ThemeName, Theme> = {
     primary: '#92D4B4', onPrimary: '#0F2A20', onPrimaryMuted: '#1B3A2E', spark: '#FF9F1C',
     captionBg: '#EEF1EC', captionInk: '#0F2A20', ...fonts,
   },
-  // Chalk on a board: pale ink on a dark canvas, the strong colour is a chalk stick.
+  // Chalk on a board: pale ink on a dark canvas, the strong colour is a chalk stick. `spark` is a mid-tone so the
+  // highlighted caption word also reads on the pale caption box.
   chalkboard: {
     canvas: '#2F4F43', surface: '#3C6152', ink: '#F4F1E8', muted: '#BBCDC2',
-    primary: '#F7E7A1', onPrimary: '#2F4F43', onPrimaryMuted: '#3C6152', spark: '#F4A6A0',
+    primary: '#F7E7A1', onPrimary: '#2F4F43', onPrimaryMuted: '#3C6152', spark: '#E8685F',
     captionBg: '#F4F1E8', captionInk: '#2F4F43', ...fonts,
   },
   blackboard: {
     canvas: '#1E1F21', surface: '#2D2F33', ink: '#F2F2EE', muted: '#A9ABAE',
-    primary: '#9ED8F5', onPrimary: '#1E1F21', onPrimaryMuted: '#2D2F33', spark: '#FFD166',
+    primary: '#9ED8F5', onPrimary: '#1E1F21', onPrimaryMuted: '#2D2F33', spark: '#F5A300',
     captionBg: '#F2F2EE', captionInk: '#1E1F21', ...fonts,
   },
   slate: {
     canvas: '#1F2F46', surface: '#2B405F', ink: '#F3F1EA', muted: '#B0C1D7',
-    primary: '#FFB4A2', onPrimary: '#1F2F46', onPrimaryMuted: '#2B405F', spark: '#B5E48C',
+    primary: '#FFB4A2', onPrimary: '#1F2F46', onPrimaryMuted: '#2B405F', spark: '#5FA83A',
     captionBg: '#F3F1EA', captionInk: '#1F2F46', ...fonts,
+  },
+  maroon: {
+    canvas: '#4A1F2A', surface: '#5E2B38', ink: '#F7EFE6', muted: '#D1B3B8',
+    primary: '#FFD6A5', onPrimary: '#4A1F2A', onPrimaryMuted: '#5E2B38', spark: '#2BB3C0',
+    captionBg: '#F7EFE6', captionInk: '#4A1F2A', ...fonts,
+  },
+  teal: {
+    canvas: '#12433F', surface: '#1B5853', ink: '#F1F7F4', muted: '#A9CFC9',
+    primary: '#FFE29A', onPrimary: '#12433F', onPrimaryMuted: '#1B5853', spark: '#F0586A',
+    captionBg: '#F1F7F4', captionInk: '#12433F', ...fonts,
+  },
+  plum: {
+    canvas: '#2E1F47', surface: '#40295F', ink: '#F5F0FA', muted: '#C3B4DA',
+    primary: '#C9F0A0', onPrimary: '#2E1F47', onPrimaryMuted: '#40295F', spark: '#E0559A',
+    captionBg: '#F5F0FA', captionInk: '#2E1F47', ...fonts,
+  },
+  olive: {
+    canvas: '#363B25', surface: '#454B30', ink: '#F6F3E6', muted: '#C4C8A8',
+    primary: '#F2C879', onPrimary: '#363B25', onPrimaryMuted: '#454B30', spark: '#3F9FA3',
+    captionBg: '#F6F3E6', captionInk: '#363B25', ...fonts,
   },
   rose: {
     canvas: '#FDF0F2', surface: '#FFFFFF', ink: '#3B1520', muted: '#835563',

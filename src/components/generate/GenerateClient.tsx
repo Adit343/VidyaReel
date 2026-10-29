@@ -18,7 +18,7 @@ type Media = NonNullable<RenderStatus['media']>;
 
 const STAGES = ['Writing voice', 'Building scenes', 'Rendering video', 'Finishing'] as const;
 const LANGUAGES: Record<string, string> = { en: 'English', hi: 'Hindi' };
-const THEMES: Record<string, string> = { forest: 'Forest', saffron: 'Saffron', sage: 'Sage Dark', chalkboard: 'Chalkboard', blackboard: 'Blackboard', slate: 'Slate Blue', rose: 'Rose Paper', ocean: 'Ocean' };
+const THEMES: Record<string, string> = { forest: 'Forest', saffron: 'Saffron', sage: 'Sage Dark', chalkboard: 'Chalkboard', blackboard: 'Blackboard', slate: 'Slate Blue', rose: 'Rose Paper', ocean: 'Ocean', maroon: 'Maroon Board', teal: 'Teal Board', plum: 'Plum Board', olive: 'Olive Board' };
 const CARD = 'bg-white rounded-[24px] border border-[#D3DBD0] shadow-[0_4px_20px_-2px_rgba(20,90,65,0.06),0_2px_6px_-1px_rgba(20,90,65,0.04)]';
 const PRIMARY = 'btn-lift px-5 py-3 rounded-xl bg-[#145A41] hover:bg-[#0F4632] text-white font-headline-sm text-sm flex items-center justify-center gap-2 shadow-sm disabled:opacity-60';
 const SECONDARY = 'btn-lift px-5 py-3 rounded-xl bg-white hover:bg-[#E1E7DF] border border-[#D3DBD0] text-[#0F2A20] font-ui-medium text-sm flex items-center justify-center gap-2';
