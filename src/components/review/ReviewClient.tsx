@@ -216,6 +216,14 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
   const longest = [...video.scenes].sort((a, b) => b.estimatedSec - a.estimatedSec).slice(0, 2).map((s) => s.order + 1).sort((a, b) => a - b);
   const warning = video.warnings[0] ?? null;
   const dirtyEditing = editingId !== null;
+  // Why Generate is off, shown next to the button. Running over the target length is only a warning and never one of these.
+  const blockReason = !hasScenes ? 'Add a scene first'
+    : locked ? 'This video is rendering'
+    : save === 'conflict' ? 'Reload the latest version first'
+    : dirtyEditing ? 'Save or cancel the scene you are editing'
+    : regenId !== null ? 'A scene is being rewritten'
+    : busy ? 'Loading the script'
+    : null;
 
   const pill = {
     saved: { cls: 'border-[#D3DBD0] text-[#54675D] hover:border-[#0F4632]', dot: 'bg-[#1A8F5A]', text: '• Saved' },
@@ -386,9 +394,11 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
               <span className={`w-2 h-2 rounded-full ${video.scenes.length ? 'bg-[#1A8F5A]' : 'bg-[#B9C5B5]'}`} />
               <span>{video.scenes.length} scenes · {words} words</span>
             </div>
+            {blockReason && <span role="status" className="hidden sm:block max-w-[220px] text-right font-code-sm text-[11px] leading-snug text-[#B36B00]">{blockReason}</span>}
+            {!blockReason && over && <span className="hidden sm:block max-w-[220px] text-right font-code-sm text-[11px] leading-snug text-[#54675D]">Longer than {clock(video.lengthSec)}; you can still generate</span>}
             <button
-              onClick={generate} disabled={!hasScenes || busy || locked || save === 'conflict' || dirtyEditing || regenId !== null}
-              title={dirtyEditing ? 'Save or cancel your edit first' : save === 'conflict' ? 'Reload the latest version first' : undefined}
+              onClick={generate} disabled={blockReason !== null}
+              title={blockReason ?? undefined}
               className="px-5 sm:px-6 py-3 rounded-xl bg-[#145A41] text-white font-ui-medium text-body-md hover:bg-[#0F4632] active:scale-[0.99] transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#145A41] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>Looks good, generate video</span><span className="material-symbols-outlined text-[18px]">arrow_forward</span>

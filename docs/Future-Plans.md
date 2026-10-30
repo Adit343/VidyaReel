@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-30 (prompt 57: narration Listen button added; prompt 56: animation and captions done; prompt 55: music tracks added; prompt 54: voices added; prompt 53: wider audience done, follow-ups added; prompt 48: nothing new; prompt 46; open: get script writing and rendering working on Vercel; use the `llm call failed` and Inngest run errors to find what is missing)
+Last updated: 2026-10-30 (prompt 58: Generate reason shown; prompt 57: narration Listen button added; prompt 56: animation and captions done; prompt 55: music tracks added; prompt 54: voices added; prompt 53: wider audience done, follow-ups added; prompt 48: nothing new; prompt 46; open: get script writing and rendering working on Vercel; use the `llm call failed` and Inngest run errors to find what is missing)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
@@ -9,6 +9,8 @@ Work is organised in phases: see [Phases.md](Phases.md). Current phase: **6 Hard
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
+
+- [ ] **Generate greyed out (prompt 58):** reproduce it on the screenshot's video and read the new reason text beside the button; if it is not one of the listed states, find the cause. Optional: a "Shorten to fit" button that asks the AI to trim the script to the chosen length, and a stricter script-length check in the prompt (the 225-word script above was about 1:38 against 1:30)
 
 - [ ] **Narration preview (prompt 57):** try the Listen button in Review with a real key (each first listen spends credits). Optional: reuse the preview audio when rendering to save credits (needs word times stored with it), a "Listen to all scenes" button, and show the credit cost on the button
 
