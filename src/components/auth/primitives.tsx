@@ -16,7 +16,7 @@ export function AuthLogo({ href = '/sign-in', size = 'md' }: { href?: string; si
       </div>
       <div className="flex flex-col">
         <span className="font-display text-[22px] font-bold leading-none tracking-tight text-solstice-forest">vidyareel</span>
-        <span className="mt-1 font-martian text-[9px] font-semibold uppercase tracking-widest text-solstice-slate">Pedagogical Studio</span>
+        <span className="mt-1 font-martian text-[9px] font-semibold uppercase tracking-widest text-solstice-slate">Explainer Studio</span>
       </div>
     </Link>
   );

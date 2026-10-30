@@ -102,7 +102,7 @@ The central document. A video is a pure function of its data (System Design prin
 | `angle` | string? | Chosen angle from "Plan with AI". |
 | `lengthSec` | 30 \| 60 \| 90 | Chosen target length. |
 | `language` | string | `"en"` in V1; stored for later languages. |
-| `audience` | `"school" \| "college" \| "general"` | Default `general`. |
+| `audience` | string (max 40) | One of the values in `src/config/audiences.ts` (for example `Class 7`, `College students`, `Working professionals`, `General`); default `General`. Older free-text values still work. |
 | `voiceId` | string | Id from `config/voices`. Provider voice id is looked up from config. |
 | `speed` | `"slow" \| "normal" \| "fast"` | Default `normal`. |
 | `theme` | `"sunrise" \| "ocean" \| "forest" \| "slate"` | One of 4 presets (names are placeholders until design picks them). |

@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { clock } from '@/lib/time';
 import type { SceneView } from '@/server/videos/view';
+import type { usePreview } from './usePreview';
 
 export const TEMPLATE_LABEL: Record<string, string> = {
   'title-hook': 'Hook', 'bullet-reveal': 'Key points', 'definition-callout': 'Definition', 'step-flow': 'Steps', diagram: 'Diagram',
@@ -51,11 +52,31 @@ export type SceneActions = {
 };
 
 type Props = {
-  scene: SceneView; theme: string; index: number; count: number; busy: boolean; editing: boolean; regenerating: boolean; confirmingDelete: boolean;
+  scene: SceneView; theme: string; index: number; videoId: string; voice: { id: string; speed: number }; preview: ReturnType<typeof usePreview>; count: number; busy: boolean; editing: boolean; regenerating: boolean; confirmingDelete: boolean;
   actions: SceneActions;
   onSave: (v: { narration: string; text: string }) => void;
   onCancelEdit: () => void; onCancelRegenerate: () => void; onConfirmDelete: () => void; onCancelDelete: () => void;
 };
+
+/** Plays this scene's narration in the voice and pace chosen in Reel settings. The first listen speaks it (a few ElevenLabs credits); repeats are free. */
+function ListenButton({ videoId, scene, voice, preview, busy }: { videoId: string; scene: SceneView; voice: Props['voice']; preview: Props['preview']; busy: boolean }) {
+  const id = `narration:${scene.id}:${voice.id}:${voice.speed}:${scene.narration}`;
+  const on = preview.state?.id === id;
+  const failed = preview.failed.includes(id);
+  const url = `/api/videos/${videoId}/scenes/${scene.id}/narration?voiceId=${encodeURIComponent(voice.id)}&speed=${voice.speed}`;
+  return (
+    <button
+      type="button" onClick={() => preview.toggle(id, url)} disabled={busy || failed}
+      title={failed ? 'Narration unavailable right now' : 'Hear this narration in the selected voice'}
+      className="inline-flex items-center gap-1.5 rounded-full bg-[#E1E7DF] px-2.5 py-1 font-ui-medium text-[12px] text-[#145A41] transition-colors hover:bg-[#145A41] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <span className={`material-symbols-outlined text-[16px] ${on && preview.state?.phase === 'loading' ? 'animate-spin' : ''}`} aria-hidden>
+        {on ? (preview.state?.phase === 'loading' ? 'progress_activity' : 'pause') : failed ? 'volume_off' : 'play_arrow'}
+      </span>
+      {on ? (preview.state?.phase === 'loading' ? 'Preparing...' : 'Stop') : failed ? 'Unavailable' : 'Listen'}
+    </button>
+  );
+}
 
 export function SceneCard(p: Props) {
   const { scene, index } = p;
@@ -121,7 +142,10 @@ export function SceneCard(p: Props) {
               </div>
             )}
             <div className="mb-3">
-              <span className="block font-code-xs text-code-xs text-[#54675D] uppercase tracking-wider mb-1">Narration voiceover</span>
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="font-code-xs text-code-xs text-[#54675D] uppercase tracking-wider">Narration voiceover</span>
+                <ListenButton videoId={p.videoId} scene={scene} voice={p.voice} preview={p.preview} busy={p.busy} />
+              </div>
               <button
                 type="button" onClick={p.actions.edit} disabled={p.busy}
                 className="block w-full text-left text-body-md text-[#0F2A20] leading-relaxed hover:bg-[#EEF1EC]/60 p-2 -ml-2 rounded-lg cursor-text transition-colors border border-transparent hover:border-[#D3DBD0] disabled:cursor-default"

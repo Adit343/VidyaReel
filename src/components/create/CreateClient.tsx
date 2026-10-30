@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { AUDIENCES, audienceGroup, type AudienceGroup } from '@/config/audiences';
 import { api } from '@/lib/client-api';
 import type { VideoView } from '@/server/videos/view';
 import { Select } from '../ui/Select';
@@ -8,19 +9,18 @@ import { Stepper } from './Stepper';
 
 const MAX = 500;
 const LENGTHS = [30, 60, 90] as const;
-const AUDIENCES = [
-  ['Class 5', 'Class 5 (Ages 10-11)'], ['Class 7', 'Class 7 (Ages 12-13)'], ['Class 9', 'Class 9 (Ages 14-15)'], ['General', 'General / Foundational'],
-] as const;
 const ANGLES = [
-  { id: 'everyday', icon: 'wb_twilight', title: 'Everyday example', text: 'Relates concept to familiar home or kitchen routines.' },
-  { id: 'step', icon: 'conversion_path', title: 'Step by step', text: 'Sequential cause and effect mechanism breakdown.' },
-  { id: 'mistake', icon: 'psychology_alt', title: 'Common mistake', text: 'Debunks student misconceptions first.' },
+  { id: 'everyday', icon: 'wb_twilight', title: 'Everyday example', text: 'Ties the idea to daily life, home or work.' },
+  { id: 'step', icon: 'conversion_path', title: 'Step by step', text: 'Cause and effect, one step at a time.' },
+  { id: 'mistake', icon: 'psychology_alt', title: 'Common mistake', text: 'Clears up the usual misunderstanding first.' },
 ] as const;
 type AngleId = (typeof ANGLES)[number]['id'];
 
-type Idea = { label: string; text: string };
-// The chips are picked from this list in the browser, so "Suggest more" is instant and costs no AI call.
-const POOL: Idea[] = [
+type Idea = { label: string; text: string; groups: readonly AudienceGroup[] };
+type RawIdea = Omit<Idea, 'groups'>;
+const withGroups = (groups: readonly AudienceGroup[], items: RawIdea[]): Idea[] => items.map((i) => ({ ...i, groups }));
+
+const SCHOOL_IDEAS: RawIdea[] = [
   { label: 'Photosynthesis', text: 'Photosynthesis in leaf chloroplasts. Explain light and dark reactions for Class 7.' },
   { label: 'Water cycle', text: 'Water cycle and precipitation dynamics for Grade 7 earth science.' },
   { label: 'How vaccines work', text: 'How vaccines work and train the immune system with antibodies.' },
@@ -72,7 +72,72 @@ const POOL: Idea[] = [
   { label: 'Respiratory system', text: 'How we breathe: Lungs, diaphragm and gas exchange.' },
   { label: 'Fundamental rights', text: 'Fundamental Rights in the Indian Constitution in plain language.' },
 ];
+
+const COLLEGE_IDEAS: RawIdea[] = [
+  { label: 'Big O notation', text: 'Big O notation: How to compare the speed of algorithms, with a search example.' },
+  { label: 'Supply and demand', text: 'Supply and demand: How prices move, with a petrol price example.' },
+  { label: 'Opportunity cost', text: 'Opportunity cost: The hidden price of every choice, with a student budget example.' },
+  { label: 'Machine learning', text: 'What is machine learning? How a model learns from examples instead of rules.' },
+  { label: 'Binary search', text: 'Binary search step by step: Why it finds a name in a sorted list so fast.' },
+  { label: 'Normal distribution', text: 'The normal distribution: Why heights and exam marks form a bell curve.' },
+  { label: 'Ohm\'s law', text: 'Ohm\'s law: Voltage, current and resistance in a simple circuit.' },
+  { label: 'Inflation', text: 'What is inflation and why does the same Rs 100 buy less every year?' },
+  { label: 'Recursion', text: 'Recursion explained: A function that calls itself, with a factorial example.' },
+  { label: 'Entropy', text: 'Entropy and the second law of thermodynamics in everyday terms.' },
+  { label: 'Cognitive biases', text: 'Confirmation bias: What it is and how it shapes the way we study and decide.' },
+  { label: 'Derivatives', text: 'What a derivative really means: Slope and rate of change, with a speedometer example.' },
+  { label: 'SQL joins', text: 'SQL joins: Inner, left and right join explained with two simple tables.' },
+  { label: 'Study technique', text: 'Active recall and spaced repetition: A study method that beats re-reading.' },
+  { label: 'Constitution basics', text: 'Separation of powers: Legislature, executive and judiciary in India.' },
+  { label: 'Exam time management', text: 'How to plan the last 30 days before a competitive exam.' },
+  { label: 'GDP', text: 'What is GDP? What it measures and what it leaves out.' },
+  { label: 'Newton vs Einstein', text: 'Newton versus Einstein: How relativity changes our idea of gravity.' },
+];
+
+const WORK_IDEAS: RawIdea[] = [
+  { label: 'Running better meetings', text: 'How to run a 15 minute meeting that ends with clear decisions and owners.' },
+  { label: 'Writing clear emails', text: 'Five habits for writing emails people answer on the first read.' },
+  { label: 'Eisenhower matrix', text: 'The Eisenhower matrix: Sorting work into urgent and important to beat overload.' },
+  { label: 'Giving feedback', text: 'How to give feedback to a colleague without hurting the relationship.' },
+  { label: 'SMART goals', text: 'SMART goals: How to turn a vague target into one you can track this quarter.' },
+  { label: 'Phishing', text: 'How to spot a phishing email at work: Five warning signs.' },
+  { label: 'Agile and Scrum', text: 'Agile and Scrum in one minute: Sprints, backlog and daily stand-up.' },
+  { label: 'Salary negotiation', text: 'Salary negotiation basics: Preparing numbers, timing and what to say.' },
+  { label: 'Time blocking', text: 'Time blocking: Plan your workday so deep work actually happens.' },
+  { label: 'Public speaking', text: 'Three ways to calm nerves before presenting to your team.' },
+  { label: 'Basic Excel formulas', text: 'Three Excel formulas every office worker should know: SUM, IF and VLOOKUP.' },
+  { label: 'Data privacy at work', text: 'Data privacy at work: What counts as personal data and how to handle it.' },
+  { label: 'Delegation', text: 'How to delegate well: Clear outcome, right person, regular check-in.' },
+  { label: 'Burnout', text: 'Burnout: Early warning signs and what to do before it hits.' },
+  { label: 'OKRs', text: 'OKRs: How objectives and key results keep a team pointed the same way.' },
+  { label: 'Mutual funds', text: 'Mutual funds and SIPs explained for first-time investors.' },
+  { label: 'Customer empathy', text: 'Handling an angry customer: Listen, acknowledge, then solve.' },
+  { label: 'Onboarding first week', text: 'Your first week at a new job: What to learn, who to meet and what to ask.' },
+];
+
+const GENERAL_ONLY: RawIdea[] = [
+  { label: 'Compound interest', text: 'Compound interest: Why starting to save early matters so much.' },
+  { label: 'Credit score', text: 'What is a credit score and how can you improve yours?' },
+  { label: 'Sleep and memory', text: 'Why sleep matters: What happens in your brain while you rest.' },
+  { label: 'Fake news', text: 'How to check if a viral message is true in under a minute.' },
+  { label: 'How UPI works', text: 'How a UPI payment moves money in seconds, step by step.' },
+  { label: 'Habit loop', text: 'The habit loop: Cue, routine and reward, and how to build a good habit.' },
+];
+
+// The chips are picked from this list in the browser, so "Suggest more" is instant and costs no AI call.
+const POOL: Idea[] = [
+  ...withGroups(['school'], SCHOOL_IDEAS),
+  // School topics that name a class or students do not suit a general audience.
+  ...withGroups(['general'], SCHOOL_IDEAS.filter((i) => !/\b(class|grade|students?)\b/i.test(i.text))),
+  ...withGroups(['college'], COLLEGE_IDEAS),
+  ...withGroups(['work'], WORK_IDEAS),
+  ...withGroups(['general'], GENERAL_ONLY),
+];
 const SHOWN = 12;
+
+function ideasFor(group: AudienceGroup): Idea[] {
+  return POOL.filter((i) => i.groups.includes(group));
+}
 
 function shuffled<T>(items: readonly T[]): T[] {
   const out = [...items];
@@ -98,8 +163,8 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
   const [topic, setTopic] = useState(initialTopic);
   const [angle, setAngle] = useState<AngleId | null>('everyday');
   const [lengthSec, setLengthSec] = useState<30 | 60 | 90>(60);
-  const [audience, setAudience] = useState('Class 7');
-  const [ideas, setIdeas] = useState<Idea[]>(POOL.slice(0, SHOWN));
+  const [audience, setAudience] = useState('General');
+  const [ideas, setIdeas] = useState<Idea[]>(() => ideasFor(audienceGroup('General')).slice(0, SHOWN));
   const [loading, setLoading] = useState(false);
   const [hint, setHint] = useState(false);
   const [used, setUsed] = useState(quota.used);
@@ -118,9 +183,16 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
 
   function suggestMore() {
     const shown = new Set(ideas.map((i) => i.text));
-    const fresh = shuffled(POOL.filter((i) => !shown.has(i.text)));
+    const pool = ideasFor(audienceGroup(audience));
+    const fresh = shuffled(pool.filter((i) => !shown.has(i.text)));
     // Once everything has been shown, start over with a new order.
-    setIdeas((fresh.length >= SHOWN ? fresh : [...fresh, ...shuffled(POOL.filter((i) => shown.has(i.text)))]).slice(0, SHOWN));
+    setIdeas((fresh.length >= SHOWN ? fresh : [...fresh, ...shuffled(pool.filter((i) => shown.has(i.text)))]).slice(0, SHOWN));
+  }
+
+  function pickAudience(value: string) {
+    setAudience(value);
+    // Different audiences get different example topics.
+    setIdeas(shuffled(ideasFor(audienceGroup(value))).slice(0, SHOWN));
   }
 
   function fail(e: { code: string; message: string; details?: Record<string, unknown> }) {
@@ -166,15 +238,15 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
 
         <div className="mb-6">
           <h1 className="font-headline-lg text-headline-lg-mobile sm:text-[40px] sm:leading-[1.1] text-[#0F2A20] tracking-tight">What should the video explain?</h1>
-          <p className="font-body-md text-[16px] text-[#54675D] mt-2 leading-[26px]">Describe the lesson. You can edit everything before it renders.</p>
+          <p className="font-body-md text-[16px] text-[#54675D] mt-2 leading-[26px]">Describe what you want to explain. You can edit everything before it renders.</p>
         </div>
 
         {banner?.kind === 'unsafe' && (
           <div role="alert" className="mb-5 p-4 rounded-2xl bg-[#FDF2F2] border border-[#F5C2C2] text-[#C93A2E] flex items-start gap-3 animate-fade-in">
             <span className="material-symbols-outlined text-[20px] shrink-0 mt-0.5">report</span>
             <div className="flex-1">
-              <p className="text-[14px] font-medium">We cannot make a video about that topic. Try a different lesson.</p>
-              <p className="text-[12px] text-[#54675D] mt-0.5">The safety check flagged this topic as unsuitable for a classroom video. Reword it or pick another idea below.</p>
+              <p className="text-[14px] font-medium">We cannot make a video about that topic. Try a different topic.</p>
+              <p className="text-[12px] text-[#54675D] mt-0.5">The safety check flagged this topic as unsuitable for an educational video. Reword it or pick another idea below.</p>
             </div>
             <button onClick={() => setBanner(null)} className="text-[#54675D] hover:text-[#0F2A20] text-xs font-code-sm">Dismiss</button>
           </div>
@@ -210,13 +282,13 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
         <div className="bg-white rounded-[24px] border border-[#D3DBD0] hero-atelier-shadow p-6 sm:p-8 relative">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label htmlFor="topic-input" className="font-headline-sm text-[15px] text-[#0F2A20] tracking-tight">Lesson topic or prompt</label>
+              <label htmlFor="topic-input" className="font-headline-sm text-[15px] text-[#0F2A20] tracking-tight">Topic or prompt</label>
               <span className={`font-code-sm text-[12px] ${topic.length >= MAX ? 'text-[#C93A2E]' : 'text-[#54675D]'}`}>{topic.length} / {MAX}</span>
             </div>
             <textarea
               ref={input} id="topic-input" rows={4} maxLength={MAX} value={topic} disabled={loading}
               onChange={(e) => { setTopic(e.target.value); setHint(false); }}
-              placeholder={hint ? 'Please enter a topic first (at least 3 characters)…' : 'Why do we have seasons? Explain for class 7.'}
+              placeholder={hint ? 'Please enter a topic first (at least 3 characters)…' : 'Why do we have seasons? Or: how to run a better meeting.'}
               className={`w-full rounded-[12px] border bg-white p-4 text-[16px] leading-[26px] text-[#0F2A20] placeholder:text-[#54675D]/60 focus:border-[#145A41] focus:ring-2 focus:ring-[#145A41]/10 outline-none transition-all resize-none font-body-md ${hint ? 'border-[#C93A2E]' : 'border-[#D3DBD0]'}`}
             />
           </div>
@@ -244,7 +316,7 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
                 <span className="font-headline-sm text-[15px] text-[#0F2A20] tracking-tight">Choose an angle</span>
                 <span className="text-xs text-[#54675D] ml-2 font-code-sm">(Optional)</span>
               </div>
-              <span className="text-xs text-[#54675D] hidden sm:inline">Adapts pedagogical tone</span>
+              <span className="text-xs text-[#54675D] hidden sm:inline">Adapts the tone</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup" aria-label="Angle">
               {ANGLES.map((a) => {
@@ -282,8 +354,8 @@ export function CreateClient({ initialTopic, voiceId, quota, tzLabel }: Props) {
               <div className="sm:col-span-4">
                 <label htmlFor="audience-select" className="block font-headline-sm text-[13px] text-[#0F2A20] mb-2 tracking-tight">Audience</label>
                 <Select
-                  id="audience-select" value={audience} disabled={loading} onChange={setAudience}
-                  options={AUDIENCES.map(([value, label]) => ({ value, label }))}
+                  id="audience-select" value={audience} disabled={loading} onChange={pickAudience}
+                  options={AUDIENCES.map(({ value, label, hint }) => ({ value, label, hint }))}
                 />
               </div>
               <div className="sm:col-span-3">

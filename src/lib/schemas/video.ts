@@ -44,7 +44,7 @@ export const versionOnlySchema = z.object({ version: z.number().int() }).strict(
 export const sceneRegenerateSchema = z.object({ version: z.number().int(), instruction: z.string().trim().max(200).optional() }).strict();
 export const sceneAddSchema = z.object({ version: z.number().int(), afterSceneId: z.string().optional() }).strict();
 
-export const ideasSuggestSchema = z.object({ subject: z.string().trim().max(100).optional() }).strict();
+export const ideasSuggestSchema = z.object({ subject: z.string().trim().max(100).optional(), audience: z.string().trim().max(40).optional() }).strict();
 export const ideasAnglesSchema = z.object({ topic: z.string().trim().min(1).max(500) }).strict();
 
 export const postVideoSchema = z.object({

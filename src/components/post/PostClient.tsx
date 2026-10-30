@@ -20,7 +20,7 @@ const MAX_TAGS = 30;
 const CARD = 'bg-white rounded-[24px] border border-[#D3DBD0] shadow-[0_12px_32px_-8px_rgba(20,90,65,0.08)]';
 const PRIMARY = 'btn-lift w-full py-3.5 px-6 rounded-xl bg-[#145A41] hover:bg-[#0F4632] text-white font-ui-medium text-sm font-semibold flex items-center justify-center gap-2 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed';
 const OUTLINE = 'btn-lift px-5 py-2.5 rounded-xl border border-[#D3DBD0] bg-white hover:bg-[#E1E7DF] text-xs font-ui-medium font-semibold text-[#0F2A20] flex items-center justify-center gap-1.5 transition-colors';
-const FALLBACK_TAGS = ['#education', '#learning', '#teachersofinstagram', '#studytips', '#science'];
+const FALLBACK_TAGS = ['#education', '#learning', '#explained', '#studytips', '#careertips'];
 
 const tagCount = (s: string) => s.match(/#[\p{L}\p{N}_]+/gu)?.length ?? 0;
 
@@ -252,7 +252,7 @@ function ComposeForm({ video, connection, timeZone, repost, notice, onPosted, on
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="font-headline-md text-2xl text-[#0F2A20] tracking-tight font-bold">Ready to publish</h1>
-        <p className="text-sm text-[#54675D] mt-0.5">Post this lesson to your Instagram Reels feed, now or at a time you pick.</p>
+        <p className="text-sm text-[#54675D] mt-0.5">Post this reel to your Instagram Reels feed, now or at a time you pick.</p>
       </div>
       {notice === 'error' && <p role="alert" className="p-3 rounded-xl bg-[#FDF3F2] border border-[#F4C8C5] text-[#C93A2E] text-[13px]">Instagram did not finish connecting. Please try again.</p>}
 
@@ -350,7 +350,7 @@ function ConnectPanel({ videoId, reconnect, notice, onDismiss }: { videoId: stri
         <p className="text-sm text-[#54675D] mt-1">
           {reconnect
             ? 'Instagram needs you to sign in again before Vidyareel can post. Your video and caption are safe, and scheduled posts will go out once you reconnect.'
-            : 'Let Vidyareel publish your lesson reels to your own Instagram account. We never see your password.'}
+            : 'Let Vidyareel publish your reels to your own Instagram account. We never see your password.'}
         </p>
       </div>
 

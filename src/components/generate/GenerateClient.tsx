@@ -156,7 +156,7 @@ function RenderingPanel({ video, status, starting, confirm, cancelling, onAskCan
       <div className="text-center max-w-xl mx-auto mb-8">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#D3DBD0] text-xs font-code-sm text-[#54675D] mb-3">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF9F1C] animate-ping" />
-          {fix ? 'Updating' : 'Rendering'} a {clock(video.estimatedSec)} lesson reel · 9:16
+          {fix ? 'Updating' : 'Rendering'} a {clock(video.estimatedSec)} reel · 9:16
         </span>
         <h1 className="font-headline-lg text-[28px] sm:text-4xl text-[#0F2A20] tracking-tight mb-2 font-bold">{fix ? 'Updating your video' : 'Making your video'}</h1>
         <p className="text-[#54675D] text-base">
@@ -233,7 +233,7 @@ function RenderingPanel({ video, status, starting, confirm, cancelling, onAskCan
 
         {!confirm ? (
           <div className="flex items-center justify-between gap-3 pt-1">
-            <span className="text-xs font-code-sm text-[#54675D] truncate">Lesson: “{video.title}”</span>
+            <span className="text-xs font-code-sm text-[#54675D] truncate">Reel: “{video.title}”</span>
             <button
               type="button" onClick={onAskCancel}
               className="shrink-0 px-4 py-2 rounded-xl border border-[#D3DBD0] text-xs font-medium text-[#54675D] hover:text-[#C93A2E] hover:border-[#C93A2E]/40 hover:bg-[#FDF3F2] transition-colors"
@@ -283,7 +283,7 @@ function ReadyView({ video, status, media, fixOpen, onFix, onExpired, onRerender
           <Link href={`/videos/${video.id}/review`} className="inline-flex items-center gap-1 text-xs font-medium text-[#54675D] hover:text-[#145A41] transition-colors mb-1">
             <span className="material-symbols-outlined text-[14px]">arrow_back</span>Back to Script &amp; Storyboard
           </Link>
-          <h1 className="font-headline-lg text-[26px] sm:text-3xl text-[#0F2A20] tracking-tight font-bold">Lesson Video Preview</h1>
+          <h1 className="font-headline-lg text-[26px] sm:text-3xl text-[#0F2A20] tracking-tight font-bold">Video Preview</h1>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-code-sm font-medium ${chip.cls}`}>

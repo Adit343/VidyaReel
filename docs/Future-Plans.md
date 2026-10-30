@@ -1,6 +1,6 @@
 # Vidyareel: Future Plans
 
-Last updated: 2026-10-29 (prompt 48: nothing new; prompt 46; open: get script writing and rendering working on Vercel; use the `llm call failed` and Inngest run errors to find what is missing)
+Last updated: 2026-10-30 (prompt 57: narration Listen button added; prompt 56: animation and captions done; prompt 55: music tracks added; prompt 54: voices added; prompt 53: wider audience done, follow-ups added; prompt 48: nothing new; prompt 46; open: get script writing and rendering working on Vercel; use the `llm call failed` and Inngest run errors to find what is missing)
 
 Fine-grained numbered steps live in [Implementation-Steps.md](Implementation-Steps.md). Phases 0 to 3 are done and signed off; Phases 4 and 5 are built and wait for your sign-off.
 
@@ -9,6 +9,16 @@ Work is organised in phases: see [Phases.md](Phases.md). Current phase: **6 Hard
 What is left to implement. Updated on every prompt; finished items move to [Project-Status.md](Project-Status.md). Milestones follow [Prototype-Plan.md](Prototype-Plan.md).
 
 ## Next up
+
+- [ ] **Narration preview (prompt 57):** try the Listen button in Review with a real key (each first listen spends credits). Optional: reuse the preview audio when rendering to save credits (needs word times stored with it), a "Listen to all scenes" button, and show the credit cost on the button
+
+- [ ] **Animation and captions (prompt 56):** run `npm run remotion:bundle`, make a new video and watch it (older videos keep their old look until re-rendered); if the moving backdrop is too busy or the captions still too big, adjust `captionFontSize` in `src/remotion/Captions.tsx` or the opacities in `Backdrop` in `src/remotion/templates/shared.tsx`; optional caption size or position setting in Review
+
+- [ ] **New music (prompt 55):** run `npm run upload:music` to put the six new tracks in R2 and the `assets` collection, then listen to each in Review and drop any you do not like. Optional: add the CC BY credit line to the caption automatically instead of only showing a reminder; add Pixabay tracks by hand (download, save in `assets/music/`, add to `src/config/music.ts`)
+
+- [ ] **Indian-English narration (prompt 54):** needs either a paid ElevenLabs plan (then add Devi `Ghr5KCyOzBvJpcdBbJhE`, Anjura `a6XidOEnTywSiWFoBUhm`, Payal `zEoa2AiakhTnKPSlAhoX`, Raj `wJ5MX7uuKXZwFqGdWM4N` to `src/config/voices.ts`) or a second free provider such as Google Cloud TTS `en-IN` or Edge `en-IN` (needs a new voice provider and word-timing sync). Also listen to the seven new voices in Review and drop any you do not like
+
+- [ ] **Wider audience follow-ups (prompt 53):** look at Create, Home and the auth screens in a browser and check the audience picker and the changing idea chips; run `npm run check:storyboards` with a workplace and a college topic to confirm the scripts read well; optionally let the AI "Suggest ideas" button use the chosen audience in the UI (the API already takes `audience`); update the PRD (I6) and Database-Design (`audience` values) to the new list; later, audience-specific themes or sample voices, and a Hindi option for non-English-first viewers
 
 - [ ] **6.10 and 6.11 (needs you):** finish the Vercel setup below, open `/api/health` on the live URL (expect `ok: true`), then do a solo run on the live site: make a video, fix a scene, post it now, schedule one, cancel one, and tick the PRD checklist. Phase 6 is signed off when that passes (the project has one user, so there is no team test)
 - [ ] **Vercel production setup (needs you):** (1) in Inngest Cloud, Apps, Sync new app, use `https://vidya-reel1.vercel.app/api/inngest`, then check the app lists the four functions; (2) Vercel env vars: `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`, `APP_URL=https://vidya-reel1.vercel.app`, `MONGODB_URI`, `ADMIN_EMAIL`, `R2_*`, `GEMINI_API_KEY`, `ELEVENLABS_*`, `PIXABAY_API_KEY`, `GOOGLE_*`, `META_*`, `IG_TOKEN_KEY`, `RESEND_*`; (3) redeploy after changing them; (4) Mongo Atlas network access must allow Vercel (0.0.0.0/0 on the free tier)

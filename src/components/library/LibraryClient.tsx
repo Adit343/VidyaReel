@@ -163,7 +163,7 @@ export function LibraryClient({ videos: initial, timeZone }: { videos: VideoCard
           </div>
           <h3 className="font-headline-md text-headline-md text-[#0F2A20] mb-2 tracking-tight">No videos yet</h3>
           <p className="font-body-md text-body-md text-[#54675D] max-w-md mx-auto mb-7">
-            Type a lesson idea to make your first one. Vidyareel turns a topic into a script, a storyboard and a finished vertical video.
+            Type any idea to make your first one. Vidyareel turns a topic into a script, a storyboard and a finished vertical video.
           </p>
           <Link href="/" className="btn-lift inline-flex items-center gap-2 px-6 py-3 rounded-[12px] bg-[#145A41] text-white font-ui-medium text-ui-medium hover:bg-[#0F4632]">
             <span className="material-symbols-outlined text-[18px]">add</span>

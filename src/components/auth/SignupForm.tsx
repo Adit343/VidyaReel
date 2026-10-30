@@ -50,7 +50,7 @@ export function SignupForm({ initialError }: { initialError?: string }) {
           <input id="fullname" name="name" required autoComplete="name" placeholder="Prof. Aditi Deshmukh" value={name} onChange={(e) => setName(e.target.value)} className={inputClass()} />
         </div>
         <div>
-          <label htmlFor="email" className="mb-1.5 block font-ui-medium text-[13px] text-solstice-charcoal">Institutional or school email</label>
+          <label htmlFor="email" className="mb-1.5 block font-ui-medium text-[13px] text-solstice-charcoal">Email address</label>
           <input id="email" name="email" type="email" required autoComplete="email" placeholder="aditi.deshmukh@lincoln.k12.edu" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass()} />
         </div>
         <div onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>

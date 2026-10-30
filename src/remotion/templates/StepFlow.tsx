@@ -1,17 +1,16 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
 import { useTheme } from '../theme';
-import { Reveal, page, startOf, useHeadline, type SceneProps } from './shared';
+import { Reveal, Stage, page, startOf, useHeadline, type SceneProps } from './shared';
 
 /** Numbered steps joined by a vertical line; each step appears on its cue. */
 export const StepFlow: React.FC<SceneProps> = ({ scene }) => {
   const t = useTheme();
   const headline = useHeadline();
   return (
-    <AbsoluteFill style={{ background: t.canvas, ...page({ gap: 40 }) }}>
+    <Stage bg={t.canvas} style={page({ gap: 40 })}>
       <div style={{ ...headline, fontSize: 84, color: t.primary, marginBottom: 16 }}>{scene.title}</div>
       {scene.elements.map((el, i) => (
-        <Reveal key={el.id} startMs={startOf(scene, i)}>
+        <Reveal key={el.id} startMs={startOf(scene, i)} dx={120}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 40 }}>
             <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
               <div style={{ ...headline, width: 120, height: 120, borderRadius: 60, background: t.primary, color: t.onPrimary, fontSize: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -27,6 +26,6 @@ export const StepFlow: React.FC<SceneProps> = ({ scene }) => {
           </div>
         </Reveal>
       ))}
-    </AbsoluteFill>
+    </Stage>
   );
 };

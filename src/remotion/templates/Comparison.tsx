@@ -1,7 +1,6 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
 import { useTheme } from '../theme';
-import { Reveal, page, startOf, useHeadline, type SceneProps } from './shared';
+import { Reveal, Stage, page, startOf, useHeadline, type SceneProps } from './shared';
 
 /**
  * Two stacked panels. Elements of type "right" go to the second panel, the rest to the first;
@@ -29,10 +28,10 @@ export const Comparison: React.FC<SceneProps> = ({ scene }) => {
     </div>
   );
   return (
-    <AbsoluteFill style={{ background: t.canvas, ...page({ gap: 32 }) }}>
+    <Stage bg={t.canvas} style={page({ gap: 32 })}>
       <div style={{ ...headline, fontSize: 72, color: t.primary }}>{scene.title}</div>
       {panel(left, t.surface, t.ink, t.spark)}
       {panel(right, t.primary, t.onPrimary, t.spark)}
-    </AbsoluteFill>
+    </Stage>
   );
 };

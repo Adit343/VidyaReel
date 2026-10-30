@@ -115,7 +115,7 @@ const safetySchema = z.object({ safe: z.boolean(), reason: z.string().optional()
 /** Throws UNSAFE_TOPIC when the model says the topic is not fine for a classroom video. */
 export async function assertSafeTopic(llm: LlmProvider, topic: string) {
   const res = await llm.generate(safetyPrompt(topic), safetySchema);
-  if (!res.safe) throw new AppError('UNSAFE_TOPIC', 'We cannot make a video about that topic. Try a different lesson.', 422);
+  if (!res.safe) throw new AppError('UNSAFE_TOPIC', 'We cannot make a video about that topic. Try a different topic.', 422);
 }
 
 const ideasSchema = z.object({ ideas: z.array(z.object({ topic: z.string().min(3).max(200), hint: z.string().max(60).default('') })).min(1).max(12) });
@@ -123,8 +123,8 @@ const anglesSchema = z.object({
   angles: z.array(z.object({ id: z.enum(['everyday', 'step', 'mistake']), label: z.string().max(40), hook: z.string().max(240) })).length(3),
 });
 
-export async function suggestIdeas(llm: LlmProvider, subject?: string) {
-  const { ideas } = await llm.generate(ideasPrompt(subject), ideasSchema);
+export async function suggestIdeas(llm: LlmProvider, subject?: string, audience?: string) {
+  const { ideas } = await llm.generate(ideasPrompt(subject, audience), ideasSchema);
   return ideas.slice(0, 6);
 }
 

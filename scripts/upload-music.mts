@@ -19,7 +19,10 @@ for (const t of MUSIC) {
   await assets().updateOne(
     { kind: 'music', sourceId: t.id },
     {
-      $set: { source: 'pixabay', sourceUrl: t.pageUrl, licence: MUSIC_LICENCE, attribution: `${t.name} by ${t.author} (Pixabay)`, storageKey: key },
+      $set: {
+        source: t.source ?? 'pixabay', sourceUrl: t.pageUrl, licence: t.licence ?? MUSIC_LICENCE,
+        attribution: t.credit ?? `${t.name} by ${t.author} (Pixabay)`, storageKey: key,
+      },
       $setOnInsert: { _id: new ObjectId(), createdAt: new Date() },
     },
     { upsert: true },

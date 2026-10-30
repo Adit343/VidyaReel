@@ -6,5 +6,6 @@ export const storageKey = {
   thumb: (videoId: string, jobId: string) => `videos/${videoId}/thumb-${jobId}.jpg`,
   media: (source: string, assetId: string) => `media/${source}/${assetId}.mp4`,
   music: (trackId: string) => `music/${trackId}.mp3`,
+  narrationPreview: (videoId: string, hash: string) => `videos/${videoId}/preview/${hash}.mp3`,
   voiceSample: (voiceId: string) => `voices/${voiceId}-sample.mp3`,
 };

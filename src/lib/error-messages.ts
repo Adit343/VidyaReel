@@ -17,7 +17,7 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
   VALIDATION: 'Please check what you entered and try again.',
   DAILY_LIMIT: 'You have reached today\'s video limit. It resets at midnight.',
   VOICE_CREDITS_LOW: 'The team\'s monthly narration budget is used up. Ask an admin, or try again next month.',
-  UNSAFE_TOPIC: 'That topic is not suitable for a classroom video. Try a different one.',
+  UNSAFE_TOPIC: 'That topic is not suitable for an educational video. Try a different one.',
   VERSION_CONFLICT: 'This video changed in another tab. Reload to see the latest version.',
   STORYBOARD_FAILED: 'We could not write a script for that topic. Try rewording it.',
   PROVIDER_UNAVAILABLE: 'A service we depend on is busy right now. Please try again in a minute.',

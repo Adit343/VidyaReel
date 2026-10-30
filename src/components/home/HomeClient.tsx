@@ -45,13 +45,13 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
           <div className="max-w-3xl mb-6">
             <div className="flex items-center gap-2 text-xs font-code-xs text-[#54675D] mb-2 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-[#145A41]" />
-              <span>Synthesize lesson reels · 1080×1920 vertical</span>
+              <span>Explainer reels for everyone · 1080×1920 vertical</span>
             </div>
             <h1 id="console-heading" className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#0F2A20] tracking-tight">
-              Transform today&apos;s lesson idea into a 60-second classroom reel.
+              Turn any idea into a 60-second reel anyone can follow.
             </h1>
             <p className="font-body-md text-body-md text-secondary mt-2">
-              Start with a syllabus topic, textbook excerpt, or classroom discussion prompt. Vidyareel drafts a script and a scene-by-scene storyboard for you to review, then adds animation and voiceover.
+              Start with a school or college topic, an exam concept, a workplace skill, or anything you want to explain. Vidyareel drafts a script and a scene-by-scene storyboard for you to review, then adds animation and voiceover.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export function HomeClient({ quota, videos, postedCount, timeZone }: Props) {
             </div>
             <div className="max-w-md">
               <h3 className="font-headline-sm text-headline-sm text-[#0F2A20]">No videos yet in your atelier</h3>
-              <p className="font-body-md text-body-md text-secondary mt-1">Create your first 60-second classroom reel from any lesson idea.</p>
+              <p className="font-body-md text-body-md text-secondary mt-1">Create your first 60-second reel from any idea.</p>
             </div>
             <Link href="/create" className="px-5 py-2.5 rounded-xl bg-[#145A41] hover:bg-[#0F4632] text-white font-ui-medium text-ui-medium transition-all flex items-center gap-2">
               <span>Create a new video</span>
@@ -214,7 +214,7 @@ function RecentCard({ v, timeZone }: { v: VideoCardData; timeZone: string }) {
 }
 
 const STEPS = [
-  ['01', 'Idea', 'Type any topic or syllabus objective.', 'bg-[#145A41]', 'text-[#145A41]'],
+  ['01', 'Idea', 'Type any topic, concept or skill.', 'bg-[#145A41]', 'text-[#145A41]'],
   ['02', 'Review', 'Edit the script and scenes before anything renders.', 'bg-white border-[#145A41]', 'text-[#145A41]'],
   ['03', 'Generate', 'Creates motion graphics and synced English narration.', 'bg-white border-[#FF9F1C]', 'text-[#A86407]'],
   ['04', 'Post', 'Send it directly to your connected Instagram account.', 'bg-[#B9C5B5]', 'text-[#54675D]'],

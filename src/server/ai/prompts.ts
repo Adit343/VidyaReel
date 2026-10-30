@@ -1,3 +1,4 @@
+import { audienceGuide } from '@/config/audiences';
 import { ENABLED_TEMPLATES } from '@/lib/schemas/storyboard';
 import { ICON_NAMES } from '@/remotion/templates/iconNames';
 import type { Prompt } from '@/server/providers';
@@ -7,9 +8,9 @@ export const WORDS_PER_SEC = 2.3;
 export type StoryboardInput = { topic: string; lengthSec: number; audience: string; angle?: string; language: string };
 
 const ANGLE_TEXT: Record<string, string> = {
-  everyday: 'Relate the concept to familiar home, kitchen or street-life examples.',
+  everyday: 'Relate the concept to examples the audience already knows from daily life, home or work.',
   step: 'Explain it as a clear sequence of cause and effect, one step per scene.',
-  mistake: 'Start by naming a common student misconception, then correct it.',
+  mistake: 'Start by naming a common misconception or mistake people make about it, then correct it.',
 };
 
 const JSON_ONLY = 'Reply with a single JSON object and nothing else. No markdown, no commentary.';
@@ -19,24 +20,24 @@ const rejected = (errors: string[]) =>
 
 export function safetyPrompt(topic: string): Prompt {
   return {
-    system: `You check lesson topics for a teaching-video tool used by teachers and students. ${JSON_ONLY}`,
+    system: `You check topics for an explainer-video tool used by teachers, students and working professionals. ${JSON_ONLY}`,
     user: `Topic: """${topic}"""
-Is this fine to explain in a short classroom video? Say no for content that gives instructions for violence, weapons, explosives, self-harm, hacking or drugs, sexual content, hate, or harassment of a real person. Normal school and general-knowledge topics (including the history of wars, human biology, chemistry, safety) are fine.
+Is this fine to explain in a short educational video? Say no for content that gives instructions for violence, weapons, explosives, self-harm, hacking or drugs, sexual content, hate, or harassment of a real person. Normal school, college, workplace and general-knowledge topics (including the history of wars, human biology, chemistry, safety, finance, law basics, management) are fine.
 Return {"safe": true, "reason": "short reason"} with "safe" true or false.`,
   };
 }
 
-export function ideasPrompt(subject?: string): Prompt {
+export function ideasPrompt(subject?: string, audience?: string): Prompt {
   return {
-    system: `You suggest short-video lesson ideas for Indian school and college teachers. ${JSON_ONLY}`,
-    user: `Suggest 6 different lesson topics${subject ? ` in the subject "${subject}"` : ' across school subjects'}. Each is one clear question or concept a teacher could explain in a 60 second video.
+    system: `You suggest short explainer-video ideas for Indian educators, students and working professionals. ${JSON_ONLY}`,
+    user: `Suggest 6 different topics${subject ? ` in the subject "${subject}"` : ' across a mix of subjects'}${audience ? ` for this audience: ${audience}` : ''}. Each is one clear question or concept someone could explain in a 60 second video.
 Return {"ideas":[{"topic":"Why is the sky blue?","hint":"Light scattering"}]} with exactly 6 items. "topic" is under 90 characters, "hint" is 2 to 4 words.`,
   };
 }
 
 export function anglesPrompt(topic: string): Prompt {
   return {
-    system: `You help teachers pick how to approach a lesson in a short video. ${JSON_ONLY}`,
+    system: `You help creators pick how to approach a topic in a short explainer video. ${JSON_ONLY}`,
     user: `Topic: """${topic}"""
 Give 3 angles. The ids must be exactly "everyday", "step", "mistake", in that order. Each has a short "label" and a one-sentence spoken "hook" for this topic.
 Return {"angles":[{"id":"everyday","label":"Everyday example","hook":"..."}]}.`,
@@ -69,7 +70,7 @@ const SCENE_RULES = `Scene rules:
 - "narration" is exactly what a narrator says aloud: plain sentences, no stage directions, no emoji, numbers written so they can be read aloud.
 - Every element has a "cue": a short phrase (1 to 4 words) copied EXACTLY from the narration of that scene. The element appears when the narrator says the cue. List the elements in the order their cues are spoken.
 - "text" is the short text shown on screen (under 60 characters; do not repeat the whole narration).
-- Set "needsCheck": true and a short "checkNote" for scenes with a number, date, formula or factual claim a teacher should verify.`;
+- Set "needsCheck": true and a short "checkNote" for scenes with a number, date, formula or factual claim the creator should verify.`;
 
 /** Words each scene should carry: the total spread over the middle of the scene-count range. */
 const perScene = (lengthSec: number, words: number) => Math.round(words / (lengthSec <= 30 ? 3.8 : lengthSec <= 60 ? 5.5 : 7.5));
@@ -78,9 +79,9 @@ export function storyboardPrompt(i: StoryboardInput, previousErrors: string[] = 
   const words = Math.round(i.lengthSec * WORDS_PER_SEC);
   const scenes = i.lengthSec <= 30 ? '3 to 5' : i.lengthSec <= 60 ? '5 to 7' : '7 to 10';
   return {
-    system: `You write scripts and storyboards for short vertical teaching videos (Instagram Reels) for Indian classrooms. Clear, warm, accurate, no hype. ${JSON_ONLY}`,
+    system: `You write scripts and storyboards for short vertical explainer videos (Instagram Reels) for learners in India: school students, college students and working professionals. Clear, warm, accurate, no hype. ${JSON_ONLY}`,
     user: `Topic: """${i.topic}"""
-Audience: ${i.audience}. Language: ${i.language === 'en' ? 'English' : i.language}.
+Audience: ${i.audience}. ${audienceGuide(i.audience)} Language: ${i.language === 'en' ? 'English' : i.language}.
 Target length: ${i.lengthSec} seconds, so the narration must total about ${words} words, no fewer than ${Math.round(words * 0.9)} (speech runs at about ${WORDS_PER_SEC} words per second). Count them. Use ${scenes} scenes, so every scene's narration is about ${perScene(i.lengthSec, words)} words (never under ${Math.round(perScene(i.lengthSec, words) * 0.75)}). The narration is the full spoken explanation: a scene with little on-screen text (stat, formula, timeline, recap, diagram) still gets its full share of narration.
 ${i.angle && ANGLE_TEXT[i.angle] ? `Approach: ${ANGLE_TEXT[i.angle]}\n` : ''}Start with a hook in the first scene and end with a one-line takeaway.
 
@@ -95,13 +96,13 @@ export function scenePrompt(
   i: StoryboardInput, scene: { title?: string; narration: string }, others: string[], instruction?: string, previousErrors: string[] = [],
 ): Prompt {
   return {
-    system: `You rewrite one scene of a short teaching video. ${JSON_ONLY}`,
-    user: `Topic: """${i.topic}""" for ${i.audience}.
+    system: `You rewrite one scene of a short explainer video. ${JSON_ONLY}`,
+    user: `Topic: """${i.topic}""" for ${i.audience}. ${audienceGuide(i.audience)}
 The other scenes say, in order:
 ${others.map((n, k) => `${k + 1}. ${n}`).join('\n') || '(none)'}
 
 Rewrite this scene${scene.title ? ` ("${scene.title}")` : ''}, currently: """${scene.narration}"""
-${instruction ? `Teacher instruction: ${instruction}` : 'Make it clearer and more engaging, about the same length.'}
+${instruction ? `Creator instruction: ${instruction}` : 'Make it clearer and more engaging, about the same length.'}
 
 ${SCENE_RULES}
 Return one scene: {"template":"","diagram":"","mediaQuery":"","title":"","narration":"","needsCheck":false,"checkNote":"","elements":[{"type":"","text":"","cue":"","icon":""}]}.${rejected(previousErrors)}`,

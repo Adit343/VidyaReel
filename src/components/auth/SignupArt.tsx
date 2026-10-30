@@ -18,7 +18,7 @@ export function SignupArt() {
 <div className="relative z-10 flex items-center justify-between">
 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15">
 <span className="w-2 h-2 rounded-full bg-[#FF9F1C]"></span>
-<span className="font-code-xs text-[11px] tracking-wide text-white uppercase">Lesson-to-Reel v2.4</span>
+<span className="font-code-xs text-[11px] tracking-wide text-white uppercase">Idea-to-Reel v2.4</span>
 </div>
 <div className="flex items-center gap-2 text-white/70 font-code-xs text-xs">
 <span className="material-symbols-outlined text-[16px]">auto_videocam</span>
@@ -103,7 +103,7 @@ export function SignupArt() {
 
 <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-white/80">
 <span className="font-code-xs text-[11px] tracking-wide">
-              Pedagogical video engine · Lesson to reel
+              Explainer video engine · Idea to reel
             </span>
 <div className="flex items-center gap-1 text-[11px] font-code-xs text-white/60">
 <span className="material-symbols-outlined text-[14px] text-[#adf1d0]">verified</span>

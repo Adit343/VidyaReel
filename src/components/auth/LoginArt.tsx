@@ -18,10 +18,10 @@ export function LoginArt() {
 <div className="flex items-center gap-2">
 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-martian bg-white/10 text-white border border-white/15">
 <span className="w-1.5 h-1.5 rounded-full bg-solstice-saffron mr-1.5"></span>
-              GRADE 6 EARTH SCIENCE
+              EARTH SCIENCE · EXPLAINER
             </span>
 </div>
-<span className="font-martian text-[11px] text-white/60 tracking-wider">LESSON #804</span>
+<span className="font-martian text-[11px] text-white/60 tracking-wider">REEL #804</span>
 </div>
 
 <div className="relative my-6 py-4 flex flex-col items-center justify-center">
@@ -120,7 +120,7 @@ export function LoginArt() {
 
 <div className="relative z-10 pt-4 border-t border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
 <p className="font-martian text-[11px] text-white/80 tracking-wide">
-            Pedagogical video engine · Lesson to reel in minutes
+            Explainer video engine · Idea to reel in minutes
           </p>
 <span className="inline-flex items-center gap-1 font-martian text-[10px] text-solstice-saffron">
 <span className="material-symbols-outlined text-[14px]">auto_awesome</span> 60s ENGINE

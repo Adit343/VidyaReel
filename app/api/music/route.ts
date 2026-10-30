@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     await requireUser(req);
     const tracks = await availableMusic(storage());
     return Response.json({
-      tracks: tracks.map((t) => ({ id: t.id, name: t.name, blurb: t.blurb, previewUrl: `/api/music/${t.id}/preview` })),
+      tracks: tracks.map((t) => ({ id: t.id, name: t.name, blurb: t.blurb, previewUrl: `/api/music/${t.id}/preview`, credit: t.credit ?? null })),
     });
   } catch (e) { return errorResponse(e); }
 }

@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { VOICES } from '@/config/voices';
 import { Select } from '@/components/ui/Select';
 import { clock } from '@/lib/time';
+import type { usePreview } from './usePreview';
 
 export type Settings = {
   voiceId: string; speed: number; theme: string; captionsOn: boolean;
@@ -27,36 +28,13 @@ const THEMES = [
 type Props = {
   settings: Settings; onChange: (patch: Partial<Settings>) => void; disabled: boolean;
   estimatedSec: number; lengthSec: number; warning: string | null; longest: number[];
+  /** The screen's single audio preview, shared with the scene cards so only one thing plays at a time. */
+  preview: ReturnType<typeof usePreview>;
 };
 
-type SampleState = { id: string; phase: 'loading' | 'playing' } | null;
-
-/** One preview at a time (a voice sample or a music track): starting another stops the first. A preview that cannot load marks its button unavailable. */
-function usePreview() {
-  const audio = useRef<HTMLAudioElement | null>(null);
-  const [state, setState] = useState<SampleState>(null);
-  const [failed, setFailed] = useState<string[]>([]);
-  const stop = () => { audio.current?.pause(); audio.current = null; setState(null); };
-  useEffect(() => () => { audio.current?.pause(); }, []);
-  const toggle = (id: string, url: string) => {
-    if (state?.id === id) return stop();
-    audio.current?.pause();
-    const a = new Audio(url);
-    audio.current = a;
-    setState({ id, phase: 'loading' });
-    const fail = () => { if (audio.current === a) { stop(); setFailed((f) => [...f, id]); } };
-    a.onplaying = () => setState({ id, phase: 'playing' });
-    a.onended = () => { if (audio.current === a) stop(); };
-    a.onerror = fail;
-    a.play().catch(fail);
-  };
-  return { state, failed, toggle, stop };
-}
-
 /** Right-hand "Reel settings" panel of Stitch Review: voice, pacing, theme, music, captions, duration meter. */
-export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, lengthSec, warning, longest }: Props) {
-  const samples = usePreview();
-  const [tracks, setTracks] = useState<{ id: string; name: string; blurb: string; previewUrl: string }[] | null>(null);
+export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, lengthSec, warning, longest, preview: samples }: Props) {
+  const [tracks, setTracks] = useState<{ id: string; name: string; blurb: string; previewUrl: string; credit: string | null }[] | null>(null);
   useEffect(() => {
     let live = true;
     fetch('/api/music').then((r) => (r.ok ? r.json() : { tracks: [] })).then((b) => { if (live) setTracks(b.tracks ?? []); }, () => { if (live) setTracks([]); });
@@ -76,8 +54,8 @@ export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, l
       </div>
 
       <fieldset className="mb-5" disabled={disabled}>
-        <legend className="block font-ui-medium text-body-sm text-[#0F2A20] mb-2.5 font-semibold">Educator Narration Voice</legend>
-        <div className="space-y-2" role="radiogroup">
+        <legend className="block font-ui-medium text-body-sm text-[#0F2A20] mb-2.5 font-semibold">Narration Voice</legend>
+        <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1" role="radiogroup">
           {VOICES.map((v) => {
             const on = s.voiceId === v.id;
             return (
@@ -185,6 +163,7 @@ export function SettingsPanel({ settings: s, onChange, disabled, estimatedSec, l
             <span className="font-code-sm text-[10px] text-[#54675D] w-8 text-right">{s.musicVolume}%</span>
           </div>
         </div>
+        {track?.credit && <p className="text-[11px] text-[#54675D] mt-1.5">Add this credit to your caption when you post: {track.credit}.</p>}
         <p className="text-[11px] text-[#54675D] mt-1.5">
           {tracks && !tracks.length ? 'No music tracks are set up yet.' : 'The music dips under the narration and rises in the pauses. The volume is its level while the narrator speaks.'}
         </p>

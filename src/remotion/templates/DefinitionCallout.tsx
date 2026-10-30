@@ -1,14 +1,13 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
 import { useTheme } from '../theme';
-import { Reveal, page, startOf, useHeadline, type SceneProps } from './shared';
+import { Reveal, Stage, page, startOf, useHeadline, type SceneProps } from './shared';
 
 export const DefinitionCallout: React.FC<SceneProps> = ({ scene }) => {
   const t = useTheme();
   const headline = useHeadline();
   const [term, definition] = scene.elements;
   return (
-    <AbsoluteFill style={{ background: t.canvas, ...page() }}>
+    <Stage bg={t.canvas} style={page()}>
       <div style={{ fontFamily: t.fontBody, fontSize: 40, letterSpacing: 6, color: t.muted, textTransform: 'uppercase' }}>Definition</div>
       <Reveal startMs={startOf(scene, 0)}>
         <div style={{ ...headline, fontSize: 128, color: t.primary }}>{term?.text ?? scene.title}</div>
@@ -20,6 +19,6 @@ export const DefinitionCallout: React.FC<SceneProps> = ({ scene }) => {
           </div>
         </Reveal>
       )}
-    </AbsoluteFill>
+    </Stage>
   );
 };

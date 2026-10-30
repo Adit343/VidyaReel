@@ -13,8 +13,8 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   try {
     const user = await requireUser(req);
-    const { subject } = await parseJson(req, ideasSuggestSchema);
+    const { subject, audience } = await parseJson(req, ideasSuggestSchema);
     await limitLlm(new ObjectId(user.id));
-    return Response.json({ ideas: await guardLlm(() => suggestIdeas(getLlm(), subject)) });
+    return Response.json({ ideas: await guardLlm(() => suggestIdeas(getLlm(), subject, audience)) });
   } catch (e) { return errorResponse(e); }
 }

@@ -8,6 +8,7 @@ import type { VideoView } from '@/server/videos/view';
 import { Stepper } from '../create/Stepper';
 import { useToast } from '../shell/Toast';
 import { SceneCard } from './SceneCard';
+import { usePreview } from './usePreview';
 import { SettingsPanel, type Settings } from './SettingsPanel';
 
 type SaveState = 'saved' | 'saving' | 'conflict' | 'error';
@@ -21,6 +22,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
   const toast = useToast();
   const [video, setVideo] = useState(initial);
   const [settings, setSettings] = useState(settingsOf(initial));
+  const preview = usePreview();
   const [title, setTitle] = useState(initial.title);
   const [editingTitle, setEditingTitle] = useState(false);
   const [save, setSave] = useState<SaveState>('saved');
@@ -306,7 +308,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
                 <p className="text-body-sm text-[#54675D] max-w-sm mx-auto mb-6">
                   {video.status === 'failed'
                     ? 'The script did not pass our checks. This attempt does not use up your daily allowance. Try again, or add scenes yourself.'
-                    : 'Start by generating your storyboard scenes from your lesson concept or manually add individual beats.'}
+                    : 'Start by generating your storyboard scenes from your topic or manually add individual beats.'}
                 </p>
                 <div className="flex items-center justify-center gap-3 flex-wrap">
                   <button onClick={regenerateAll} disabled={busy || locked} className="px-5 py-2.5 rounded-xl bg-[#145A41] text-white font-ui-medium text-body-sm hover:bg-[#0F4632] shadow-sm disabled:opacity-60">
@@ -319,7 +321,7 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
               <div className="flex flex-col gap-4" id="scenes-container">
                 {video.scenes.map((scene, i) => (
                   <SceneCard
-                    key={scene.id} scene={scene} theme={settings.theme} index={i} count={video.scenes.length} busy={locked || busy}
+                    key={scene.id} scene={scene} theme={settings.theme} videoId={video.id} voice={{ id: settings.voiceId, speed: settings.speed }} preview={preview} index={i} count={video.scenes.length} busy={locked || busy}
                     editing={editingId === scene.id} regenerating={regenId === scene.id} confirmingDelete={deleteId === scene.id}
                     actions={{
                       edit: () => { setDeleteId(null); setEditingId(scene.id); },
@@ -351,12 +353,12 @@ export function ReviewClient({ initial }: { initial: VideoView }) {
           </div>
 
           <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
-            <SettingsPanel settings={settings} onChange={change} disabled={locked || busy} estimatedSec={video.estimatedSec} lengthSec={video.lengthSec} warning={warning} longest={longest} />
+            <SettingsPanel settings={settings} onChange={change} disabled={locked || busy} estimatedSec={video.estimatedSec} lengthSec={video.lengthSec} warning={warning} longest={longest} preview={preview} />
             <div className="bg-white/70 rounded-2xl border border-[#D3DBD0] p-4 text-body-sm text-[#54675D]">
               <div className="flex items-center gap-2 mb-1.5 text-[#145A41] font-semibold">
                 <span className="material-symbols-outlined text-[16px]">psychology</span><span>Teaching tip</span>
               </div>
-              <p className="text-[12px] leading-relaxed">Open with the question or the misconception students usually have. The first few seconds decide whether they keep watching.</p>
+              <p className="text-[12px] leading-relaxed">Open with the question or the misconception your viewers usually have. The first few seconds decide whether they keep watching.</p>
             </div>
           </div>
         </div>

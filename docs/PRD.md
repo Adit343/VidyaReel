@@ -89,7 +89,7 @@ Acceptance: an unapproved email cannot sign in or sign up, even by calling the A
 | I3 | **Plan with AI** (optional): AI offers 3 angles for the topic (for example "everyday example", "step by step", "common mistakes") and a suggested hook. User picks one or skips. |
 | I4 | Length selector: 30, 60 or 90 seconds. Default 60. |
 | I5 | Language: English only in V1, so no language selector is shown. The language is still stored with each video so more languages can be added later. |
-| I6 | Audience level, optional with default: school, college, general. Controls vocabulary and depth. |
+| I6 | Audience, optional with default General public. Choices: Class 5, 7 and 9; College students; Exam aspirants; Working professionals; Managers and leaders; New hires; General public. Controls vocabulary, depth, examples and the idea chips shown. |
 | I7 | Primary button creates the script and storyboard in one action. |
 | I8 | Input is checked for unsafe or disallowed topics (see 8.4) and rejected with a plain message. |
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { useTheme, type Theme } from '../theme';
 import { hasIcon, Icon } from './icons';
-import { Reveal, page, startOf, useHeadline, useReveal, type SceneProps } from './shared';
+import { Backdrop, Reveal, page, startOf, useHeadline, useReveal, type SceneProps } from './shared';
 
 const SPRING = { damping: 18, stiffness: 140 };
 
@@ -21,23 +21,6 @@ const Pop: React.FC<{ startMs: number; phase?: number; children: React.ReactNode
   const frame = useCurrentFrame();
   const bob = Math.sin(frame / 22 + phase * 1.7) * 5 * Math.min(1, p);
   return <div style={{ opacity: Math.min(1, p * 1.6), transform: `translateY(${bob}px) scale(${0.45 + 0.55 * p})`, ...style }}>{children}</div>;
-};
-
-/** Slow drifting soft shapes behind the drawing. */
-const Backdrop: React.FC<{ t: Theme }> = ({ t }) => {
-  const frame = useCurrentFrame();
-  const dots = [[8, 12, 260], [86, 22, 180], [14, 62, 220], [90, 70, 300], [50, 92, 200]];
-  return (
-    <AbsoluteFill style={{ overflow: 'hidden' }}>
-      {dots.map(([x, y, r], k) => (
-        <div key={k} style={{
-          position: 'absolute', left: `${x}%`, top: `${y}%`, width: r, height: r, borderRadius: r, marginLeft: -r / 2, marginTop: -r / 2,
-          background: k % 2 ? t.spark : t.primary, opacity: 0.07,
-          transform: `translate(${Math.sin(frame / (50 + k * 9) + k) * 34}px, ${Math.cos(frame / (60 + k * 7) + k) * 34}px)`,
-        }} />
-      ))}
-    </AbsoluteFill>
-  );
 };
 
 /** Round badge with the element's icon, or its number when it has none. */
@@ -290,7 +273,7 @@ export const Diagram: React.FC<SceneProps> = ({ scene }) => {
   const stages = useStages(scene);
   return (
     <AbsoluteFill style={{ background: t.canvas }}>
-      <Backdrop t={t} />
+      <Backdrop bg={t.canvas} />
       <AbsoluteFill style={page({ gap: 40 })}>
         <div style={{ ...headline, fontSize: 80, color: t.primary }}>{scene.title}</div>
         {scene.diagram === 'raindrop' ? <Raindrop scene={scene} t={t} />

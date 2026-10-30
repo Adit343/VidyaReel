@@ -1,14 +1,13 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
 import { useTheme } from '../theme';
-import { Reveal, page, splitLabel, startOf, useHeadline, type SceneProps } from './shared';
+import { Reveal, Stage, page, splitLabel, startOf, useHeadline, type SceneProps } from './shared';
 
 /** Events down a vertical line. Text like "1905: Einstein publishes" shows "1905" as the date. */
 export const Timeline: React.FC<SceneProps> = ({ scene }) => {
   const t = useTheme();
   const headline = useHeadline();
   return (
-    <AbsoluteFill style={{ background: t.canvas, ...page({ gap: 36 }) }}>
+    <Stage bg={t.canvas} style={page({ gap: 36 })}>
       <div style={{ ...headline, fontSize: 84, color: t.primary, marginBottom: 12 }}>{scene.title}</div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 44, paddingLeft: 70 }}>
         <div style={{ position: 'absolute', left: 22, top: 20, bottom: 20, width: 10, borderRadius: 5, background: t.muted, opacity: 0.35 }} />
@@ -25,6 +24,6 @@ export const Timeline: React.FC<SceneProps> = ({ scene }) => {
           );
         })}
       </div>
-    </AbsoluteFill>
+    </Stage>
   );
 };

@@ -74,14 +74,14 @@ export function ForgotForm() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <label htmlFor="email-field" className="block font-ui-medium text-xs font-semibold uppercase tracking-wider text-atelier-dark">Email address</label>
-            <span className="font-code-xs text-xs text-secondary">Institution or School ID</span>
+            <span className="font-code-xs text-xs text-secondary">Work, college or school email</span>
           </div>
           <div className="relative">
-            <input id="email-field" type="email" autoComplete="email" value={email} disabled={busy} placeholder="aditi.deshmukh@lincoln.k12.edu"
+            <input id="email-field" type="email" autoComplete="email" value={email} disabled={busy} placeholder="you@example.com"
               onChange={(e) => { setEmail(e.target.value); setInvalid(false); }} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
               className={`h-12 w-full rounded-xl border bg-white px-4 font-body-md text-[15px] text-atelier-dark transition duration-150 placeholder:text-[#99A69E] focus:outline-none ${
                 invalid ? 'border-atelier-crimson ring-2 ring-atelier-crimson/20' : focused ? 'border-atelier-green ring-2 ring-atelier-green/20' : 'border-atelier-border'}`} />
-            <Icon name="school" className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[20px] text-secondary/60" />
+            <Icon name="mail" className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[20px] text-secondary/60" />
           </div>
           {invalid && <div role="alert" className="mt-2 flex items-center gap-1.5 text-atelier-crimson"><Icon name="error" className="text-[17px]" /><span className="font-body-sm text-xs font-medium">Enter a valid email address.</span></div>}
         </div>

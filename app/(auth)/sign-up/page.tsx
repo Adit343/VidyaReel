@@ -9,7 +9,7 @@ export const metadata = { title: 'Create account · Vidyareel' };
 export default async function Page({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   return (
-    <SplitAuth title="Create your account" subtitle="Turn a lesson idea into a short video in about ten minutes." art={<SignupArt />}
+    <SplitAuth title="Create your account" subtitle="Turn any idea into a short video in about ten minutes." art={<SignupArt />}
       below={<>Already have an account? <Link href="/sign-in" className="ml-1 font-semibold text-solstice-forest hover:underline">Log in</Link></>}>
       <GoogleButton label="Sign up with Google" />
       <OrDivider />

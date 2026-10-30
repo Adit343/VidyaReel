@@ -134,7 +134,7 @@ export function SettingsClient({ name, email, timeZone, connection, scheduledCou
               <div className="max-w-md">
                 <div className="flex items-center gap-2 mb-2"><span className="inline-block w-2 h-2 rounded-full bg-[#506359]" /><span className="text-[11px] font-code-sm text-[#506359] uppercase">No account linked</span></div>
                 <h3 className="text-lg font-bold text-[#0F2A20]">Connect your Instagram account</h3>
-                <p className="text-[13px] text-[#506359] mt-1">Connect a Creator or Business account to post your lesson reels straight from Vidyareel.</p>
+                <p className="text-[13px] text-[#506359] mt-1">Connect a Creator or Business account to post your reels straight from Vidyareel.</p>
                 <p className="text-[11px] font-code-sm text-[#506359] mt-3">Personal accounts cannot publish. Use a professional account.</p>
               </div>
               <a href={`/api/instagram/connect?returnTo=${RETURN_TO}`} className="btn-lift px-5 py-2.5 rounded-xl text-sm font-ui-medium bg-[#145A41] text-white hover:bg-[#0F4632] transition-all flex items-center gap-2 shadow-sm whitespace-nowrap self-start sm:self-center">
